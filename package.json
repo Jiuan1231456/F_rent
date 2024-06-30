@@ -9,12 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "sass": "^1.77.4",
+    "pinia": "^2.1.7",
+    "router": "^1.3.8",
+    "sass": "^1.77.6",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
-    "vite": "^5.2.8"
+    "vite": "^5.3.2"
   }
 }
