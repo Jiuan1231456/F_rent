@@ -15,17 +15,20 @@ export default{
 
 <template>
     <div class="headerArea">
+        <RouterLink class="routerItem" :class="{'selectedPage': this.page === 3}" to="/ContractList">租約管理列表</RouterLink>
         <RouterLink class="routerItem" :class="{ 'selectedPage': this.page === 1}" to="/bill">帳單管理</RouterLink>
         <RouterLink class="routerItem" :class="{'selectedPage': this.page === 2}" to="/benefit">觀看收益</RouterLink>
+        
     </div>
 </template>
 
 <style scoped lang="scss">
 .headerArea{
     height: 100dvh;
-    width: 100%;
+    width: 350px;
     background-color: #FFC89A;
     padding-top: 5%;
+    position: fixed;
 .routerItem{
     color: black;
     background-color: #FFC89A;
