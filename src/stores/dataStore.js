@@ -8,6 +8,9 @@ export default defineStore('dataStore',{
         getPage:(state) => `現在位置:${state.page}`,
     },
     actions:{   // 處理數據
+        returnPage(){
+            console.log(this.page)
+        },
         setPage(params){
         this.page = params
         }
