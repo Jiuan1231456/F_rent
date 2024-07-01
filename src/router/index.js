@@ -30,8 +30,8 @@ const router = createRouter({
     },
     //租約列表管理
     {
-      path: '/contractList',
-      name: 'contractList',
+      path: '/ContractList',
+      name: 'ContractList',
       component: () => import('../views/ContractList.vue')
     },
     //新增租約

@@ -1,9 +1,6 @@
 <script>
-import { vModelCheckbox } from "vue";
 import dataStore from "@/stores/dataStore";
-import { mapState, mapActions } from 'pinia'  //mapState導入變數 ,mapActions導入方法
-
-
+import { mapState, mapActions } from "pinia";
 export default {
     data(){
         return {
@@ -19,15 +16,17 @@ export default {
     mounted(){
         this.setPage(3)
     }
-
-
 }
 </script>
 
 <template>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
 <div class="manageArea">
+    <button>我在這裡</button>
     <h2>這是租約管理列表頁面</h2>
     <p>{{ this.page }}</p>
     <div class="searchPlace">
@@ -41,6 +40,9 @@ export default {
                 min="1970-01-01" max="2050-12-31" />
             <button class="searchbtn" type="button" @click="search()">搜尋</button>
     </div>
+    <!-- 新增/刪除租約 -->
+    <i class="fa-solid fa-trash-can"@click="" ></i>
+    <i class="fa-solid fa-circle-plus" @click="goToContractAdd"> </i>
     <!-- con=contract -->
     <div class="conlist">
         <table>
