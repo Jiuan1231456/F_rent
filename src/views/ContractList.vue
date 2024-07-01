@@ -41,9 +41,9 @@ export default {
         </div>
         <!-- 選擇日期 -->
         <p class="datetime">
-        <label for="start_time">租約時間 從：</label>
+        <label for="start_time"  style="background-color:  #FFC89A;" >租約時間 從：</label>
         <input type="date" id="start" name="trip-start" min="1970-01-01" max="2050-12-31" style="font-size: 22px;">
-        <label for="end_time">到：</label>
+        <label for="end_time" style="background-color:  #FFC89A;">到：</label>
         <input type="date" id="end" name="trip-end" min="1970-01-01" max="2050-12-31" style="font-size: 22px;">
         <button class="searchbtn" type="button">搜尋</button>
         </p>
@@ -113,23 +113,30 @@ export default {
         margin-left: 10%;  // 移除 margin-left，並將 margin 設定為 auto
         padding-top: 0;  // 確保 padding-top 為 0
         background-color: #FAF0E9;
+    //搜尋欄文字背景顏色
+    .label{
+        background-color: #FFC89A; ;
+    }
     }
 //搜尋
     .searchPlace {
-        width: auto;
+        width: 40dvw;
         height: 20dvh;
         color: black;
         font-size: 22px;
-        //border: 3px solid rgba(190, 188, 42, 0.822);
+        background-color: #FFC89A;
+        border: 1em solid #fae1cd;
         text-align: left;
-        margin: auto;
-        padding: 5% 0 0 20%;
+        margin-top: 5%;
+        margin-left: 17%;
+        padding: 3% 3% 5% 3%;
     }
 
     .inputPlace {
         display: flex; /* 使用 Flexbox 使元素並排 */
         align-items: center; /* 垂直居中對齊 */
         margin-bottom: 10px; /* 可以根據需要調整間距 */
+        background-color: #FFC89A;
     }
 
     .InputContainer {
@@ -162,6 +169,7 @@ export default {
 
     .datetime {
         margin-top: 20px;
+        background-color: #FFC89A;
     }
 //搜尋按鈕
     .searchbtn {
