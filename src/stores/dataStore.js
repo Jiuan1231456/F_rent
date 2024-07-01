@@ -5,12 +5,12 @@ export default defineStore('dataStore',{
         page:1,
     }),
     getters:{  // 返回變數或數據
-      getPage:(state) => state.page,
+        getPage:(state) => state.page,
     },
     actions:{   // 處理數據
-       setPage(params){
+        setPage(params){
         this.page = params
-       }
+        }
         }
     }
 )

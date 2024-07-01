@@ -15,7 +15,8 @@ export default{
 
 <template>
     <div class="headerArea">
-        <RouterLink class="routerItem" :class="{'selectedPage': this.page === 3}" to="/ContractList">租約管理列表</RouterLink>
+        <RouterLink class="routerItem" :class="{'selectedPage': this.page === 3}" to="/contractList">租約管理列表</RouterLink>
+        <RouterLink class="routerItem" :class="{'selectedPage': this.page === 4}" to="/contractList">新增租約</RouterLink>
         <RouterLink class="routerItem" :class="{ 'selectedPage': this.page === 1}" to="/bill">帳單管理</RouterLink>
         <RouterLink class="routerItem" :class="{'selectedPage': this.page === 2}" to="/benefit">觀看收益</RouterLink>
         
