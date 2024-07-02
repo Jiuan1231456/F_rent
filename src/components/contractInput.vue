@@ -7,25 +7,28 @@ export default {
 <template>
 
 <div class="input-wrapper">
-    <input class="input-box" type="text" placeholder="Enter your text">
+    <input class="input-box" type="textarea" placeholder="Enter your text">
     <span class="underline"></span>
 </div>
+
+
+
 
 </template>
 
     <style scoped lang="scss">
     .input-wrapper {
     position: relative;
-    width: 200px;
+    width: 600px;
     margin: auto;
     }
 
     .input-box {
-    font-size: 16px;
+    font-size: 20px;
     padding: 10px 0;
     border: none;
     border-bottom: 2px solid #ccc;
-    color: #FF9D60;
+    color: #0f0f0f;
     width: 100%;
     background-color: transparent;
     transition: border-color 0.3s ease-in-out;
