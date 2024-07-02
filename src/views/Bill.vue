@@ -14,13 +14,13 @@ export default {
         ...mapActions(dataStore,['setPage'])
     },
     mounted(){
-        this.setPage(1)
+        this.setPage(2)
     }
 }
 </script>
 
 <template>
-    <h2>這是帳單頁面</h2>
+    <h2>這是帳單生成頁面</h2>
      <p>{{ this.page }}</p>
 </template>
 
