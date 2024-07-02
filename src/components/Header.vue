@@ -47,6 +47,18 @@ export default {
       to="/benefit"
       >觀看收益</RouterLink
     >
+    <RouterLink
+      class="routerItem"
+      :class="{ selectedPage: this.page === 2 }"
+      to="/roomdetail"
+      >房間資訊</RouterLink
+    >
+    <RouterLink
+      class="routerItem"
+      :class="{ selectedPage: this.page === 3 }"
+      to="/addroom"
+      >新增房間</RouterLink
+    >
   </div>
 </template>
 
