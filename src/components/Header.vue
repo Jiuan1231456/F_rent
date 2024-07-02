@@ -18,6 +18,7 @@ export default{
         <RouterLink class="routerItem" :class="{'selectedPage': this.page === 1}" to="/roomdetail">房間資訊</RouterLink>
         <RouterLink class="routerItem" :class="{'selectedPage': this.page === 2}" to="/bill">帳單管理</RouterLink>
         <RouterLink class="routerItem" :class="{'selectedPage': this.page === 3}" to="/benefit">觀看收益</RouterLink>
+        <RouterLink class="routerItem" :class="{'selectedPage': this.page === 4}" to="/addroom">新增房間</RouterLink>
     </div>
 </template>
 
