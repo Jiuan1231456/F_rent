@@ -5,7 +5,7 @@ import { mapState, mapActions } from "pinia";
 //import print from 'print-js';
 
 import contractInput from '../components/contractInput.vue';
-import dateInput from '../components/dateInput.vue';
+// import dateInput from '../components/dateInput.vue';
 import preview_btn from '../components/preview_btn.vue';
 import send_btn from '../components/send_btn.vue';
 
@@ -23,12 +23,12 @@ export default {
     },
     components:{
         contractInput,
-        dateInput,
+        // dateInput,
         preview_btn,
         send_btn,
     },
     mounted(){
-        this.setPage(4)
+        this.setPage(7)
     }
 }
 </script >
