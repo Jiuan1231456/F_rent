@@ -17,8 +17,8 @@ export default {
     
 button {
         color: #090909;
-        padding: 0.7em 1.7em;
-        font-size: 18px;
+        padding: 0.4em 1.3em;
+        font-size: 20px;
         border-radius: 0.5em;
         background: #e8e8e8;
         cursor: pointer;
@@ -29,6 +29,7 @@ button {
 
 button:active {
     color: #666;
+    font-weight: 500;
     box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
     }
 
