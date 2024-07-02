@@ -10,12 +10,12 @@ export default defineStore('dataStore',{
       getLoginObj:(state) => state.loginObj,
     },
     actions:{   // 處理數據
-       setPage(params){
+        returnPage(){
+            console.log(this.page)
+        },
+        setPage(params){
         this.page = params
-       },
-       setLoginObj(obj){
-        this.loginObj = obj
-       },
+        }
         }
     }
 )

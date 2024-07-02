@@ -3,11 +3,16 @@
 *{
     padding: 0;
     margin: 0;
-    box-sizing: border-box;
     font-family: "Zen Kaku Gothic New", sans-serif;
     background-color: #FAF0E9;
+
+
+    
 }
+
 
 #app{
     display: flex;
+    padding: 0;
+    margin: 0;  // 確保沒有多餘的 margin
 }

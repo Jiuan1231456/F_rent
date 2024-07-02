@@ -47,6 +47,7 @@ export default {
         <label for="pwd">密碼</label>
         <input type="text" id="pwd" v-model="this.owner_pwd">
         <button type="submit" @click="login()">確認</button>
+        <h1>aaa</h1>
     </div>
     
 </template>

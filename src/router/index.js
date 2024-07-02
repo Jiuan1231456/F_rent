@@ -33,6 +33,18 @@ const router = createRouter({
       name: 'benefit',
       component: () => import('../views/Benefit.vue')
     },
+    //租約列表管理
+    {
+      path: '/ContractList',
+      name: 'ContractList',
+      component: () => import('../views/ContractList.vue')
+    },
+    //新增租約
+    {
+      path: '/contractAdd',
+      name: 'contractAdd',
+      component: () => import('../views/ContractAdd.vue')
+    },
   ]
 })
 

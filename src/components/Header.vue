@@ -22,46 +22,28 @@ export default {
       to="/"
       >登入</RouterLink
     >
-    <!-- accordion 下拉式選單 from bootstrap套件 -->
-    <div class="accordion" id="accordionExample">
-      <div class="accordion-item">
-        <button  
-          class="dropdownBtn"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapseOne"
-          aria-expanded="true"
-          aria-controls="collapseOne"
-          style="width: 100%; border:0px;border-left: 16px solid #ffc89a;"
-        >
-          帳單管理
-        </button>
-        <div
-          id="collapseOne"
-          class="accordion-collapse collapse show"
-          aria-labelledby="headingOne"
-          data-bs-parent="#accordionExample"
-        >
-          <div class="accordion-body">
-            <RouterLink
-              class="dropdownItem"
-              :class="{ selectedPage: this.page === 4 }"
-              to="/lookupBill"
-              >觀看帳單</RouterLink
-            >
-            <RouterLink
-              class="dropdownItem"
-              :class="{ selectedPage: this.page === 2 }"
-              to="/bill"
-              >帳單生成</RouterLink
-            >
-          </div>
-        </div>
-      </div>
-    </div>
     <RouterLink
       class="routerItem"
-      :class="{ selectedPage: this.page === 3 }"
+      :class="{ selectedPage: this.page === 6 }"
+      to="/ContractList"
+      >租約管理列表</RouterLink
+    >
+
+    <RouterLink
+      class="routerItem"
+      :class="{ selectedPage: this.page === 7 }"
+      to="/contractAdd"
+      >新增租約</RouterLink
+    >
+    <RouterLink
+      class="routerItem"
+      :class="{ selectedPage: this.page === 10 }"
+      to="/bill"
+      >帳單管理</RouterLink
+    >
+    <RouterLink
+      class="routerItem"
+      :class="{ selectedPage: this.page === 11 }"
       to="/benefit"
       >觀看收益</RouterLink
     >
@@ -71,9 +53,11 @@ export default {
 <style scoped lang="scss">
 .headerArea {
   height: 100dvh;
-  width: 100%;
+  width: 350px;
   background-color: #ffc89a;
   padding-top: 5%;
+  position: fixed;
+
   .routerItem {
     color: black;
     background-color: #ffc89a;
@@ -96,37 +80,37 @@ export default {
     background-color: #ffc89a;
     // padding-left: 33px;
   }
-  .accordion-item{
+  .accordion-item {
     border: 0px;
     background-color: #ffc89a;
   }
   .dropdownBtn {
-      color: black;
-      background-color: #ffc89a;
-      text-decoration: none;
-      font-size: 22px;
-      display: flex;
-      letter-spacing: 8px;
-      justify-content: center;
-      padding: 5%;
-      &:hover {
-        cursor: pointer;
-        background-color: #ff9d60;
-        font-weight: 400;
-        border-left: 16px solid #ffc89a;
-        border-radius: 11% 0px 0px 11%;
-        padding-left: 10px;
-        padding-bottom: 10px;
-      }
-      &:checked {
-        background-color: #ff9d60;
-      }
+    color: black;
+    background-color: #ffc89a;
+    text-decoration: none;
+    font-size: 22px;
+    display: flex;
+    letter-spacing: 8px;
+    justify-content: center;
+    padding: 5%;
+    &:hover {
+      cursor: pointer;
+      background-color: #ff9d60;
+      font-weight: 400;
+      border-left: 16px solid #ffc89a;
+      border-radius: 11% 0px 0px 11%;
+      padding-left: 10px;
+      padding-bottom: 10px;
     }
-    .dropdownBtn[aria-expanded="true"] {
-  background-color: #f6b47d; /* 展開時的背景顏色 */
-}
-    .dropdownItem{
-      background-color: #f2dcca;
+    &:checked {
+      background-color: #ff9d60;
+    }
+  }
+  .dropdownBtn[aria-expanded="true"] {
+    background-color: #f6b47d; /* 展開時的背景顏色 */
+  }
+  .dropdownItem {
+    background-color: #f2dcca;
     font-size: 18px;
     justify-content: center;
     height: 45px;
@@ -140,12 +124,12 @@ export default {
     align-items: center;
     padding: 5%;
     &:hover {
-        cursor: pointer;
-        background-color: #ff9d60;
-        font-weight: 400;
-        border-right: 0px;
-        border-left: 16px solid #ffc89a;
-        border-radius: 11% 0px 0px 11%;
+      cursor: pointer;
+      background-color: #ff9d60;
+      font-weight: 400;
+      border-right: 0px;
+      border-left: 16px solid #ffc89a;
+      border-radius: 11% 0px 0px 11%;
     }
   }
   .selectedPage {
