@@ -21,7 +21,7 @@ export default {
 
 <template>
     <h2>這是帳單頁面</h2>
-     <p>{{ this.page }}</p>
+    <p>{{ this.page }}</p>
 </template>
 
 <style scoped lang="scss">
