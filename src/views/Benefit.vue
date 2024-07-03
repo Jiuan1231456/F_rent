@@ -14,7 +14,7 @@ export default {
         ...mapActions(dataStore ,['setPage'])
     },
     mounted(){
-        // this.setPage(2)
+        this.setPage(11)
     }
 }
 </script>
@@ -23,6 +23,7 @@ export default {
     <div class="middleArea">
         <h1>這是收益頁面</h1>
         <h3>{{ this.page }}</h3>
+        <h6>測試用</h6>
     </div>
     
 </template>
