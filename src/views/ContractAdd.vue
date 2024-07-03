@@ -47,13 +47,7 @@ export default {
         <label for="end_time">到：</label>
         <input type="date" id="end" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" />
 
-        <!-- <h3>
-            <span>租賃期間: 自</span>
-            <dateInput />
-            <span>起至</span>
-            <dateInput />
-            <span>止</span>
-        </h3> -->
+
     </div>
 
     <br>
@@ -199,8 +193,6 @@ export default {
     transform: scaleX(1);
     }
 
-   
-   
 
 
 </style>

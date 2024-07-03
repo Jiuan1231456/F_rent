@@ -26,7 +26,7 @@ export default{
 <style scoped lang="scss">
 .headerArea{
     height: 100dvh;
-    width: 350px;
+    width: 16%;
     background-color: #FFC89A;
     padding-top: 5%;
     position: fixed;
