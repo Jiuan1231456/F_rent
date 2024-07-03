@@ -63,15 +63,6 @@ export default {
 </template>
 
 <style scoped lang="scss">
-<<<<<<< HEAD
-.headerArea{
-    height: 100dvh;
-    width: 16%;
-    background-color: #FFC89A;
-    padding-top: 5%;
-    position: fixed;
-.routerItem{
-=======
 .headerArea {
   height: 100dvh;
   width: 350px;
@@ -80,7 +71,6 @@ export default {
   position: fixed;
 
   .routerItem {
->>>>>>> 9f91f1b757cc558c377ccdab4f540d27b6f1f165
     color: black;
     background-color: #ffc89a;
     text-decoration: none;

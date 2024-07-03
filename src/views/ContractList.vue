@@ -120,8 +120,8 @@ export default {
     }
 //搜尋
     .searchPlace {
-        width: 60%;
-        height: 20%;
+        width: 66%;
+        height: 35%;
         color: black;
         font-size: 22px;
         background-color: #FFC89A;
@@ -138,18 +138,18 @@ export default {
         margin-bottom: 10px; /* 可以根據需要調整間距 */
         background-color: #FFC89A;
     }
-
+//搜尋欄
     .InputContainer {
-        width: 620px;
-        height: 50px;
+        width: 600px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(to bottom, #FF9D60, rgb(255, 231, 231));
+        // background: linear-gradient(to bottom, #FF9D60, rgb(255, 231, 231));
         border-radius: 30px;
         overflow: hidden;
         cursor: pointer;
-        box-shadow: 2px 2px 10px rgba(163, 162, 162, 0.075);
+        box-shadow: 2px 2px 2px rgba(163, 162, 162, 0.075);
         display: inline-block;
         vertical-align: middle; /* Optional: Align vertically */
         // flex: 1; /* 彈性增長，使 input 容器占據剩餘空間 */
@@ -158,8 +158,8 @@ export default {
     .input {
         width: 600px;
         height: 40px;
-        caret-color: rgb(255, 81, 0);
-        background-color: rgb(255, 255, 255);
+        // caret-color: rgb(255, 81, 0);
+        // background-color: rgb(255, 255, 255);
         border-radius: 30px;
         padding-left: 15px;
         letter-spacing: 0.8px;

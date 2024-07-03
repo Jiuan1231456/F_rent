@@ -6,16 +6,16 @@ export default defineStore('dataStore',{
         loginObj:{},  // 存放房東登入資訊
     }),
     getters:{  // 返回變數或數據
-      getPage:(state) => state.page,
-      getLoginObj:(state) => state.loginObj,
+        getPage:(state) => state.page,
+        getLoginObj:(state) => state.loginObj,
     },
     actions:{   // 處理數據
-       setPage(params){
+        setPage(params){
         this.page = params
-       },
-       setLoginObj(obj){
+        },
+        setLoginObj(obj){
         this.loginObj = obj
-       },
+        },
         }
     }
 )
