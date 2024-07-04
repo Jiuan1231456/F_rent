@@ -1,6 +1,8 @@
 <script>
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
+import { RouterLink } from 'vue-router';
+
 export default {
     data(){
         return {
@@ -19,13 +21,13 @@ export default {
     },
     computed: {
         // 綁定 Pinia 狀態
-        ...mapState(dataStore, ['page','loginObj'])
-        
-    
+        ...mapState(dataStore, ['loginObj'])
+    },
+    component:{
+        RouterLink 
     },
     methods: {
-         // 綁定 Pinia actions
-        ...mapActions(dataStore,['setPage']),
+
            // 跳轉到新增契約頁面
         goToContractAdd() {
             // 使用 Vue Router 的方式進行跳轉
@@ -52,11 +54,11 @@ export default {
             })
                 .then(res => res.json())//將回應轉換為 JSON
                 .then(data => {
-                    console.log("Response Data:", data);// 打印回應資料以供調試
+                    console.log("所有契約(不分房東):", data);// 第一層:顯示所有契約(沒有包含特定房東)
 
-                    // 篩選出當前身份證字號的契約問卷
+                    // 第二層:篩選出當前身份證字號的契約問卷，即顯示特定房東的所有房間資訊
                     this.contractList = data.contractList.filter(item => item.ownerIdentity === this.loginObj.ownerIdentity);
-                    console.log("Filtered Contract List:", this.contractList);
+                    console.log("只有當前房東的(篩選特定房東):", this.contractList);
         
                     // 計算總頁數
                     this.calculateTotalPages(this.contractList.length)
@@ -65,27 +67,28 @@ export default {
                 console.error("Error fetching data:", error); // 處理錯誤
             });
         },
+        //第三層:篩選特定房東的特定房間資訊
+        selectRoomInfo(index){
+            this.selectIndex=index;
+            console.log("選特定房東的特定房間資訊",this.contractList[index])
+            this.setOneContractObj(this.contractList[index])
+        },
+
           // 計算總頁數
         calculateTotalPages(totalItems) {
             const pageSize = 10; // 假設每頁顯示 10 筆資料
             const totalPages = Math.ceil(totalItems / pageSize);
             console.log("Total Pages:", totalPages); // 打印總頁數以供調試
         },
-        //新增查看契約詳細資訊的方法
-        viewContractDetails(contract) {
-            // 這裡可以導航到契約詳細資訊頁面或彈出模態窗口來顯示詳細資訊
-            console.log("Viewing contract details:", contract);
-            // 例如：
-            // this.$router.push({ name: 'contractDetails', params: { id: contract.id } });
-        }
+        
 
     },
     created(){
         this.search(); // 組件創建時執行搜尋以獲取初始數據
     },   
     mounted(){
-        // 設定初始頁面
-        this.setPage(6)
+      
+       
     }
 }
 </script>
@@ -161,7 +164,7 @@ export default {
                 <td>{{ item.startDate }}</td>
                 <td>{{ item.endDate }}</td>
                 <td>{{ item.rentP }}</td>
-                <td><button @click="viewContractDetails(contract)">查看</button></td>
+                <td><RouterLink to="{ name: 'ContractDetail', params: { contract: item } }"> 查看詳情</RouterLink></td>
             </tr>
             
         </tbody>
