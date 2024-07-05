@@ -107,7 +107,7 @@ export default {
     <style scoped lang="scss">
     .manageArea {
         width: 100dvw;
-        height: auto;
+        height: 100dvh;
         border: 1em solid #9a685200;
         //border-style:  inset;
         margin-left: 10%;  // 移除 margin-left，並將 margin 設定為 auto
@@ -120,8 +120,8 @@ export default {
     }
 //搜尋
     .searchPlace {
-        width: 40dvw;
-        height: 20dvh;
+        width: 60%;
+        height: 20%;
         color: black;
         font-size: 22px;
         background-color: #FFC89A;
@@ -270,7 +270,3 @@ export default {
     }
     
 </style>
-  
-
-
-

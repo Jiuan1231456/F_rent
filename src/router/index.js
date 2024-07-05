@@ -24,9 +24,9 @@ const router = createRouter({
       component: () => import('../views/Bill.vue')
     },
     {
-      path: '/lookupBill',
-      name: 'lookupBill',
-      component: () => import('../views/LookupBill.vue')
+      path: '/BillDetail',
+      name: 'BillDetail',
+      component: () => import('../views/BillDetail.vue')
     },
     {
       path: '/benefit',
@@ -54,6 +54,11 @@ const router = createRouter({
       path: '/addroom',
       name: 'addroom',
       component: () => import('../views/AddRoom.vue')
+    },
+    {
+      path: '/lookupbill',
+      name: 'lookupbill',
+      component: () => import('../views/LookupBill.vue')
     },
   ]
 })
