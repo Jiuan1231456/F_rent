@@ -164,7 +164,7 @@ export default {
         <br>
         中止日期:<contractInput/>
     </div>
-</p>
+
     <h3><br>其他備註(或個別磋商條款):</h3>
     <div class="input-wrapper">
     <textarea class="input-box" type="textarea" placeholder="Enter your text"></textarea>
@@ -177,7 +177,7 @@ export default {
         <send_btn class="space-between"/>
 
 </div>
-</div>
+
 
 </template>
   
@@ -285,7 +285,7 @@ export default {
     transform: scaleX(1);
     }
 
-   
+}
    
 
 

@@ -83,7 +83,7 @@ export default {
 
     },
     mounted() {
-        this.setPage(2),
+        this.setPage(4),
         this.search()
         //this.getRoomInfo()
 

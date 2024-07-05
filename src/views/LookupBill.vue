@@ -76,7 +76,8 @@ export default {
  
   },
   mounted() {
-    this.setPage(11), this.search(),this.today(new Date());
+    this.setPage(11), this.search();
+    // this.today(new Date())
   },
 };
 </script>
