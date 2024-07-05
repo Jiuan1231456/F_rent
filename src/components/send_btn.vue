@@ -17,8 +17,9 @@ export default {
     
 button {
         color: #090909;
-        padding: 0.4em 1.3em;
-        font-size: 20px;
+        width: 25%;
+        padding: 0.5em ;
+        font-size: 18px;
         border-radius: 0.5em;
         background: #e8e8e8;
         cursor: pointer;

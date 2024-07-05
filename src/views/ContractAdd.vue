@@ -146,103 +146,109 @@ export default {
 </script>
 
 <template>
-    <div class="bigArea">
+    <div class="areaMom">
         <h1>新增契約書</h1>
-        <br>
-        <div class="roomInfo">
-            <h2>租賃物件資訊</h2>
-            <br>
-            <div class="rent_time">
-            <label for="start_time">租賃期間 自：</label>
-            <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="start_date"/>
-            <label for="end_time">到：</label>
-            <input type="date" id="end" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="end_date" />
+        <div class="area">
+            <div class="bigArea">
+                
+                <br>
+                <div class="roomInfo">
+                    <h2>租賃物件資訊</h2>
+                    <br>
+                    <div class="rent_time">
+                    <label for="start_time">租賃期間 自：</label>
+                    <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="start_date"/>
+                    <label for="end_time">到：</label>
+                    <input type="date" id="end" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="end_date" />
+                    </div>
+                    <br>
+                    租賃物件地址: <p>{{ roomObj.address }}</p>
+                    <br>
+                    樓層:<p>{{ roomObj.floor }}</p>
+                    <br>
+                    <!-- 這邊的rId是小徐的，創建完後才會變成我的roomId -->
+                    房號:<p>{{ roomObj.roomId }}</p>
+                    <br>
+                    租金/月:<p>{{roomObj.rentP }} </p>
+                    <br>
+                    押金: <p>{{ roomObj.deposit }}</p>
+                    <br>
+                    管理費/月:<p>{{roomObj.manageP}}</p>
+                    <br>
+                    電費/度: <p>{{ roomObj.eletricP }}</p>
+                    <br>
+                    水費/月:<p>{{ roomObj.waterP }} </p>
+                    <br>
+                    面積: <p>{{ roomObj.acreage }}</p>
+                    <br>
+                    車位:<p>{{roomObj.parking}}</p>
+                    <br>
+                    設備:<p>{{ roomObj.equip }}</p>
+                    <br>
+                    物件備註:<p>{{ roomObj.rOther }}</p>
+                    
+                    </div>
+                </div>
+
+                <div class="line">
+                
+                </div>
+            <div class="bigArea2">
+                <h2>立契約書人</h2>
+                <div class="Info">
+                    <br>
+                    <h4>出租人姓名:</h4> <input type="text" v-model="owner_name" class="input-box"  style="font-weight: bold; font-size: 20px;">
+                    <br>
+                    身分證字號: <input type="text" v-model="owner_identity" class="input-box">
+                    <br>
+                    戶籍地址(營業登記地址): <input type="text" v-model="owner_home_address" class="input-box">
+                    <br>
+                    通訊地址: <input type="text" v-model="owner_contact_address" class="input-box">
+                    <br>
+                    連絡電話: <input type="text" v-model="owner_phone" class="input-box">
+                    <br>
+                    <br>
+                    <h4>承租人姓名:</h4> <input type="text" v-model="tenant_name" class="input-box" style="font-weight: bold; font-size: 20px;">
+                    <br>
+                    身分證字號: <input type="text" v-model="tenant_identity" class="input-box">
+                    <br>
+                    戶籍地址(營業登記地址): <input type="text" v-model="tenant_home_address" class="input-box">
+                    <br>
+                    通訊地址: <input type="text" v-model="tenant_contact_address" class="input-box">
+                    <br>
+                    email: <input type="text" v-model="tenant_email" class="input-box">
+                    <br>
+                    連絡電話: <input type="text" v-model="tenant_phone" class="input-box">
+                </div>
+                <br>
+                <h3>契約中止</h3>
+                <div class="cut">
+                    <br>
+                    中止原因: <input type="text" v-model="cut_reason" class="input-box">
+                    <br>
+                    違約金: <input type="text" v-model="cut_p" class="input-box">
+                    <br>
+                    中止日期: <input type="text" v-model="cut_date" class="input-box">
+                </div>
+                <br>
+                <h3>其他備註(或個別磋商條款)</h3>
+                <div class="input-wrapper">
+                    <textarea class="input-box" type="textarea" placeholder="Enter your text" v-model="c_other"></textarea>
+                    <span class="underline"></span>
+                </div>
+                <br>
+                <h3>立約日期:</h3>
+                <input type="date" id="sign_date" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="sign_date"/>
+            
+                <div class="btn"> 
+                
+                    <send_btn class="space-between" @click="addContractToDB"/>
+                </div>
             </div>
-            <br>
-            租賃物件地址: {{roomObj.address}}
-            <br>
-            樓層:{{roomObj.floor}} <input type="text" v-model="floor" class="input-box">
-            <br>
-            <!-- 這邊的rId是小徐的，創建完後才會變成我的roomId -->
-            房號:{{ roomObj.roomId }}
-            <br>
-            租金/月:{{roomObj.rentP }} <input type="text" v-model="rent_p" class="input-box">
-            <br>
-            押金: {{ roomObj.deposit }}<input type="text" v-model="deposit" class="input-box">
-            <br>
-            管理費/月: {{roomObj.manageP}}<input type="text" v-model="manage_p" class="input-box">
-            <br>
-            電費/度: {{ roomObj.eletricP }}<input type="text" v-model="eletric_p" class="input-box">
-            <br>
-            水費/月:{{ roomObj.waterP }} <input type="text" v-model="water_p" class="input-box">
-            <br>
-            面積: {{ roomObj.acreage }}<input type="text" v-model="acreage" class="input-box">
-            <br>
-            車位:{{roomObj.parking}}
-            <br>
-            設備:{{ roomObj.equip }}
-            <br>
-            物件備註:{{ roomObj.rOther }}
-            <div class="input-wrapper">
-            <textarea class="input-box" type="textarea" placeholder="Enter your text" v-model="r_other"></textarea>
-            <span class="underline"></span>
-            </div>
-        </div>
-    
-        <h2>立契約書人</h2>
-        <div class="Info">
-            <br>
-            <h4>出租人姓名:</h4> <input type="text" v-model="owner_name" class="input-box"  style="font-weight: bold; font-size: 20px;">
-            <br>
-            身分證字號: <input type="text" v-model="owner_identity" class="input-box">
-            <br>
-            戶籍地址(營業登記地址): <input type="text" v-model="owner_home_address" class="input-box">
-            <br>
-            通訊地址: <input type="text" v-model="owner_contact_address" class="input-box">
-            <br>
-            連絡電話: <input type="text" v-model="owner_phone" class="input-box">
-            <br>
-            <br>
-            <h4>承租人姓名:</h4> <input type="text" v-model="tenant_name" class="input-box" style="font-weight: bold; font-size: 20px;">
-            <br>
-            身分證字號: <input type="text" v-model="tenant_identity" class="input-box">
-            <br>
-            戶籍地址(營業登記地址): <input type="text" v-model="tenant_home_address" class="input-box">
-            <br>
-            通訊地址: <input type="text" v-model="tenant_contact_address" class="input-box">
-            <br>
-            email: <input type="text" v-model="tenant_email" class="input-box">
-            <br>
-            連絡電話: <input type="text" v-model="tenant_phone" class="input-box">
-        </div>
-        <br>
-        <h3>契約中止</h3>
-        <div class="cut">
-            <br>
-            中止原因: <input type="text" v-model="cut_reason" class="input-box">
-            <br>
-            違約金: <input type="text" v-model="cut_p" class="input-box">
-            <br>
-            中止日期: <input type="text" v-model="cut_date" class="input-box">
-        </div>
-        <br>
-        <h3>其他備註(或個別磋商條款)</h3>
-        <div class="input-wrapper">
-            <textarea class="input-box" type="textarea" placeholder="Enter your text" v-model="c_other"></textarea>
-            <span class="underline"></span>
-        </div>
-        <br>
-        <h3>立約日期:</h3>
-        <input type="date" id="sign_date" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="sign_date"/>
-    
-        <div class="btn"> 
-            <preview_btn class="space-between"/>
-            <send_btn class="space-between" @click="addContractToDB"/>
         </div>
     </div>
-
-
-<div class="bigArea2">
+<!-- 
+<div class="bigArea3">
         <h1>定型化契約條款</h1>
 
         <div class="lawcontent">
@@ -312,31 +318,57 @@ export default {
         滅失者，承租人得按滅失之部分，請求減少租金。
     </p>
         </div>
-</div>
+</div> -->
 
 </template>
   
   <style scoped lang="scss">
-  .bigArea {
-    width: 40%;
-    margin-top: 3%;
-    margin-left: 150px;
-    font-size: 18px;
-  
-    .btn {
-      margin-left: 22%;
-      margin-bottom: 5%;
-      display: flex;
-      .space-between { 
-        margin-right: 30%;
-        margin-top: 5%;
-      }
+
+.areaMom{
+    width: 100%;
+        .area{
+            width: 100%;
+            display: flex;
+            
+            //物件資訊
+            .bigArea {
+                width: 40%;
+                margin-top: 3%;
+                margin-left: 15%;
+                font-size: 22px;
+            }
+                
+            
+            //垂直分隔線
+            .line{
+                border-left: 2px dashed rgb(223, 189, 140);
+                height:300%;
+                margin-top: 8%;
+                left: 55%;
+                position: absolute;
+            }
+            // 立契約書人
+            .bigArea2{
+                width: 40%;
+                margin-top: 2%;
+                padding: 3%;
+                font-size: 18px   
+            }
+        
     }
-  }
-  .bigArea2{
-    width: 40%;
-    padding: 3%;
-  }
+    
+}
+
+//送出預覽按鈕
+.btn{
+        margin-right: 0%;
+        margin-bottom: 5%;
+        display: flex;
+        .space-between { 
+        margin-right: 30%;
+        margin-top: 5%;}
+    }
+
   
   .input-box {
     width: 600px;
@@ -374,21 +406,7 @@ export default {
 <!-- <button type="button" onclick="printJS('docs/printjs.pdf')">列印PDF</button> -->
 <style scoped lang="scss">
 
-.bigArea{
-    width: 40%;
-    margin-top:3% ;
-    margin-left: 150px;
-    font-size: 18px;
 
-    .btn{
-        margin-left: 22%;
-        margin-bottom: 5%;
-        display: flex;
-        .space-between { 
-        margin-right: 30%;
-        margin-top: 5%;}
-    }
-}
 
 .input-box {
     width: 600px;
@@ -425,6 +443,10 @@ h1{
     text-align: center;
 }
 
-
+p{
+    font-weight: bold;
+    font-size: 20px;
+    color: #a09a9a;
+}
 
 </style>

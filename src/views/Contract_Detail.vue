@@ -11,7 +11,7 @@ export default {
     computed: {
         // 綁定 Pinia 狀態
         // 'oneContractObj' 在 pinia 檔裡的 state
-        ...mapState(dataStore, ['oneContractObj'])
+        ...mapState(dataStore, ['oneContractObj','roomObj'])
     },
     components: {
         RouterLink 
@@ -34,25 +34,27 @@ export default {
         
             </div>
             <br>
-            租賃物件地址: {{ oneContractObj.address }}
+            租賃物件地址: {{ roomObj.address }}
             <br>
-            樓層: {{ oneContractObj.floor }}
+            樓層: {{ roomObj.floor }}
             <br>
-            房號: {{ oneContractObj.roomId }}
+            房號: {{ roomObj.roomId }}
             <br>
-            租金/月: {{ oneContractObj.rentP}}
+            租金/月: {{ roomObj.rentP}}
             <br>
-            押金: {{ oneContractObj.deposit }}
+            押金: {{ roomObj.deposit }}
             <br>
-            管理費/月: {{}}
+            管理費/月: {{roomObj.manageP}}
             <br>
-            電費/度: {{}}
+            電費/度: {{roomObj.eletricP}}
             <br>
-            水費/月: {{  }}
+            水費/月: {{ roomObj.waterP}}
             <br>
-            面積: {{  }}
+            面積: {{roomObj.acreage}}
             <br>
-            物件備註:{{ oneContractObj.equip }}
+            設備:{{ oneContractObj.equip }}
+            <br>
+            物件備註:{{ oneContractObj.rOther }}
             <div class="input-wrapper">
           
             </div>
@@ -63,13 +65,13 @@ export default {
             <br>
             <h4>出租人姓名:{{}}</h4> 
             <br>
-            身分證字號: {{oneContractObj.ownerIdentity}}
+            身分證字號: {{}}
             <br>
             戶籍地址: {{  oneContractObj.ownerHomeAddress}}
             <br>
             通訊地址: {{  oneContractObj.ownerContactAddress}}
             <br>
-            連絡電話: 
+            連絡電話: {{ }}
             <br>
             <br>
             <h4>承租人姓名:{{ oneContractObj.tenantName }}</h4> 
@@ -116,7 +118,8 @@ export default {
 <style scoped lang="scss">
 
 .bigArea{
-    margin-left: 25%
+    margin-top: 3%;
+    margin-left: 10%
 }
 </style>
 
