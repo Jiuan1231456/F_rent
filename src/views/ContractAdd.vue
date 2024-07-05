@@ -26,7 +26,7 @@ export default {
             sign_date: "",
             cut_reason: "",
             cut_date: "",
-            ai:""
+            ai:"",
         // 房間資訊抓
             address: "",
             floor: "",
@@ -40,47 +40,53 @@ export default {
             acreage: "",
             parking: false,
             equip: "",
-            r_other: ""
+            r_other: "",
+
+            //////////////////
+            loginObj: { // 添加 loginObj 並初始化為空物件
+                ownerIdentity: ""
+            },
     }
 },
     computed: {
-        ...mapState(dataStore, ['page'])
+       //使用pinia中房間站存資訊
+       ...mapState(dataStore, ['roomObj'])
     },
     created() {
-        this.getRegisterData();
-        this.getRoomData();
+        // this.getRegisterData();
+        //this.getRoomData();
          // 從路由參數中獲取房間資訊
         this.roomInfo = this.$route.params.roomInfo;
     },
     mounted() {
-        this.setPage(7);
+       
     },
     methods: {
-        ...mapActions(dataStore, ['setPage']),
-        async getRegisterData() {
-        try {
-            const response = await fetch('http://localhost:8080/rent/account');
-            const data = await response.json();
-            // 假設 API 返回的資料是這樣的結構: { owner_name: '...', owner_phone: '...', owner_email: '...' }
-            this.owner_name = data.owner_name;
-            this.owner_phone = data.owner_phone;
-            this.owner_email = data.owner_email;
-        } catch (error) {
-            console.error('Error fetching register data:', error);
-        }
-        },
-        async getRoomData() {
-        try {
-            const response = await fetch('http://localhost:8080/room/creatRoom1');
-            const data = await response.json();
-            // 假設 API 返回的資料是這樣的結構: { r_id: '...', address: '...', rent_p: '...' }
-            this.r_id = data.r_id;
-            this.address = data.address;
-            this.rent_p = data.rent_p;
-        } catch (error) {
-            console.error('Error fetching room data:', error);
-        }
-        },
+      
+        // async getRegisterData() {
+        // try {
+        //     const response = await fetch('http://localhost:8080/rent/account');
+        //     const data = await response.json();
+        //     // 假設 API 返回的資料是這樣的結構: { owner_name: '...', owner_phone: '...', owner_email: '...' }
+        //     this.owner_name = data.owner_name;
+        //     this.owner_phone = data.owner_phone;
+        //     this.owner_email = data.owner_email;
+        // } catch (error) {
+        //     console.error('Error fetching register data:', error);
+        // }
+        // },
+        // async getRoomData() {
+        // try {
+        //     const response = await fetch('http://localhost:8080/room/creatRoom1');
+        //     const data = await response.json();
+        //     // 假設 API 返回的資料是這樣的結構: { r_id: '...', address: '...', rent_p: '...' }
+        //     this.r_id = data.r_id;
+        //     this.address = data.address;
+        //     this.rent_p = data.rent_p;
+        // } catch (error) {
+        //     console.error('Error fetching room data:', error);
+        // }
+        // },
         addContractToDB() {
         let testObj = {
             tenantIdentity: this.tenant_identity,  
@@ -153,25 +159,30 @@ export default {
             <input type="date" id="end" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="end_date" />
             </div>
             <br>
-            租賃物件地址: <input type="text" v-model="address" class="input-box">
+            租賃物件地址: {{roomObj.address}}
             <br>
-            樓層: <input type="text" v-model="floor" class="input-box">
+            樓層:{{roomObj.floor}} <input type="text" v-model="floor" class="input-box">
             <br>
-            房號: <input type="text" v-model="r_id" class="input-box">
+            <!-- 這邊的rId是小徐的，創建完後才會變成我的roomId -->
+            房號:{{ roomObj.roomId }}
             <br>
-            租金/月: <input type="text" v-model="rent_p" class="input-box">
+            租金/月:{{roomObj.rentP }} <input type="text" v-model="rent_p" class="input-box">
             <br>
-            押金: <input type="text" v-model="deposit" class="input-box">
+            押金: {{ roomObj.deposit }}<input type="text" v-model="deposit" class="input-box">
             <br>
-            管理費/月: <input type="text" v-model="manage_p" class="input-box">
+            管理費/月: {{roomObj.manageP}}<input type="text" v-model="manage_p" class="input-box">
             <br>
-            電費/度: <input type="text" v-model="eletric_p" class="input-box">
+            電費/度: {{ roomObj.eletricP }}<input type="text" v-model="eletric_p" class="input-box">
             <br>
-            水費/月: <input type="text" v-model="water_p" class="input-box">
+            水費/月:{{ roomObj.waterP }} <input type="text" v-model="water_p" class="input-box">
             <br>
-            面積: <input type="text" v-model="acreage" class="input-box">
+            面積: {{ roomObj.acreage }}<input type="text" v-model="acreage" class="input-box">
             <br>
-            物件備註:
+            車位:{{roomObj.parking}}
+            <br>
+            設備:{{ roomObj.equip }}
+            <br>
+            物件備註:{{ roomObj.rOther }}
             <div class="input-wrapper">
             <textarea class="input-box" type="textarea" placeholder="Enter your text" v-model="r_other"></textarea>
             <span class="underline"></span>

@@ -4,10 +4,14 @@ export default defineStore('dataStore',{
     state: () => ({  // 存放全域變數的地方
         page:1,  // 讀取當頁頁碼
         loginObj:{},  // 存放房東登入資訊
+        roomObj:{},
+        oneContractObj:{}//存放單一筆房間契約的資訊
     }),
     getters:{  // 返回變數或數據
         getPage:(state) => state.page,
         getLoginObj:(state) => state.loginObj,
+        getRoomObj:(state)=>state.roomObj,
+        getoneContractObj:(state)=>state.oneContractObj
     },
     actions:{   // 處理數據
         setPage(params){
@@ -16,6 +20,10 @@ export default defineStore('dataStore',{
         setLoginObj(obj){
         this.loginObj = obj
         },
+        setRoomObj:(state)=>state.roomObj,
+        setOneContractObj(obj){
+        this.oneContractObj=obj
+        }
         }
     }
 )

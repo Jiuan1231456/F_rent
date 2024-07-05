@@ -15,8 +15,7 @@ export default {
                 startDate: "",
                 endDate: ""
             },
-            selectedContracts: [] // 新增選中的契約狀態,用於存儲選中的契約。
-        
+            selectedContracts: [] // 新增選中(checkbox)的契約狀態,用於存儲選中的契約。
         }
     },
     computed: {
@@ -27,15 +26,15 @@ export default {
         RouterLink 
     },
     methods: {
-
-           // 跳轉到新增契約頁面
+        ...mapActions(dataStore, ['setOneContractObj']),
+        // 跳轉到新增契約頁面
         goToContractAdd() {
-            // 使用 Vue Router 的方式進行跳轉
+        // 使用 Vue Router 的方式進行跳轉
             this.$router.push({ name: 'contractAdd'}); 
         },
-          //模糊搜尋過濾器
+        //模糊搜尋過濾器
         search() {
-               // 建立搜尋條件，依照地址、承租方姓名或租約日期進行搜尋
+        // 建立搜尋條件，依照地址、承租方姓名或租約日期進行搜尋
             let searchObj = {
                 address: this.contractFilters.address,
                 tenantName:this.contractFilters.tenantName,
@@ -59,36 +58,34 @@ export default {
                     // 第二層:篩選出當前身份證字號的契約問卷，即顯示特定房東的所有房間資訊
                     this.contractList = data.contractList.filter(item => item.ownerIdentity === this.loginObj.ownerIdentity);
                     console.log("只有當前房東的(篩選特定房東):", this.contractList);
-        
                     // 計算總頁數
                     this.calculateTotalPages(this.contractList.length)
                 })
                 .catch(error => {
-                console.error("Error fetching data:", error); // 處理錯誤
+                console.error("Error fetching data:", error); //處理錯誤
             });
         },
         //第三層:篩選特定房東的特定房間資訊
         selectRoomInfo(index){
             this.selectIndex=index;
-            console.log("選特定房東的特定房間資訊",this.contractList[index])
-            this.setOneContractObj(this.contractList[index])
+            console.log("選特定房東的特定房間資訊",this.contractList[index]);//印出來供看console
+            this.setOneContractObj(this.contractList[index]);
+             // 跳轉到詳細頁面並傳遞資料
+            // this.$router.push({ name: 'Contract_Detail', params: { id: this.contractList[index].ai } });
         },
 
-          // 計算總頁數
+        // 計算總頁數
         calculateTotalPages(totalItems) {
             const pageSize = 10; // 假設每頁顯示 10 筆資料
             const totalPages = Math.ceil(totalItems / pageSize);
-            console.log("Total Pages:", totalPages); // 打印總頁數以供調試
+            console.log("Total Pages:", totalPages); // 打印總頁數以供參考
         },
-        
-
     },
     created(){
         this.search(); // 組件創建時執行搜尋以獲取初始數據
     },   
     mounted(){
-      
-       
+        console.log('此筆契約',this.oneContractObj);
     }
 }
 </script>
@@ -132,7 +129,7 @@ export default {
             <option value="">待生效</option>
             <option value="">已結束</option>
         </select>
-        </div>
+    </div>
     </div>
 
     <!--租約列表 con=contract -->
@@ -155,7 +152,7 @@ export default {
             <!-- item 是在 v-for 循環中定義的一個臨時變量，用來表示 contractList 陣列中的每個元素 -->
             <!-- index 是每次迭代過程中的當前索引值。在這裡是指 contractList 陣列中每個元素的索引位置。 -->
             <tr v-for="(item, index) in this.contractList" :key="index">
-                <td><input type="checkbox" v-model="selectedContracts" :value="item.roomId"></td>
+                <td><input type="checkbox" v-model="selectedContracts" :value="item.ai"></td>
                 <td>{{ item.roomId }}</td>
                 <td>{{ item.tenantName }}</td>
                 <td>{{ item.status }}</td>
@@ -164,9 +161,8 @@ export default {
                 <td>{{ item.startDate }}</td>
                 <td>{{ item.endDate }}</td>
                 <td>{{ item.rentP }}</td>
-                <td><RouterLink to="{ name: 'ContractDetail', params: { contract: item } }"> 查看詳情</RouterLink></td>
+                <td><RouterLink to="/Contract_Detail" @click="selectRoomInfo(index)"> 查看詳情</RouterLink></td>
             </tr>
-            
         </tbody>
         </table>
     </div>
