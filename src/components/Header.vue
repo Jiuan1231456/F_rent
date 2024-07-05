@@ -34,6 +34,13 @@ export default {
       to="/addroom"
       >新增房間</RouterLink
     >
+    <RouterLink 
+    class="routerItem" 
+    :class="{ selectedPage: this.page === 2 }" 
+    to="/roomlist"
+    >房間列表
+  </RouterLink>
+  
     <RouterLink
       class="routerItem"
       :class="{ selectedPage: this.page === 6 }"
@@ -75,7 +82,19 @@ export default {
               to="/lookupBill"
               >帳單列表</RouterLink
             >
-            <RouterLink
+            <!-- <RouterLink
+      class="routerItem"
+      :class="{ selectedPage: this.page === 8 }"
+      to="/ContractPreview"
+      >預覽租約</RouterLink
+    > -->
+    <RouterLink
+      class="routerItem"
+      
+      to="/Contract_Detail"
+      >租約詳情/契約中止編輯</RouterLink
+    >
+    <RouterLink
               class="dropdownItem"
               :class="{ selectedPage: this.page === 10 }"
               to="/bill"

@@ -18,6 +18,11 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue')
     },
+     {//房間列表
+      path: '/roomList',
+      name: 'roomList',
+      component: () => import('../views/RoomList.vue')
+    },
     {
       path: '/bill',
       name: 'bill',
@@ -60,7 +65,22 @@ const router = createRouter({
       name: 'lookupbill',
       component: () => import('../views/LookupBill.vue')
     },
+    // {
+    //   path: '/ ContractPreview',
+    //   name: 'ContractPreview',
+    //   component: () => import('../views/ContractPreview.vue')
+    // },
+    //查看契約詳情
+    {
+      path: '/Contract_Detail',
+      name: 'Contract_Detail',
+      component: () => import('../views/Contract_Detail.vue'),
+      props: true // 允許通過路由傳參
+
+    },
   ]
+
 })
+
 
 export default router

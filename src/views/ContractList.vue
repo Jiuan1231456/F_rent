@@ -1,24 +1,91 @@
 <script>
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
+import { RouterLink } from 'vue-router';
+
 export default {
     data(){
         return {
-
+            //儲存契約列表
+            contractList: [],
+            // 儲存搜尋對象過濾器
+            contractFilters: {
+                address: "",
+                tenantName:"",
+                startDate: "",
+                endDate: ""
+            },
+            selectedContracts: [] // 新增選中(checkbox)的契約狀態,用於存儲選中的契約。
         }
     },
     computed: {
-        ...mapState(dataStore, ['page'])
+        // 綁定 Pinia 狀態
+        ...mapState(dataStore, ['loginObj'])
+    },
+    component:{
+        RouterLink 
     },
     methods: {
-        ...mapActions(dataStore,['returnPage','setPage']),
+        ...mapActions(dataStore, ['setOneContractObj']),
+        // 跳轉到新增契約頁面
         goToContractAdd() {
-            // 使用 Vue Router 的方式進行跳轉
-            this.$router.push({ name: 'contractAdd'}); // 假設路由設定中有名為 Back1 的路由
+        // 使用 Vue Router 的方式進行跳轉
+            this.$router.push({ name: 'contractAdd'}); 
+        },
+        //模糊搜尋過濾器
+        search() {
+        // 建立搜尋條件，依照地址、承租方姓名或租約日期進行搜尋
+            let searchObj = {
+                address: this.contractFilters.address,
+                tenantName:this.contractFilters.tenantName,
+                startDate: this.contractFilters.startDate,
+                endDate: this.contractFilters.endDate,
+            };
+            console.log("Search Object:", searchObj);// 打印搜尋條件以供調試
+
+            // 發送搜尋請求到後端
+            fetch("http://localhost:8080/contract/contratSearch", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(searchObj)
+            })
+                .then(res => res.json())//將回應轉換為 JSON
+                .then(data => {
+                    console.log("所有契約(不分房東):", data);// 第一層:顯示所有契約(沒有包含特定房東)
+
+                    // 第二層:篩選出當前身份證字號的契約問卷，即顯示特定房東的所有房間資訊
+                    this.contractList = data.contractList.filter(item => item.ownerIdentity === this.loginObj.ownerIdentity);
+                    console.log("只有當前房東的(篩選特定房東):", this.contractList);
+                    // 計算總頁數
+                    this.calculateTotalPages(this.contractList.length)
+                })
+                .catch(error => {
+                console.error("Error fetching data:", error); //處理錯誤
+            });
+        },
+        //第三層:篩選特定房東的特定房間資訊
+        selectRoomInfo(index){
+            this.selectIndex=index;
+            console.log("選特定房東的特定房間資訊",this.contractList[index]);//印出來供看console
+            this.setOneContractObj(this.contractList[index]);
+             // 跳轉到詳細頁面並傳遞資料
+            // this.$router.push({ name: 'Contract_Detail', params: { id: this.contractList[index].ai } });
+        },
+
+        // 計算總頁數
+        calculateTotalPages(totalItems) {
+            const pageSize = 10; // 假設每頁顯示 10 筆資料
+            const totalPages = Math.ceil(totalItems / pageSize);
+            console.log("Total Pages:", totalPages); // 打印總頁數以供參考
         },
     },
+    created(){
+        this.search(); // 組件創建時執行搜尋以獲取初始數據
+    },   
     mounted(){
-        this.setPage(6)
+        console.log('此筆契約',this.oneContractObj);
     }
 }
 </script>
@@ -45,13 +112,12 @@ export default {
         <input type="date" id="start" name="trip-start" min="1970-01-01" max="2050-12-31" style="font-size: 22px;">
         <label for="end_time" style="background-color:  #FFC89A;">到：</label>
         <input type="date" id="end" name="trip-end" min="1970-01-01" max="2050-12-31" style="font-size: 22px;">
-        <button class="searchbtn" type="button">搜尋</button>
+        <button class="searchbtn" type="button" @click="search()">搜尋</button>
         </p>
     </div>
 
     <div class="container">
-        <!-- 新增/刪除租約 -->
-        <i class="fa-solid fa-trash-can"></i>
+        <!-- 新增租約按鈕 -->
         <i class="fa-solid fa-circle-plus" @click="goToContractAdd()"></i>
 
         <!-- 狀態選擇清單 -->
@@ -63,7 +129,7 @@ export default {
             <option value="">待生效</option>
             <option value="">已結束</option>
         </select>
-        </div>
+    </div>
     </div>
 
     <!--租約列表 con=contract -->
@@ -83,20 +149,19 @@ export default {
             </tr>
         </thead>
         <tbody>
-            <!-- 之後用v-for綁tr-->
-            <tr class="title">
-            <!-- 這邊之後用item一個個去綁 -->
-
-            <td>{{  }}</td>
-            <td>{{  }}</td>
-            <td>{{  }}</td>
-            <td>{{  }}</td>
-            <td>{{  }}</td>
-            <td>{{  }}</td>
-            <td>{{  }}</td>
-            <td>{{  }}</td>
-
-            <td><button class="edit">查看</button></td>
+            <!-- item 是在 v-for 循環中定義的一個臨時變量，用來表示 contractList 陣列中的每個元素 -->
+            <!-- index 是每次迭代過程中的當前索引值。在這裡是指 contractList 陣列中每個元素的索引位置。 -->
+            <tr v-for="(item, index) in this.contractList" :key="index">
+                <td><input type="checkbox" v-model="selectedContracts" :value="item.ai"></td>
+                <td>{{ item.roomId }}</td>
+                <td>{{ item.tenantName }}</td>
+                <td>{{ item.status }}</td>
+                <td>{{ item.address }}</td>
+                <!-- 這邊還要再寫另一個方法來獲取狀態 -->
+                <td>{{ item.startDate }}</td>
+                <td>{{ item.endDate }}</td>
+                <td>{{ item.rentP }}</td>
+                <td><RouterLink to="/Contract_Detail" @click="selectRoomInfo(index)"> 查看詳情</RouterLink></td>
             </tr>
         </tbody>
         </table>
@@ -120,15 +185,15 @@ export default {
     }
 //搜尋
     .searchPlace {
-        width: 60%;
-        height: 20%;
+        width: 66%;
+        height: 35%;
         color: black;
         font-size: 22px;
         background-color: #FFC89A;
         border: 1em solid #fae1cd;
         text-align: left;
         margin-top: 5%;
-        margin-left: 17%;
+        margin-left: 12%;
         padding: 3% 3% 5% 3%;
     }
 
@@ -138,18 +203,18 @@ export default {
         margin-bottom: 10px; /* 可以根據需要調整間距 */
         background-color: #FFC89A;
     }
-
+//搜尋欄
     .InputContainer {
-        width: 620px;
-        height: 50px;
+        width: 600px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(to bottom, #FF9D60, rgb(255, 231, 231));
+        // background: linear-gradient(to bottom, #FF9D60, rgb(255, 231, 231));
         border-radius: 30px;
         overflow: hidden;
         cursor: pointer;
-        box-shadow: 2px 2px 10px rgba(163, 162, 162, 0.075);
+        box-shadow: 2px 2px 2px rgba(163, 162, 162, 0.075);
         display: inline-block;
         vertical-align: middle; /* Optional: Align vertically */
         // flex: 1; /* 彈性增長，使 input 容器占據剩餘空間 */
@@ -158,8 +223,8 @@ export default {
     .input {
         width: 600px;
         height: 40px;
-        caret-color: rgb(255, 81, 0);
-        background-color: rgb(255, 255, 255);
+        // caret-color: rgb(255, 81, 0);
+        // background-color: rgb(255, 255, 255);
         border-radius: 30px;
         padding-left: 15px;
         letter-spacing: 0.8px;
@@ -247,21 +312,15 @@ export default {
         margin-top: 1%;
     }
 
-    .fa-trash-can {
-        font-size: 2.2em;
-        margin-right: 2%;
-        margin-top: 3%;
-    }
-
     .fa-circle-plus {
         font-size: 2.2em;
-        margin-right: 2%;
         margin-top: 3%;
+        margin-left: -5%;
     }
 
     .statusList {
         font-size: 22px;
-        margin-left: 72.5%;
+        margin-left: 85%;
         margin-top: 3%;
     }
 
