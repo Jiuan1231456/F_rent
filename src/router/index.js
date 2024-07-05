@@ -44,16 +44,21 @@ const router = createRouter({
       path: '/contractAdd',
       name: 'contractAdd',
       component: () => import('../views/ContractAdd.vue')
-      },
-    {
-      path: '/roomdetail',
-      name: 'roomdetail',
-      component: () => import('../views/RoomDetail.vue')
     },
-    {
-      path: '/addroom',
-      name: 'addroom',
+    {//房間列表
+      path: '/roomList',
+      name: 'roomList',
+      component: () => import('../views/RoomList.vue')
+    },
+    {//新增房間
+      path: '/addRoom',
+      name: 'addRoom',
       component: () => import('../views/AddRoom.vue')
+    },
+    {//單一房間詳細資訊
+      path: '/roomDetail',
+      name: 'roomDetail',
+      component: () => import('../views/RoomDetail.vue')
     },
   ]
 })

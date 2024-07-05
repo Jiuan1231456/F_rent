@@ -120,15 +120,15 @@ export default {
     }
 //搜尋
     .searchPlace {
-        width: 40dvw;
-        height: 20dvh;
+        width: 75%;
+        height: 50%;
         color: black;
         font-size: 22px;
         background-color: #FFC89A;
         border: 1em solid #fae1cd;
         text-align: left;
         margin-top: 5%;
-        margin-left: 17%;
+        margin-left: 11%;
         padding: 3% 3% 5% 3%;
     }
 
@@ -261,7 +261,7 @@ export default {
 
     .statusList {
         font-size: 22px;
-        margin-left: 72.5%;
+        margin-left: 65%;
         margin-top: 3%;
     }
 

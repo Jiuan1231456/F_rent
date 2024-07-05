@@ -16,56 +16,22 @@ export default {
 
 <template>
   <div class="headerArea">
-    <RouterLink
-      class="routerItem"
-      :class="{ selectedPage: this.page === 1 }"
-      to="/"
-      >登入</RouterLink
-    >
-    <RouterLink
-      class="routerItem"
-      :class="{ selectedPage: this.page === 6 }"
-      to="/ContractList"
-      >租約管理列表</RouterLink
-    >
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 1 }" to="/">登入</RouterLink>
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 6 }" to="/ContractList">租約管理列表</RouterLink>
 
-    <RouterLink
-      class="routerItem"
-      :class="{ selectedPage: this.page === 7 }"
-      to="/contractAdd"
-      >新增租約</RouterLink
-    >
-    <RouterLink
-      class="routerItem"
-      :class="{ selectedPage: this.page === 10 }"
-      to="/bill"
-      >帳單管理</RouterLink
-    >
-    <RouterLink
-      class="routerItem"
-      :class="{ selectedPage: this.page === 11 }"
-      to="/benefit"
-      >觀看收益</RouterLink
-    >
-    <RouterLink
-      class="routerItem"
-      :class="{ selectedPage: this.page === 2 }"
-      to="/roomdetail"
-      >房間資訊</RouterLink
-    >
-    <RouterLink
-      class="routerItem"
-      :class="{ selectedPage: this.page === 3 }"
-      to="/addroom"
-      >新增房間</RouterLink
-    >
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 7 }" to="/contractAdd">新增租約</RouterLink>
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 10 }" to="/bill">帳單管理</RouterLink>
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 11 }" to="/benefit">觀看收益</RouterLink>
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 2 }" to="/roomlist">房間列表</RouterLink>
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 3 }" to="/addroom">新增房間</RouterLink>
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 4 }" to="/roomDetail">房間詳細資訊</RouterLink>
   </div>
 </template>
 
 <style scoped lang="scss">
 .headerArea {
   height: 100dvh;
-  width: 350px;
+  width: 16%;
   background-color: #ffc89a;
   padding-top: 5%;
   position: fixed;
@@ -79,6 +45,7 @@ export default {
     letter-spacing: 8px;
     justify-content: center;
     padding: 5%;
+
     &:hover {
       cursor: pointer;
       background-color: #ff9d60;
@@ -87,15 +54,18 @@ export default {
       border-radius: 11% 0px 0px 11%;
     }
   }
+
   .accordion-body {
     padding: 0;
     background-color: #ffc89a;
     // padding-left: 33px;
   }
+
   .accordion-item {
     border: 0px;
     background-color: #ffc89a;
   }
+
   .dropdownBtn {
     color: black;
     background-color: #ffc89a;
@@ -105,6 +75,7 @@ export default {
     letter-spacing: 8px;
     justify-content: center;
     padding: 5%;
+
     &:hover {
       cursor: pointer;
       background-color: #ff9d60;
@@ -114,13 +85,17 @@ export default {
       padding-left: 10px;
       padding-bottom: 10px;
     }
+
     &:checked {
       background-color: #ff9d60;
     }
   }
+
   .dropdownBtn[aria-expanded="true"] {
-    background-color: #f6b47d; /* 展開時的背景顏色 */
+    background-color: #f6b47d;
+    /* 展開時的背景顏色 */
   }
+
   .dropdownItem {
     background-color: #f2dcca;
     font-size: 18px;
@@ -135,6 +110,7 @@ export default {
     border-radius: 11% 0px 0px 11%;
     align-items: center;
     padding: 5%;
+
     &:hover {
       cursor: pointer;
       background-color: #ff9d60;
@@ -144,12 +120,14 @@ export default {
       border-radius: 11% 0px 0px 11%;
     }
   }
+
   .selectedPage {
     background-color: #faf0e9;
     border-radius: 11% 0px 0px 11%;
     border-left: 16px solid #ffc89a;
     // padding-left: 25px;
     font-weight: 500;
+
     &:hover {
       cursor: default;
       background-color: #faf0e9;
