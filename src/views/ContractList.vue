@@ -97,13 +97,13 @@ export default {
         <div class="inputPlace">
         <span class="label">承租地址　：</span>
         <div class="InputContainer">
-            <input placeholder="Search.." id="input" class="input" name="text" type="text">
+            <input placeholder="Search.." id="input" class="input" name="text" type="text" v-model="this.contractFilters.address">
         </div>
         </div>
         <div class="inputPlace">
         <span class="label">承租人姓名：</span>
         <div class="InputContainer">
-            <input placeholder="Search.." id="input" class="input" name="text" type="text">
+            <input placeholder="Search.." id="input" class="input" name="text" type="text" v-model="this.contractFilters.tenantName">
         </div>
         </div>
         <!-- 選擇日期 -->
