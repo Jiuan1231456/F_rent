@@ -6,7 +6,9 @@ export default defineStore('dataStore',{
         loginObj:{},  // 存放房東登入資訊
         roomObj:{},
         oneContractObj:{},//存放單一筆房間契約的資訊
-        registerObj:{}//存放註冊資訊
+        registerObj:{
+           
+        }//存放註冊資訊
     }),
     getters:{  // 返回變數或數據
         getPage:(state) => state.page,

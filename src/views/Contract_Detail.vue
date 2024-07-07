@@ -11,7 +11,7 @@ export default {
     computed: {
         // 綁定 Pinia 狀態
         // 'oneContractObj' 在 pinia 檔裡的 state
-        ...mapState(dataStore, ['oneContractObj','roomObj'])
+        ...mapState(dataStore, ['oneContractObj','roomObj','registerObj'])
     },
     components: {
         RouterLink 
@@ -52,9 +52,9 @@ export default {
             <br>
             面積: {{roomObj.acreage}}
             <br>
-            設備:{{ oneContractObj.equip }}
+            設備:{{ roomObj.equip }}
             <br>
-            物件備註:{{ oneContractObj.rOther }}
+            物件備註:{{ roomObj.rOther }}
             <div class="input-wrapper">
           
             </div>
@@ -63,15 +63,15 @@ export default {
         <h2>立契約書人</h2>
         <div class="Info">
             <br>
-            <h4>出租人姓名:{{}}</h4> 
+            <h4>出租人姓名:{{registerObj.ownerName}}</h4> 
             <br>
-            身分證字號: {{}}
+            身分證字號: {{registerObj.ownerIdentity}}
             <br>
             戶籍地址: {{  oneContractObj.ownerHomeAddress}}
             <br>
             通訊地址: {{  oneContractObj.ownerContactAddress}}
             <br>
-            連絡電話: {{ }}
+            連絡電話: {{ registerObj.ownerPhone}}
             <br>
             <br>
             <h4>承租人姓名:{{ oneContractObj.tenantName }}</h4> 
@@ -98,6 +98,8 @@ export default {
         </div>
         <br>
         <h3>其他備註(或個別磋商條款)</h3>
+        <br>
+            <textarea>{{oneContractObj.cOther  }}</textarea>
         <div class="input-wrapper">
            
         </div>

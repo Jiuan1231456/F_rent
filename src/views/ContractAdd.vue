@@ -50,7 +50,7 @@ export default {
 },
     computed: {
        //使用pinia中房間站存資訊
-       ...mapState(dataStore, ['roomObj'])
+       ...mapState(dataStore, ['roomObj','registerObj'])
     },
     created() {
         // this.getRegisterData();
@@ -95,11 +95,11 @@ export default {
             tenantContactAddress: this.tenant_contact_address,
             tenantPhone: this.tenant_phone,
             tenantEmail: this.tenant_email,
-            ownerName: this.owner_name, //從註冊資訊抓
-            ownerIdentity: this.owner_identity, //從註冊資訊抓
-            ownerHomeAddress: this.owner_home_address, //從註冊資訊抓
-            ownerContactAddress: this.owner_contact_address, //從註冊資訊抓
-            ownerPhone: this.owner_phone, //從註冊資訊抓
+            ownerName: this.registerObj.ownerName, //從註冊資訊抓
+            ownerIdentity: this.registerObj.ownerIdentity, //從註冊資訊抓
+            ownerHomeAddress: this.owner_home_address, 
+            ownerContactAddress: this.owner_contact_address, 
+            //ownerPhone: this.registerObj.owner_phone, //契約的表沒有這個欄位，要從註冊抓，但我建議再SQL新增這個欄位，因為房東可能想註冊的電話跟連絡他的電話不一樣
             startDate: this.start_date,
             endDate: this.end_date,
             cOther: this.c_other,
@@ -197,15 +197,16 @@ export default {
                 <h2>立契約書人</h2>
                 <div class="Info">
                     <br>
-                    <h4>出租人姓名:</h4> <input type="text" v-model="owner_name" class="input-box"  style="font-weight: bold; font-size: 20px;">
+                    <h4>出租人姓名:</h4> <p>{{ registerObj.ownerName }}</p>
                     <br>
-                    身分證字號: <input type="text" v-model="owner_identity" class="input-box">
+                    身分證字號: <p> {{registerObj.ownerIdentity}}</p>
                     <br>
                     戶籍地址(營業登記地址): <input type="text" v-model="owner_home_address" class="input-box">
                     <br>
                     通訊地址: <input type="text" v-model="owner_contact_address" class="input-box">
                     <br>
-                    連絡電話: <input type="text" v-model="owner_phone" class="input-box">
+                    <!-- 這邊房東電話不建議寫死，因為註冊電話應該可以和連絡電話不一樣，，建議再器樂的SQL表另外新增owner_phone欄位而不是直接引用註冊的電話 -->
+                    連絡電話:{{ registerObj.ownerPhone }}
                     <br>
                     <br>
                     <h4>承租人姓名:</h4> <input type="text" v-model="tenant_name" class="input-box" style="font-weight: bold; font-size: 20px;">
@@ -238,7 +239,7 @@ export default {
                 </div>
                 <br>
                 <h3>立約日期:</h3>
-                <input type="date" id="sign_date" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="sign_date"/>
+                
             
                 <div class="btn"> 
                 
