@@ -24,6 +24,13 @@ export default {
     >
     <RouterLink 
     class="routerItem" 
+    :class="{ selectedPage: this.page === 100 }" 
+    to="/Register"
+    >註冊
+  </RouterLink>
+
+    <RouterLink 
+    class="routerItem" 
     :class="{ selectedPage: this.page === 2 }" 
     to="/roomlist"
     >房間列表

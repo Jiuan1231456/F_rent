@@ -74,6 +74,13 @@ const router = createRouter({
       props: true // 允許通過路由傳參
 
     },
+    {
+      path: '/Register',
+      name: 'Register',
+      component: () => import('../views/Register.vue'),
+      props: true // 允許通過路由傳參
+
+    },
   ]
 
 })
