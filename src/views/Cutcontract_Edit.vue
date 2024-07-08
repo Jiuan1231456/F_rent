@@ -6,6 +6,11 @@ import { RouterLink } from 'vue-router';
 export default {
     data() {
         return {
+            cut_reason:"",
+            cut_date:"",
+            cutContractSearch:[], //存放搜尋到的特定契約，放更新完的契約
+            cutDateContract:[]//存放特定契約的中止日
+
         }
     },
     computed: {
@@ -16,6 +21,9 @@ export default {
     components: {
         RouterLink 
     },
+    methods(){
+        
+    }
 //    
 }
 </script>
@@ -34,7 +42,7 @@ export default {
         
             </div>
             <br>
-            租賃物件地址: {{ roomObj.address }}
+            租賃物件地址: {{roomObj.address}}
             <br>
             樓層: {{ roomObj.floor }}
             <br>
@@ -90,25 +98,25 @@ export default {
         <h3>契約中止</h3>
         <div class="cut">
             <br>
-            中止原因: <textarea name="cReason" id=""></textarea>
+            中止原因: <textarea name="" id=""></textarea>
             <br>
             違約金: {{ roomObj.cutP }}
             <br>
-            中止日期: <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="start_date"/>
+            中止日期: 
         </div>
         <br>
         <h3>其他備註(或個別磋商條款)</h3>
         <br>
-            <textarea disabled>{{oneContractObj.cOther }}</textarea>
+            <textarea>{{oneContractObj.cOther  }}</textarea>
         <div class="input-wrapper">
         
         </div>
         <br>
         <h3>立約日期:{{ oneContractObj.signDate }}</h3>
-    
+       
     
         <div class="btn"> 
-        
+        <button type="submit">送出</button>
         </div>
     </div>
 </template>

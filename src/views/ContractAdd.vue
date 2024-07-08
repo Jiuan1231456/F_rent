@@ -18,8 +18,8 @@ export default {
             tenant_email: "",
             owner_name: "",  //從註冊資訊抓
             owner_identity: "", //從註冊資訊抓
-            owner_home_address: "", //從註冊資訊抓
-            owner_contact_address: "", //從註冊資訊抓
+            owner_home_address: "", 
+            owner_contact_address: "", 
             owner_phone: "",  //從註冊資訊抓
             start_date: "",
             end_date: "",
@@ -47,6 +47,7 @@ export default {
             loginObj: { // 添加 loginObj 並初始化為空物件
                 ownerIdentity: ""
             },
+            registerInfo:[]//存放找到的特定註冊資料
     }
 },
     computed: {
@@ -64,30 +65,8 @@ export default {
     },
     methods: {
       
-        // async getRegisterData() {
-        // try {
-        //     const response = await fetch('http://localhost:8080/rent/account');
-        //     const data = await response.json();
-        //     // 假設 API 返回的資料是這樣的結構: { owner_name: '...', owner_phone: '...', owner_email: '...' }
-        //     this.owner_name = data.owner_name;
-        //     this.owner_phone = data.owner_phone;
-        //     this.owner_email = data.owner_email;
-        // } catch (error) {
-        //     console.error('Error fetching register data:', error);
-        // }
-        // },
-        // async getRoomData() {
-        // try {
-        //     const response = await fetch('http://localhost:8080/room/creatRoom1');
-        //     const data = await response.json();
-        //     // 假設 API 返回的資料是這樣的結構: { r_id: '...', address: '...', rent_p: '...' }
-        //     this.r_id = data.r_id;
-        //     this.address = data.address;
-        //     this.rent_p = data.rent_p;
-        // } catch (error) {
-        //     console.error('Error fetching room data:', error);
-        // }
-        // },
+        ...mapActions(dataStore,['setPage','setRegisterObj']),
+        
         addContractToDB() {
         let testObj = {
             tenantIdentity: this.tenant_identity,  
@@ -96,7 +75,7 @@ export default {
             tenantContactAddress: this.tenant_contact_address,
             tenantPhone: this.tenant_phone,
             tenantEmail: this.tenant_email,
-            ownerName: this.registerObj.owneName, //從註冊資訊抓
+            ownerName: this.registerObj.ownerName, //從註冊資訊抓
             ownerIdentity: this.registerObj.ownerIdentity, //從註冊資訊抓
             ownerHomeAddress: this.owner_home_address, 
             ownerContactAddress: this.owner_contact_address, 
@@ -136,7 +115,27 @@ export default {
         .then(data => {
             console.log(data);
         });
-        }
+        },
+    //     //連接註冊資料庫資料
+    //     findCutDate(){
+    //   let empty = {};
+    //   fetch("http://localhost:8080/rent/account", {
+    //     method: "post",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(empty),
+    //   })
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //       console.log(data);
+    //       this.registerInfo = data.register.filter(
+    //         (item) => (item.ownerName === this.register.ownerName) && (item.ownerIdentity === this.perRegister.ownerIdentity) && (item.ownerPhone === this.perRegister.ownerPhone)
+    //       );
+    //       console.log("篩出此筆租約與註冊相關資料",this.registerInfo[0]);
+    //       this. 這邊要去pinia創造一個將註冊資訊存到契約的地方(this.registerInfo[0]);
+    //     });
+    // }
     },
     components: {
         contractInput,
@@ -239,7 +238,7 @@ export default {
                     <span class="underline"></span>
                 </div>
                 <br>
-                <h3>立約日期:</h3>
+                <h3>立約日期:  <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="start_date"/></h3>
                 
             
                 <div class="btn"> 
