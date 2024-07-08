@@ -6,18 +6,16 @@ export default defineStore('dataStore',{
         loginObj:{},  // 存放房東登入資訊
         roomObj:{},
         oneContractObj:{},//存放單一筆房間契約的資訊
-        registerObj:{
-            ownerName: '',
-            ownerIdentity: '',
-            ownerPhone: ''
-        }//存放註冊資訊
+        registerObj:{},//存放註冊資訊
+        perRegister:{}
     }),
     getters:{  // 返回變數或數據
         getPage:(state) => state.page,
         getLoginObj:(state) => state.loginObj,
         getRoomObj:(state)=>state.roomObj,
         getoneContractObj:(state)=>state.oneContractObj,
-        getRegisrerObj:(state)=>state.registerObj
+        getRegisterObj:(state)=>state.registerObj,
+        getPerRegisterObj:(state)=>state.perRegisterObj,
     },
     actions:{   // 處理數據
         setPage(params){
@@ -34,6 +32,9 @@ export default defineStore('dataStore',{
         },
         setRegisterObj(obj){
             this.registerObj=obj
+        },
+        setPerRegisterObj(obj){
+            this.perRegisterObj=obj
             }
         }
     }
