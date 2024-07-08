@@ -22,7 +22,7 @@ export default {
 
 <template>
     <div class="bigArea">
-        <h1>與{{oneContractObj.tenantName}}的契約書</h1>
+        <h1>與{{oneContractObj.tenantName}}的租賃契約書</h1>
         <br>
         <div class="roomInfo">
             <h2>租賃物件資訊</h2>
@@ -61,7 +61,7 @@ export default {
         </div>
         <br>
         <h2>立契約書人</h2>
-        <div class="Info">
+        <div class="info">
             <br>
             <h4>出租人姓名:{{registerObj.ownerName}}</h4> 
             <br>
@@ -97,14 +97,12 @@ export default {
             中止日期: 
         </div>
         <br>
-        <h3>其他備註(或個別磋商條款)</h3>
+        <h3 class="other">其他備註(或個別磋商條款)</h3>
         <br>
             <textarea>{{oneContractObj.cOther  }}</textarea>
-        <div class="input-wrapper">
-        
-        </div>
         <br>
-        <h3>立約日期:{{ oneContractObj.signDate }}</h3>
+        <br>
+        <h3 class="signdate">立約日期:{{ oneContractObj.signDate }}</h3>
        
     
         <div class="btn"> 
@@ -119,8 +117,86 @@ export default {
 <style scoped lang="scss">
 
 .bigArea{
+   
     margin-top: 3%;
-    margin-left: 10%
+    padding: 3%;
+    margin-bottom: 3%;
+    margin-left: 10%;
+    width: 55%;
+    background-color: white;
+    border: 1px solid rgba(12, 12, 12, 0.096);
+    box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+    .roomInfo{
+        background-color: white;
+    }
+    .info{
+        background-color: white;
+    }
+    .cut{
+        background-color: white;
+    }
+}
+
+
+
+
+.rent_time{
+    background-color: white;
+    label{
+        background-color: white;
+    }
+}
+h3{
+    background-color: white;
+    background-color: white;
+    background-color: rgb(247, 203, 150);
+    width: 25%;
+
+    padding: 2%;
+    // text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.15) 2.95px 2.95px 3.6px;
+
+}
+.other{
+        
+width: 43%;
+    }
+.signdate{
+    width: 43%;
+    background-color: white;
+    box-shadow: none;
+}
+
+
+h4{
+    background-color: white;
+    
+}
+h2{
+    background-color: white;
+    background-color: rgb(247, 203, 150);
+    width: 25%;
+    padding: 1%;
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.15) 2.95px 2.95px 3.6px;
+  
+}
+.roomInfo{
+        margin-top: 10%;
+    }
+h1{
+    background-color: white;
+    width: 30%;
+    padding: 2%;
+    border-style:inset;
+    text-align: center;
+    position: absolute;
+    border-radius: 12%;
+    top:2%;
+    left: 39%;
+    margin: auto;
+    background-color: rgb(158, 112, 57);
+    color: white;
 }
 </style>
 
