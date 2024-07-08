@@ -60,6 +60,12 @@ const router = createRouter({
       name: 'roomDetail',
       component: () => import('../views/RoomDetail.vue')
     },
+    {//編輯單一房間資訊
+      path: '/editRoom',
+      name: 'editRoom',
+      component: () => import('../views/EditRoom.vue')
+    },
+
   ]
 })
 

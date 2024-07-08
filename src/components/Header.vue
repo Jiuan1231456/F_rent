@@ -18,13 +18,12 @@ export default {
   <div class="headerArea">
     <RouterLink class="routerItem" :class="{ selectedPage: this.page === 1 }" to="/">登入</RouterLink>
     <RouterLink class="routerItem" :class="{ selectedPage: this.page === 6 }" to="/ContractList">租約管理列表</RouterLink>
-
     <RouterLink class="routerItem" :class="{ selectedPage: this.page === 7 }" to="/contractAdd">新增租約</RouterLink>
     <RouterLink class="routerItem" :class="{ selectedPage: this.page === 10 }" to="/bill">帳單管理</RouterLink>
     <RouterLink class="routerItem" :class="{ selectedPage: this.page === 11 }" to="/benefit">觀看收益</RouterLink>
     <RouterLink class="routerItem" :class="{ selectedPage: this.page === 2 }" to="/roomlist">房間列表</RouterLink>
     <RouterLink class="routerItem" :class="{ selectedPage: this.page === 3 }" to="/addroom">新增房間</RouterLink>
-    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 4 }" to="/roomDetail">房間詳細資訊</RouterLink>
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 4 }" to="/editRoom">編輯房間</RouterLink>
   </div>
 </template>
 

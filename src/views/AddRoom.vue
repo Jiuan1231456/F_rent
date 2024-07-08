@@ -1,6 +1,7 @@
 <script>
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
+import { RouterLink } from "vue-router";
 export default {
     data() {
         return {
@@ -53,9 +54,9 @@ export default {
                 .then(res => res.json())
                 .then(data => {
                     console.log(data)
+                //還要加一個 跳回列表頁的功能
                 })
-        }
-
+        },
     },
     mounted() {
         this.setPage(3);
@@ -65,7 +66,9 @@ export default {
 </script>
 
 <template>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <div class="bigArea">
         <div class="title">
             <h1>新增房間資訊</h1>
@@ -109,8 +112,9 @@ export default {
             <textarea class="equip inp" style="resize: none; width: 80%; height: 40%;" v-model="this.equip"></textarea>
         </div>
         <div class="rOtherDiv">
-            <span>特色說明&nbsp;:&nbsp;&nbsp;</span>
-            <textarea class="rOther inp" style="resize: none; width: 80%; height: 40%;" v-model="this.rOther"></textarea>
+            <span>特色描述&nbsp;:&nbsp;&nbsp;</span>
+            <textarea class="rOther inp" style="resize: none; width: 80%; height: 40%;"
+                v-model="this.rOther"></textarea>
         </div>
         <button @click="addRoomToDB()">確定新增</button>
     </div>
@@ -127,7 +131,7 @@ export default {
     width: 45%;
 }
 
-.inp{
+.inp {
     padding-left: 5px;
 }
 
