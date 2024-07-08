@@ -1,4 +1,5 @@
-<!-- src="print.js" --><script>
+<!-- src="print.js" -->
+ <script>
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
 
@@ -95,11 +96,11 @@ export default {
             tenantContactAddress: this.tenant_contact_address,
             tenantPhone: this.tenant_phone,
             tenantEmail: this.tenant_email,
-            ownerName: this.registerObj.ownerName, //從註冊資訊抓
+            ownerName: this.registerObj.owneName, //從註冊資訊抓
             ownerIdentity: this.registerObj.ownerIdentity, //從註冊資訊抓
             ownerHomeAddress: this.owner_home_address, 
             ownerContactAddress: this.owner_contact_address, 
-            //ownerPhone: this.registerObj.owner_phone, //契約的表沒有這個欄位，要從註冊抓，但我建議再SQL新增這個欄位，因為房東可能想註冊的電話跟連絡他的電話不一樣
+            ownerPhone: this.registerObj.ownerPhone, //契約的表沒有這個欄位，要從註冊抓，但我建議再SQL新增這個欄位，因為房東可能想註冊的電話跟連絡他的電話不一樣
             startDate: this.start_date,
             endDate: this.end_date,
             cOther: this.c_other,
@@ -197,7 +198,7 @@ export default {
                 <h2>立契約書人</h2>
                 <div class="Info">
                     <br>
-                    <h4>出租人姓名:</h4> <p>{{ registerObj.ownerName }}</p>
+                    <h4>出租人姓名:</h4> <p>{{registerObj.ownerName}}</p>
                     <br>
                     身分證字號: <p> {{registerObj.ownerIdentity}}</p>
                     <br>
@@ -248,78 +249,7 @@ export default {
             </div>
         </div>
     </div>
-<!-- 
-<div class="bigArea3">
-        <h1>定型化契約條款</h1>
 
-        <div class="lawcontent">
-            <br>
-        <p>
-        第一條 使用租賃住宅之限制
-        <br>
-        本租賃住宅係供居住使用，承租人不得變更用途。
-        承租人同意遵守公寓大廈規約或其他住戶應遵行事項，不得違法使
-        用、存放有爆炸性或易燃性物品。
-        承租人應經出租人同意始得將本租賃住宅之全部或一部分轉租、出
-        借或以其他方式供他人使用，或將租賃權轉讓於他人。
-        前項出租人同意轉租者，應出具同意書(如附件二)載明同意轉租之
-        範圍、期間及得終止本契約之事由，供承租人轉租時向次承租人提示。
-    </p>
-    <p>
-        第二條 修繕
-        <br>
-        租賃住宅或附屬設備損壞時，應由出租人負責修繕。但租賃雙方另
-        有約定、習慣或其損壞係可歸責於承租人之事由者，不在此限。
-        前項由出租人負責修繕者，承租人得定相當期限催告修繕，如出租
-        人未於承租人所定相當期限內修繕時，承租人得自行修繕，並請求出租
-        人償還其費用或於第三條約定之租金中扣除。
-        出租人為修繕租賃住宅所為之必要行為，應於相當期間先期通知，
-        承租人無正當理由不得拒絕。
-        前項出租人於修繕期間，致租賃住宅全部或一部不能居住使用者，
-        承租人得請求出租人扣除該期間全部或一部之租金。
-        第九條 室內裝修
-        承租人有室內裝修之需要，應經出租人同意並依相關法令規定辦
-        理，且不得損害原有建築結構之安全。
-        4
-        承租人經出租人同意裝修者，其裝修增設部分若有損壞，由承租人
-        負責修繕。
-        第一項情形，承租人返還租賃住宅時，應□負責回復原狀□現況返
-        還□其他 。
-    </p>
-    <p>
-        第三條 出租人之義務及責任
-        <br>
-        出租人應出示有權出租本租賃住宅之證明文件及國民身分證或其
-        他足資證明身分之文件，供承租人核對。
-        出租人應以合於所約定居住使用之租賃住宅，交付承租人，並應於
-        租賃期間保持其合於居住使用之狀態。
-        出租人與承租人簽訂本契約前，租賃住宅有由承租人負責修繕之項
-        目及範圍者，出租人應先向承租人說明並經承租人確認（如附件三），
-        未經約明確認者，出租人應負責修繕，並提供有修繕必要時之聯絡方式。
-    </p>
-        第四條 承租人之義務及責任
-        <br>
-        承租人應於簽訂本契約時，出示國民身分證或其他足資證明身分之
-        文件，供出租人核對。
-        承租人應以善良管理人之注意，保管、使用租賃住宅。
-        承租人違反前項義務，致租賃住宅毀損或滅失者，應負損害賠償責
-        任。但依約定之方法或依租賃住宅之性質使用、收益，致有變更或毀損
-        者，不在此限。
-        前項承租人應賠償之金額，得由第四條第一項規定之押金中抵充，
-        如有不足，並得向承租人請求給付不足之金額。
-        承租人經出租人同意轉租者，與次承租人簽訂轉租契約時，應不得
-        逾出租人同意轉租之範圍及期間，並應於簽訂轉租契約後三十日內，以
-        書面將轉租範圍、期間、次承租人之姓名及通訊住址等相關資料通知出
-        租人。
-    <p>
-        <br>
-        第五條 租賃住宅部分滅失
-        <br>
-        租賃關係存續中，因不可歸責於承租人之事由，致租賃住宅之一部
-        滅失者，承租人得按滅失之部分，請求減少租金。
-    </p>
-        </div>
-</div> -->
 
 </template>
   

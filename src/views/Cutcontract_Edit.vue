@@ -34,7 +34,7 @@ export default {
         
             </div>
             <br>
-            租賃物件地址: {{roomObj.address}}
+            租賃物件地址: {{ roomObj.address }}
             <br>
             樓層: {{ roomObj.floor }}
             <br>
@@ -90,22 +90,22 @@ export default {
         <h3>契約中止</h3>
         <div class="cut">
             <br>
-            中止原因: 
+            中止原因: <textarea name="cReason" id=""></textarea>
             <br>
-            違約金: 
+            違約金: {{ roomObj.cutP }}
             <br>
-            中止日期: 
+            中止日期: <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="start_date"/>
         </div>
         <br>
         <h3>其他備註(或個別磋商條款)</h3>
         <br>
-            <textarea>{{oneContractObj.cOther  }}</textarea>
+            <textarea disabled>{{oneContractObj.cOther }}</textarea>
         <div class="input-wrapper">
         
         </div>
         <br>
         <h3>立約日期:{{ oneContractObj.signDate }}</h3>
-       
+    
     
         <div class="btn"> 
         

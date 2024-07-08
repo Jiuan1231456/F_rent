@@ -22,12 +22,12 @@ export default {
         
         register(){
             let registerObj1 = {
-                owner_account: this.owner_account,
-                owner_pwd: this.owner_pwd,
-                owner_email: this.owner_email,
-                owner_phone: this.owner_phone,
-                owner_identity: this.owner_identity,
-                owner_name: this.owner_name
+                ownerAccount: this.owner_account,
+                ownerPwd: this.owner_pwd,
+                ownerEmail: this.owner_email,
+                ownerPhone: this.owner_phone,
+                ownerIdentity: this.owner_identity,
+                ownerName: this.owner_name
             };
             console.log('Sending data:', registerObj1); // 印出來看有沒有吃到輸入資料
             // url

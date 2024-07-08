@@ -7,7 +7,9 @@ export default defineStore('dataStore',{
         roomObj:{},
         oneContractObj:{},//存放單一筆房間契約的資訊
         registerObj:{
-           
+            ownerName: '',
+            ownerIdentity: '',
+            ownerPhone: ''
         }//存放註冊資訊
     }),
     getters:{  // 返回變數或數據

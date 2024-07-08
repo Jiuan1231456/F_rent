@@ -63,6 +63,13 @@ export default {
     >
     <RouterLink
       class="routerItem"
+      
+      to="/Cutcontract_Edit"
+      >租約中止編輯</RouterLink
+    >
+   
+    <RouterLink
+      class="routerItem"
       :class="{ selectedPage: this.page === 10 }"
       to="/bill"
       >帳單管理</RouterLink

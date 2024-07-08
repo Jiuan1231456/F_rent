@@ -137,7 +137,7 @@ export default {
         <table>
         <thead>
             <tr>
-            <th>選取</th>
+            
             <th>編號</th>
             <th>承租人</th>
             <th>狀態</th>
@@ -145,6 +145,7 @@ export default {
             <th>開始時間</th>
             <th>結束時間</th>
             <th>租金</th>
+            <th>契約中止編輯</th>
             <th>查看詳情</th>
             </tr>
         </thead>
@@ -152,7 +153,7 @@ export default {
             <!-- item 是在 v-for 循環中定義的一個臨時變量，用來表示 contractList 陣列中的每個元素 -->
             <!-- index 是每次迭代過程中的當前索引值。在這裡是指 contractList 陣列中每個元素的索引位置。 -->
             <tr v-for="(item, index) in this.contractList" :key="index">
-                <td><input type="checkbox" v-model="selectedContracts" :value="item.ai"></td>
+                <!-- <td><input type="checkbox" v-model="selectedContracts" :value="item.ai"></td> -->
                 <td>{{ item.roomId }}</td>
                 <td>{{ item.tenantName }}</td>
                 <td>{{ item.status }}</td>
@@ -161,6 +162,7 @@ export default {
                 <td>{{ item.startDate }}</td>
                 <td>{{ item.endDate }}</td>
                 <td>{{ item.rentP }}</td>
+                <td><RouterLink to="/Contract_Detail" @click="selectRoomInfo(index)"> 契約中止編輯</RouterLink></td>
                 <td><RouterLink to="/Contract_Detail" @click="selectRoomInfo(index)"> 查看詳情</RouterLink></td>
             </tr>
         </tbody>

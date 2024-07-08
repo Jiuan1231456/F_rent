@@ -81,6 +81,13 @@ const router = createRouter({
       props: true // 允許通過路由傳參
 
     },
+    {
+      path: '/Cutcontract_Edit',
+      name: 'Cutcontract_Edit',
+      component: () => import('../views/Cutcontract_Edit.vue'),
+      props: true // 允許通過路由傳參
+
+    },
   ]
 
 })
