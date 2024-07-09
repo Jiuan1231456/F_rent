@@ -11,11 +11,14 @@ export default {
     computed: {
         // 綁定 Pinia 狀態
         // 'oneContractObj' 在 pinia 檔裡的 state
-        ...mapState(dataStore, ['oneContractObj','roomObj','registerObj'])
+        ...mapState(dataStore, ['oneContractObj','roomObj','loginObj'])
     },
     components: {
         RouterLink 
     },
+    mounted(){
+        console.log(this.roomObj)
+    }
 //    
 }
 </script>
@@ -63,15 +66,15 @@ export default {
         <h2>立契約書人</h2>
         <div class="info">
             <br>
-            <h4>出租人姓名:{{registerObj.ownerName}}</h4> 
+            <h4>出租人姓名:{{loginObj.ownerName}}</h4> 
             <br>
-            身分證字號: {{registerObj.ownerIdentity}}
+            身分證字號: {{loginObj.ownerIdentity}}
             <br>
             戶籍地址: {{  oneContractObj.ownerHomeAddress}}
             <br>
             通訊地址: {{  oneContractObj.ownerContactAddress}}
             <br>
-            連絡電話: {{ registerObj.ownerPhone}}
+            連絡電話: {{ loginObj.ownerPhone}}
             <br>
             <br>
             <h4>承租人姓名:{{ oneContractObj.tenantName }}</h4> 
@@ -115,7 +118,9 @@ export default {
 
 
 <style scoped lang="scss">
-
+*{
+margin-right: 0% ;
+}
 .bigArea{
    
     margin-top: 3%;
@@ -179,7 +184,7 @@ h2{
     padding: 1%;
     text-align: center;
     box-shadow: rgba(0, 0, 0, 0.15) 2.95px 2.95px 3.6px;
-  
+
 }
 .roomInfo{
         margin-top: 10%;

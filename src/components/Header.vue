@@ -15,6 +15,9 @@ export default {
 </script>
 
 <template>
+
+  <div class="topArea">
+  </div>
   <div class="headerArea">
     <RouterLink
       class="routerItem"
@@ -96,6 +99,12 @@ export default {
 </template>
 
 <style scoped lang="scss">
+
+.topArea{
+  width:100dvw;
+  height: 5%;
+  background-color: #f6b47d;
+}
 .headerArea {
   height: 100dvh;
   width: 350px;

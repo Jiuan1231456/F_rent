@@ -26,4 +26,6 @@ export default {
 
 <style scoped lang="scss">
 
+
+*{margin-top: 20%;}
 </style>

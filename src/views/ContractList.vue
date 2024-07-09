@@ -20,13 +20,13 @@ export default {
     },
     computed: {
         // 綁定 Pinia 狀態
-        ...mapState(dataStore, ['loginObj'])
+        ...mapState(dataStore, ['loginObj','setOneContractObj','setRoomObj'])
     },
     component:{
         RouterLink 
     },
     methods: {
-        ...mapActions(dataStore, ['setOneContractObj']),
+        ...mapActions(dataStore, ['setOneContractObj','setRoomObj']),
         // 跳轉到新增契約頁面
         goToContractAdd() {
         // 使用 Vue Router 的方式進行跳轉
@@ -67,9 +67,10 @@ export default {
         },
         //第三層:篩選特定房東的特定房間資訊
         selectRoomInfo(index){
-            this.selectIndex=index;
             console.log("選特定房東的特定房間資訊",this.contractList[index]);//印出來供看console
+            this.setRoomObj(this.contractList[index])//
             this.setOneContractObj(this.contractList[index]);
+          
              // 跳轉到詳細頁面並傳遞資料
             // this.$router.push({ name: 'Contract_Detail', params: { id: this.contractList[index].ai } });
         },

@@ -74,5 +74,8 @@ export default {
 </template>
 
 <style scoped lang="scss">
-*{margin-left: 10%;}
+*{margin-top: 5%;
+    margin-right: 50%
+
+}
 </style>
