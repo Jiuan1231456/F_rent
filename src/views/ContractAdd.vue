@@ -61,7 +61,7 @@ export default {
         this.roomInfo = this.$route.params.roomInfo;
     },
     mounted() {
-       
+       console.log(this.roomObj)
     },
     methods: {
       
