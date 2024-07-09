@@ -62,8 +62,58 @@ export default {
        
     },
     methods: {
-        ...mapActions(dataStore,['setPage'])
+        ...mapActions(dataStore,['setPage']),
+        addContractToDB() {
+        let testObj = {
+            tenantIdentity: this.tenant_identity,  
+            tenantName: this.tenant_name,
+            tenantHomeAddress: this.tenant_home_address,
+            tenantContactAddress: this.tenant_contact_address,
+            tenantPhone: this.tenant_phone,
+            tenantEmail: this.tenant_email,
+            ownerName: this.owner_name, //從註冊資訊抓
+            ownerIdentity: this.owner_identity, //從註冊資訊抓
+            ownerHomeAddress: this.owner_home_address, //從註冊資訊抓
+            ownerContactAddress: this.owner_contact_address, //從註冊資訊抓
+            ownerPhone: this.owner_phone, //從註冊資訊抓
+            startDate: this.start_date,
+            endDate: this.end_date,
+            cOther: this.c_other,
+            signDate: this.sign_date,
+            cutReason: this.cut_reason,
+            cutDate: this.cut_date,
+            ai:this.ai,
+            //從房間抓
+            address: this.address,
+            floor: this.floor,
+            roomId: this.r_id,
+            rentP: this.rent_p,
+            deposit: this.deposit,
+            cutP: this.cut_p,
+            eletricP: this.eletric_p,
+            waterP: this.water_p,
+            manageP: this.manage_p,
+            acreage: this.acreage,
+            parking: this.parking,
+            equip: this.equip,
+            signDate: this.sign_date,
+            rOther: this.r_other,
+           
+        };
+        fetch("http://localhost:8080/contract/createContract", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json"
+            },
+            body: JSON.stringify(testObj)
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+        });
+        }
     },
+    
     components:{
         contractInput,
         preview_btn,

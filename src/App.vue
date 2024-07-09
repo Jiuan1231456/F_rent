@@ -5,6 +5,7 @@ import Header from"./components/Header.vue"
 
 <template>
   <div class="header">
+
     <Header />
   </div>
 
@@ -12,6 +13,7 @@ import Header from"./components/Header.vue"
 </template>
 
 <style scoped lang="scss">
+
 .header {
   width: 23dvw;
   height: 100dvh;

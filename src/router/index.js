@@ -23,12 +23,12 @@ const router = createRouter({
       name: 'roomList',
       component: () => import('../views/RoomList.vue')
     },
-    {
-      path: '/bill',
-      name: 'bill',
-      component: () => import('../views/Bill.vue')
+    {// 產生當期帳單
+      path: '/generatebill',
+      name: 'generatebill',
+      component: () => import('../views/BillGenerate.vue')
     },
-    {
+    {// 帳單明細
       path: '/BillDetail',
       name: 'BillDetail',
       component: () => import('../views/BillDetail.vue')
@@ -60,10 +60,10 @@ const router = createRouter({
       name: 'addroom',
       component: () => import('../views/AddRoom.vue')
     },
-    {
+    {//帳單列表
       path: '/lookupbill',
       name: 'lookupbill',
-      component: () => import('../views/LookupBill.vue')
+      component: () => import('../views/BillList.vue')
     },
     // {
     //   path: '/ ContractPreview',
@@ -76,7 +76,11 @@ const router = createRouter({
       name: 'Contract_Detail',
       component: () => import('../views/Contract_Detail.vue'),
       props: true // 允許通過路由傳參
-
+    },
+     {//當期帳單計算(輸入用電量的頁面)
+      path: '/billFinalDetail',
+      name: 'billFinalDetail',
+      component: () => import('../views/BillFinalDetail.vue')
     },
   ]
 

@@ -3,16 +3,38 @@ import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
 export default {
   data() {
-    return {};
+    return {
+      cutDateBill:{},
+    };
   },
   computed: {
-    ...mapState(dataStore, ["billObj"]),
+    ...mapState(dataStore, ["billObj","loginObj"]),
   },
   methods: {
     ...mapActions(dataStore, [""]),
+    findCutDate(){
+      let empty = {};
+      fetch("http://localhost:8080/contract/contratSearch", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(empty),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          this.cutDateBill = data.contractList.filter(
+            (item) => (item.ownerName === this.loginObj.ownerName) && (item.tenantIdentity === this.billObj.tenantIdentity) && (item.address === this.billObj.address)
+          );
+          console.log("篩出此筆帳單的租約",this.cutDateBill);
+          // this.setBillToContract(this.cutDateBill);
+        });
+    }
   },
   mounted() {
-    console.log('此筆帳單',this.billObj)
+    console.log('此筆帳單',this.billObj);
+    this.findCutDate();
   },
 };
 </script>
@@ -21,15 +43,15 @@ export default {
   <div class="bigArea">
     <div class="title">
       <span class="billTitle">帳單明細</span>
-      <span class="period" style="top: 10%;">計費期間：{{ this.billObj.periodStart}} ~ {{ this.billObj.periodEnd }}</span>
-      <span class="period" style="top: 50%;">繳費截止日：{{ this.billObj.paymentDate }}</span>
+      <span class="period" style="left: 32%;">計費期間：{{ this.billObj.periodStart}} ~ {{ this.billObj.periodEnd }}</span>
+      <span class="period" style="left: 66%;">繳費截止日：{{ this.billObj.paymentDate }}</span>
     </div>
       <div class="tenantArea">
        <span class="personal" style="top: 10%;left: 5%;font-weight: 500;">承租人資訊</span>
        <span class="personal" style="top: 35%;left: 7%;">姓名：{{ this.billObj.tenantName }}</span>
        <!-- <span class="personal" style="top: 35%;left: 28%;">電話：{{ this.billObj. }}</span> -->
        <span class="personal" style="top: 35%;right: 31%;">身分證字號：{{ this.billObj.tenantIdentity }}</span>
-       <span class="personal" style="bottom: 18%;left: 7%;">地址：{{ this.billObj.address }}</span>
+       <span class="personal" style="bottom: 18%;left: 7%;">租賃物件地址：{{ this.billObj.address }}</span>
     </div>
     <div class="detailArea">
       <table class="detail">
@@ -65,6 +87,12 @@ export default {
                 &emsp;&emsp;&emsp;&nbsp;= {{ this.billObj.eletricOneP }}</td>
             <td>{{ this.billObj.eletricOneP }}</td>
           </tr>
+          <tr class="content"style="border-bottom: 2px solid black;">
+              <td scope="row" >違約金</td>
+              <td style="text-align: justify;padding-left: 76px;">依租賃契約規定辦理</td>
+              <td v-if="this.cutDateBill.cutDate">{{ this.billObj.cutP }}</td>
+              <td v-else>無</td>
+            </tr>
           <tr class="content" >
             <td>應繳總金額</td>
             <td></td>
@@ -128,8 +156,9 @@ export default {
   }
   .period{
     position: absolute;
-    left: 66%;
+    top: 50%;
     background-color: transparent;
+    letter-spacing: 1px;
   }
   
   .searchItem {
