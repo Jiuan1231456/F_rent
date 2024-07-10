@@ -10,7 +10,10 @@ import topHeader from"./components/topHeader.vue"
     <Header />
   </div>
 <div class="top">
-  <!-- <topHeader /> -->
+  <topHeader />
+
+
+  <button class="login">登入/註冊</button>
 </div>
 
 
@@ -25,7 +28,15 @@ import topHeader from"./components/topHeader.vue"
 
 //這邊可以讓topheader浮出來
 .top{
-  
+  position: fixed;
   z-index: -99;
+}
+
+.login{
+    width: 8%;
+    height: 3%;
+    font-size: larger;
+    margin-left: 60%;
+    
 }
 </style>

@@ -8,6 +8,7 @@ export default {
         return {
         }
     },
+
     computed: {
         // 綁定 Pinia 狀態
         // 'oneContractObj' 在 pinia 檔裡的 state
@@ -16,17 +17,26 @@ export default {
     components: {
         RouterLink 
     },
+    created(){
+        console.log(this.roomObj);
+        this.pointRoom(roomObj.ownerIdentity,roomObj.ownerPhone)
+    },
     mounted(){
-        console.log(this.roomObj)
+       
+    },
+    methods:{
+        ...mapActions(dataStore, ['pointRoom']),
+    
     }
-//    
 }
 </script>
 
 <template>
     <div class="bigArea">
-        <h1>與{{oneContractObj.tenantName}}的租賃契約書</h1>
+        <!-- <h1>與{{oneContractObj.tenantName}}的租賃契約書</h1> -->
+
         <br>
+        <h1>與{{oneContractObj.tenantName}}的租賃契約書</h1>
         <div class="roomInfo">
             <h2>租賃物件資訊</h2>
             <br>
@@ -191,17 +201,17 @@ h2{
     }
 h1{
     background-color: white;
-    width: 30%;
-    padding: 2%;
+    // width: 30%;
+    // padding: 2%;
     border-style:inset;
     text-align: center;
-    position: absolute;
-    border-radius: 12%;
+    // position: absolute;
+    border-radius: 0%;
     top:2%;
     left: 39%;
     margin: auto;
-    background-color: rgb(158, 112, 57);
-    color: white;
+    // background-color: rgb(158, 112, 57);
+    color: rgb(0, 0, 0);
 }
 </style>
 

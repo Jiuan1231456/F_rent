@@ -164,28 +164,28 @@ export default defineComponent({
         <!-- 表單 -->
         <div class="login-page">
             <div class="form">
-            <form v-if="!isLoginForm" class="register-form">
-                <h5>註冊會員</h5>
-                <label>帳號</label>
-                    <input v-model="owner_account" type="text" placeholder="3-10位英數混合帳號" />
-                    <label>真實姓名</label>
-                    <input v-model="owner_name" type="text" placeholder="朴敘俊" />
-                    <label>E-mail</label>
-                    <input v-model="owner_email" type="email" placeholder="xxx@mail.com" />
-                    <label>連絡電話</label>
-                    <input v-model="owner_phone" type="tel" placeholder="09xx-xxx-xxx" />
-                    <label>密碼</label>
-                    <input v-model="owner_pwd" type="text" placeholder="6-10位英數密碼" />
-                    <button type="button" @click.prevent="register">註冊確認</button>
-                <p class="message"><a href="#" @click.prevent="toggleForm">登入</a></p>
-            </form>
-            <form v-else class="login-form">
-                <h5>會員登入</h5>
-                <input v-model="owner_account" type="text" placeholder="帳號/電話" />
-                <input v-model="owner_pwd" type="password" placeholder="密碼" />
-                <button @click.prevent="login">登入</button>
-                <p class="message">尚未加入會員? <a href="#" @click.prevent="toggleForm">註冊</a></p>
-            </form>
+                <form v-if="!isLoginForm" class="register-form">
+                    <h5>註冊會員</h5>
+                    <label>帳號</label>
+                        <input v-model="owner_account" type="text" placeholder="3-10位英數混合帳號" />
+                        <label>真實姓名</label>
+                        <input v-model="owner_name" type="text" placeholder="朴敘俊" />
+                        <label>E-mail</label>
+                        <input v-model="owner_email" type="email" placeholder="xxx@mail.com" />
+                        <label>連絡電話</label>
+                        <input v-model="owner_phone" type="tel" placeholder="09xx-xxx-xxx" />
+                        <label>密碼</label>
+                        <input v-model="owner_pwd" type="text" placeholder="6-10位英數密碼" />
+                        <button type="button" @click.prevent="register">註冊確認</button>
+                    <p class="message"><a href="#" @click.prevent="toggleForm">登入</a></p>
+                </form>
+                <form v-else class="login-form">
+                    <h5>會員登入</h5>
+                    <input v-model="owner_account" type="text" placeholder="帳號/電話" />
+                    <input v-model="owner_pwd" type="password" placeholder="密碼" />
+                    <button @click.prevent="login">登入</button>
+                    <p class="message">尚未加入會員? <a href="#" @click.prevent="toggleForm">註冊</a></p>
+                </form>
             </div>
         </div>
         <!-- 表單結束 -->
@@ -290,4 +290,6 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+
 </style>

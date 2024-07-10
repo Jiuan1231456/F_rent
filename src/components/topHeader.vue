@@ -34,8 +34,8 @@ export default {
 </script>
 
 <template>
-
 <div class="top">
+
 <Login/>
 </div>
 
@@ -47,5 +47,12 @@ export default {
     width: 100dvw;
     height: 5%;
     background-color: rgb(231, 195, 161);
+}
+.login{
+    width: 8%;
+    height: 3%;
+    font-size: larger;
+    margin-left: 60%;
+    
 }
 </style>

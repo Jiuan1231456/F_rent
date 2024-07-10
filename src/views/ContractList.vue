@@ -15,7 +15,8 @@ export default {
                 startDate: "",
                 endDate: ""
             },
-            selectedContracts: [] // 新增選中(checkbox)的契約狀態,用於存儲選中的契約。
+            selectedContracts: [], // 新增選中(checkbox)的契約狀態,用於存儲選中的契約。
+            statusFilter: "" // 新增狀態過濾器
         }
     },
     computed: {
@@ -26,7 +27,8 @@ export default {
         RouterLink 
     },
     methods: {
-        ...mapActions(dataStore, ['setOneContractObj','setRoomObj']),
+    
+        ...mapActions(dataStore, ['setOneContractObj','setRoomObj','getRoomInfo']),
         // 跳轉到新增契約頁面
         goToContractAdd() {
         // 使用 Vue Router 的方式進行跳轉
@@ -65,12 +67,51 @@ export default {
                 console.error("Error fetching data:", error); //處理錯誤
             });
         },
+// 計算總頁數
+calculateTotalPages(totalItems) {
+            const pageSize = 10; // 假設每頁顯示 10 筆資料
+            const totalPages = Math.ceil(totalItems / pageSize);
+            console.log("Total Pages:", totalPages); // 打印總頁數以供參考
+        },
+        // 設定契約狀態
+        getContractStatus(contract) {//據當前日期和契約的開始及結束日期，判斷契約狀態。
+            const now = new Date();
+            const startDate = new Date(contract.startDate);
+            const endDate = new Date(contract.endDate);
+            if (now < startDate) {
+                return "待生效";
+            } else if (now >= startDate && now <= endDate) {
+                return "出租中";
+            } else if (now > endDate) {
+                return "已結束";
+            }
+            return "空房"; // 假設沒有狀態時為空房
+        },
+        //篩選狀態
+        filterByStatus(status) {
+            // 根據選中的狀態過濾契約列表
+            this.statusFilter = status; // 更新狀態過濾器
+        },
+        // 根據狀態過濾契約
+        getFilteredContracts() {
+            if (this.statusFilter === "") {
+                return this.contractList;
+            }
+            return this.contractList.filter(contract => {
+                const contractStatus = this.getContractStatus(contract);
+                return contractStatus === this.statusFilter;
+            });
+        },
+        // 顯示所有契約
+        showAllContracts() {
+            this.statusFilter = ""; // 清空狀態過濾器以顯示所有契約
+        },
+
         //第三層:篩選特定房東的特定房間資訊
         selectRoomInfo(index){
             console.log("選特定房東的特定房間資訊",this.contractList[index]);//印出來供看console
-            
             this.setOneContractObj(this.contractList[index]);
-            
+            //this.getRoomInfo(index2)
              // 跳轉到詳細頁面並傳遞資料
             // this.$router.push({ name: 'Contract_Detail', params: { id: this.contractList[index].ai } });
         },
@@ -81,6 +122,10 @@ export default {
             const totalPages = Math.ceil(totalItems / pageSize);
             console.log("Total Pages:", totalPages); // 打印總頁數以供參考
         },
+
+        
+
+
     },
     created(){
         this.search(); // 組件創建時執行搜尋以獲取初始數據
@@ -96,42 +141,38 @@ export default {
     <!-- 搜尋欄 -->
     <div class="searchPlace">
         <div class="inputPlace">
-        <span class="label">承租地址　：</span>
-        <div class="InputContainer">
-            <input placeholder="Search.." id="input" class="input" name="text" type="text" v-model="this.contractFilters.address">
-        </div>
+            <span class="label">承租地址　：</span>
+            <div class="InputContainer">
+                <input placeholder="Search.." id="input" class="input" name="text" type="text" v-model="this.contractFilters.address">
+            </div>
         </div>
         <div class="inputPlace">
-        <span class="label">承租人姓名：</span>
-        <div class="InputContainer">
-            <input placeholder="Search.." id="input" class="input" name="text" type="text" v-model="this.contractFilters.tenantName">
-        </div>
+            <span class="label">承租人姓名：</span>
+            <div class="InputContainer">
+                <input placeholder="Search.." id="input" class="input" name="text" type="text" v-model="this.contractFilters.tenantName">
+            </div>
         </div>
         <!-- 選擇日期 -->
         <p class="datetime">
-        <label for="start_time"  style="background-color:  #FFC89A;" >租約時間 從：</label>
-        <input type="date" id="start" name="trip-start" min="1970-01-01" max="2050-12-31" style="font-size: 22px;">
-        <label for="end_time" style="background-color:  #FFC89A;">到：</label>
-        <input type="date" id="end" name="trip-end" min="1970-01-01" max="2050-12-31" style="font-size: 22px;">
-        <button class="searchbtn" type="button" @click="search()">搜尋</button>
+            <label for="start_time"  style="background-color:  #FFC89A;" >租約時間 從：</label>
+            <input type="date" id="start" name="trip-start" min="1970-01-01" max="2050-12-31" style="font-size: 22px;">
+            <label for="end_time" style="background-color:  #FFC89A;">到：</label>
+            <input type="date" id="end" name="trip-end" min="1970-01-01" max="2050-12-31" style="font-size: 22px;">
+            <button class="searchbtn" type="button" @click="search()">搜尋</button>
         </p>
     </div>
 
-    <div class="container">
-        <!-- 新增租約按鈕 -->
-        <i class="fa-solid fa-circle-plus" @click="goToContractAdd()"></i>
 
-        <!-- 狀態選擇清單 -->
-        <div class="statusList">
-        <select style="font-size: 22px;">
-            <option value="" disabled selected>房屋使用狀態篩選</option>
-            <option value="">出租中</option>
-            <option value="">空房</option>
-            <option value="">待生效</option>
-            <option value="">已結束</option>
-        </select>
-    </div>
-    </div>
+        <!-- 狀態選擇按鈕 -->
+        <div class="statusButtons">
+            <button class="renting" @click="filterByStatus('出租中')" :class="{ active: statusFilter === '出租中' }">出租中</button>
+            <button class="empty" @click="filterByStatus('空房')" :class="{ active: statusFilter === '空房' }">空房</button>
+            <button class="goingtostart" @click="filterByStatus('待生效')" :class="{ active: statusFilter === '待生效' }">待生效</button>
+            <button class="ended" @click="filterByStatus('已結束')" :class="{ active: statusFilter === '已結束' }">已結束</button>
+            <!-- 顯示名下所有契約 -->
+            <button class="all" @click="showAllContracts()" :class="{ active: statusFilter === '' }">顯示所有契約</button>
+        </div>
+ 
 
     <!--租約列表 con=contract -->
     <div class="conlist">
@@ -153,11 +194,11 @@ export default {
         <tbody>
             <!-- item 是在 v-for 循環中定義的一個臨時變量，用來表示 contractList 陣列中的每個元素 -->
             <!-- index 是每次迭代過程中的當前索引值。在這裡是指 contractList 陣列中每個元素的索引位置。 -->
-            <tr v-for="(item, index) in this.contractList" :key="index">
+            <tr v-for="(item, index) in getFilteredContracts()" :key="index">
                 <!-- <td><input type="checkbox" v-model="selectedContracts" :value="item.ai"></td> -->
                 <td>{{ item.roomId }}</td>
                 <td>{{ item.tenantName }}</td>
-                <td>{{ item.status }}</td>
+                <td>{{  getContractStatus(item) }}</td>
                 <td>{{ item.address }}</td>
                 <!-- 這邊還要再寫另一個方法來獲取狀態 -->
                 <td>{{ item.startDate }}</td>
@@ -173,12 +214,13 @@ export default {
 </template>
 
     <style scoped lang="scss">
+    *{margin-top: 5%;}
     .manageArea {
         width: 100dvw;
         height: 100dvh;
         border: 1em solid #9a685200;
         //border-style:  inset;
-        margin-left: 10%;  // 移除 margin-left，並將 margin 設定為 auto
+        margin-left: 25%;  // 移除 margin-left，並將 margin 設定為 auto
         padding-top: 0;  // 確保 padding-top 為 0
         background-color: #FAF0E9;
     //搜尋欄文字背景顏色
@@ -196,14 +238,15 @@ export default {
         border: 1em solid #fae1cd;
         text-align: left;
         margin-top: 5%;
-        margin-left: 12%;
-        padding: 3% 3% 5% 3%;
-    }
+        margin-left: 7%;
+        padding: 3% 3% 5% 3%;}
+    
 
     .inputPlace {
         display: flex; /* 使用 Flexbox 使元素並排 */
         align-items: center; /* 垂直居中對齊 */
-        margin-bottom: 10px; /* 可以根據需要調整間距 */
+        margin-top: -5%;
+        margin-bottom: 2%; /* 可以根據需要調整間距 */
         background-color: #FFC89A;
     }
 //搜尋欄
@@ -236,9 +279,10 @@ export default {
     }
 
     .datetime {
-        margin-top: 20px;
+        margin-top: 2%;
         background-color: #FFC89A;
     }
+
 //搜尋按鈕
     .searchbtn {
         margin-left: 3%;
@@ -264,11 +308,12 @@ export default {
         font-size: medium;
         transform: scale(0.95); /* 在active時縮小按鈕 */
     }
-
+    
     .conlist {
-        width: 95%;
+        width: 135dvh;
         height: auto;
         margin-top: 1%;
+        
         color: black;
         background-color: antiquewhite;
         border: none;
@@ -310,27 +355,90 @@ export default {
         background-color: #f3f3f3;
     }
 
-    .container {
-        display: flex;
-        margin-top: 1%;
+
+  
+
+
+//狀態按鈕
+.statusButtons{
+    width: 80dvw;
+    display: flexbox;
+    color: #110f0f;
+    font-size: 18px;
+    margin-top: 0;
+ :active{
+    font-size:20px;
+    font-weight: 600;
+ }
+
+    .renting{
+        margin-bottom: 26px;
+        margin-left: 54px;
+        width: 12%;
+        height: 30px;
+        border: 0px;
+        background-color: #f9ddc6;
+        border-radius: 20px;
+        
+        &:hover {
+        background-color: #f0c49f;
+        }
+    }
+    .empty{
+        margin-bottom: 26px;
+        margin-left: 54px;
+        width: 12%;
+        height: 30px;
+      
+        border: 0px;
+        background-color: #fcc395;
+        border-radius: 20px;
+        &:hover {
+        background-color: #f0c49f;
+        }
+    }
+    .goingtostart{
+        margin-bottom: 26px;
+        margin-left: 54px;
+        width: 12%;
+        height: 30px;
+       
+        border: 0px;
+        background-color: #f9ddc6;
+        border-radius: 20px;
+        &:hover {
+        background-color: #f0c49f;
+        }
+    }
+    .ended{
+        margin-bottom: 26px;
+        margin-left: 54px;
+        width: 12%;
+        height: 30px;
+      
+        border: 0px;
+        background-color: #fcc395;
+        border-radius: 20px;
+        &:hover {
+        background-color: #f0c49f;
+        }
     }
 
-    .fa-circle-plus {
-        font-size: 2.2em;
-        margin-top: 3%;
-        margin-left: -5%;
+    .all{
+        margin-bottom: 26px;
+        margin-left: 54px;
+        width: 12%;
+        height: 30px;
+      
+        border: 0px;
+        background-color: #ebcbcb;
+        border-radius: 20px;
+        &:hover {
+        background-color: #f0c49f;
+        }
     }
+}
 
-    .statusList {
-        font-size: 22px;
-        margin-left: 85%;
-        margin-top: 3%;
-    }
-
-    .statusList option {
-        font-size: 22px;
-    }
-    
 </style>
   
 

@@ -1,5 +1,5 @@
 <!-- src="print.js" -->
- <script>
+<script>
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
 
@@ -61,7 +61,7 @@ export default {
         this.roomInfo = this.$route.params.roomInfo;
     },
     mounted() {
-       console.log(this.roomObj)
+       
     },
     methods: {
       
