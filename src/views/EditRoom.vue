@@ -1,10 +1,12 @@
 <script>
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
+import Swal from 'sweetalert2'
 export default {
     data() {
         return {
-
+            imageFile: null,
+            imageUrl: null,
         }
     },
     computed: {
@@ -36,11 +38,90 @@ export default {
             })
                 .then(res => res.json())
                 .then(data => {
+                    console.log(data)
                     console.log("更新完的結果", this.roomDetail)
-                    // 篩選出當前account的問卷
-                    // this.roomList = data.roomList.filter(item => item.account === this.loginObj.ownerAccount);
+                    if (data.code === 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "更新成功!!",
+                            didClose: () => {
+                                this.$router.push('/roomList');
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "輸入內容有誤",
+                        });
+                    }
                 })
         },
+
+        // GPT===================================================
+
+        previewImage(event) { //在选择图片时触发，调用 convertToBase64 方法将图片转换成 base64 编码。
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                this.imageFile = file;
+                this.imageUrl = URL.createObjectURL(file);
+                this.convertToBase64(file);
+            } else {
+                alert('請上傳一個有效的圖片文件');
+                this.imageFile = null;
+                this.imageUrl = null;
+            }
+        },
+        convertToBase64(file) { //使用 FileReader 将图片文件转换成 base64 编码。
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                this.photo = reader.result.split(',')[1]; // 去掉 base64 前缀
+            };
+            reader.onerror = error => {
+                console.error('Error: ', error);
+            };
+        },
+        uploadImage() { //调用 addPhoto 方法将图片和地址上传到服务器。
+            if (!this.imageFile) {
+                alert('請選擇一張圖片');
+                return;
+            }
+
+            this.addPhoto();
+        },
+
+        addPhoto() {
+            let photoObj = {
+                address: this.roomDetail.address,
+                photo: this.photo,
+            };
+            fetch("http://localhost:8080/room/insertPhoto", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(photoObj)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.code === 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "上傳成功!!",
+                            didClose: () => {
+                                this.$router.push('/roomList');
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "發生錯誤",
+                        });
+                    }
+                })
+
+        }
     },
     mounted() {
         this.setPage(4)
@@ -72,6 +153,18 @@ export default {
             <span>特色描述&nbsp;:&nbsp;&nbsp;</span>
             <textarea class="rOther inp" style="resize: none; width: 80%; height: 40%;" v-model="this.roomDetail.rOther"></textarea>
         </div>
+        
+        <div id="app">
+            <form id="imageUploadForm" @submit.prevent="uploadImage">
+                <input type="file" id="imageFile" name="imageFile" @change="previewImage" accept="image/*">
+                <button type="submit">上傳圖片</button>
+            </form>
+            <div v-if="imageUrl">
+                <h3>預覽圖片:</h3>
+                <img :src="imageUrl" alt="Image Preview">
+            </div>
+        </div>
+
         <button @click="update()">儲存更新</button>
     </div>
 </template>

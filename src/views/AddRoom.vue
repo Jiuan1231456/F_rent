@@ -2,6 +2,7 @@
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
 import { RouterLink } from "vue-router";
+import Swal from 'sweetalert2'
 export default {
     data() {
         return {
@@ -19,6 +20,7 @@ export default {
             parking: false,
             equip: "",
             rOther: "",
+            photo: "",
 
         }
     },
@@ -27,7 +29,7 @@ export default {
     },
     methods: {
         ...mapActions(dataStore, ['setPage']),
-        addRoomToDB() {
+        addRoomToDB() {//新增房間資訊到DB
             let testObj = {
                 address: this.address,
                 account: this.loginObj.ownerAccount, //pinia暫存的房東帳號
@@ -43,6 +45,7 @@ export default {
                 parking: this.parking,
                 equip: this.equip,
                 rOther: this.rOther,
+                photo: this.photo,
             }
             fetch("http://localhost:8080/room/creatRoom1", {
                 method: "POST",
@@ -53,10 +56,25 @@ export default {
             })
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data)
-                //還要加一個 跳回列表頁的功能
+                    console.log(data);
+                    if (data.code === 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "新增成功!!",
+                            didClose: () => {
+                                this.$router.push('/roomList');
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "輸入內容有誤",
+                        });
+                    }
                 })
         },
+
+        
     },
     mounted() {
         this.setPage(3);
