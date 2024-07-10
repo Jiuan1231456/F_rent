@@ -34,8 +34,11 @@ export default {
   },
   mounted() {
     console.log('此筆帳單',this.billObj);
-    this.findCutDate();
+    
   },
+  beforeCreate(){
+    this.findCutDate();
+  }
 };
 </script>
 

@@ -2,57 +2,70 @@
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
 import emailjs from "emailjs-com";
-import JSZip from 'jszip';
-import Docxtemplater from 'docxtemplater';
-import { saveAs } from 'file-saver';
+import JSZip from "jszip";
+import Docxtemplater from "docxtemplater";
+import { saveAs } from "file-saver";
+import axios from "axios"; // 用於加載模板文件
+import { PDFDocument } from "pdf-lib";
 
 export default {
   data() {
     return {
-      title:'',
-      content:'',
+      ownerName: "",
+      tenantName: "",
     };
   },
   computed: {
-    ...mapState(dataStore, ["finalBill", "billToContract","loginObj"]),
+    ...mapState(dataStore, ["finalBill", "billToContract", "loginObj"]),
   },
   methods: {
     ...mapActions(dataStore, ["setBillToContract"]),
-    sendEmail() {
+    sendEmail() {  // 寄信功能
       var templateParams = {
         tenantName: this.finalBill.tenantName,
         periodStart: this.finalBill.periodStart,
         periodEnd: this.finalBill.periodEnd,
         paymentDate: this.finalBill.paymentDate,
         ownerName: this.finalBill.ownerName,
-        tenantEmail:this.billToContract.tenantEmail,
-        ownerEmail:this.loginObj.ownerEmail,
+        tenantEmail: this.billToContract.tenantEmail,
+        ownerEmail: this.loginObj.ownerEmail,
       };
-      emailjs
-        .send(
-          "service_azp4v8s",
-          "template_h9952ii",
-          templateParams,
-        )
-        .then(
-          function (response) {
-            console.log("SUCCESS!", response.status, response.text);
-          },
-          function (error) {
-            console.log("FAILED...", error);
-          }
-        );
+      emailjs.send("service_azp4v8s", "template_h9952ii", templateParams).then(
+        function (response) {
+          console.log("SUCCESS!", response.status, response.text);
+        },
+        function (error) {
+          console.log("FAILED...", error);
+        }
+      );
     },
-    print(){
+    async loadTemplate() {  // 提供一個列印的模板
+      try {
+        const response = await axios.get("/test.docx", {
+          responseType: "arraybuffer",
+        });
+        return response.data;
+      } catch (error) {
+        // console.error('Error loading template:', error);
+        throw error;
+      }
+    },
+    async print() {  // 列印功能
+      // try{
+      const templateArrayBuffer = await this.loadTemplate();
+      // console.log('Template loaded successfully');
+
       // 創建一個空的 Word 文檔
-      const zip = new JSZip();
+      const zip = new JSZip(templateArrayBuffer);
       const doc = new Docxtemplater().loadZip(zip);
+      // console.log('Template unzipped and loaded into Docxtemplater');
 
       // 設置文檔內容
       doc.setData({
-        title: "這是標題",
-        content: "這是內容",
+        ownerName: this.finalBill.ownerName,
+        tenantName: this.finalBill.tenantName,
       });
+      console.log("Data set for the template");
 
       try {
         // 渲染文檔
@@ -64,11 +77,32 @@ export default {
 
       // 生成 Word 文檔並保存
       const out = doc.getZip().generate({
-        type: 'blob',
-        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        type: "blob",
+        mimeType:
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       });
-      saveAs(out, 'test1.docx');
-    }
+      saveAs(out, "test1.docx");
+      // ========================================================================= 以下是生成pdf
+      // console.log('Buffer generated successfully');
+      // 將Docx文檔轉換為PDF
+      //   const pdfDoc = await PDFDocument.load(buffer);
+      //   // console.log('PDF document loaded successfully from buffer');
+
+      //    // 添加內容到PDF文件，這裡可以自定義添加內容的方式
+      //    const page = pdfDoc.addPage();
+      //     page.drawText('Hello, World!', { x: 50, y: 50 });
+      //     // console.log('Text added to the PDF');
+
+      //     // 將PDF保存為Blob並下載
+      //     const pdfBytes = await pdfDoc.save();
+      //     console.log('PDF document saved successfully');
+      //     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      //     saveAs(blob, 'output.pdf'); // 下載文件，文件名為'output.pdf'
+      //     console.log('PDF downloaded successfully');
+      // } catch(error){
+      //   console.log('pdf生成失敗',error);
+      //   throw error;
+    },
   },
   mounted() {
     emailjs.init("l4QPcOaCIqMDx_T_L");
@@ -177,8 +211,12 @@ export default {
         >返回列表</RouterLink
       >
     </button>
-    <button class="email inform" style="right: 13%; " @click="sendEmail()" >寄信通知</button>
-    <button class="copy inform" style="right: 25%;" @click="print()">列印帳單</button>
+    <button class="email inform" style="right: 13%" @click="sendEmail()">
+      寄信通知
+    </button>
+    <button class="copy inform" style="right: 25%" @click="print()">
+      列印帳單
+    </button>
   </div>
 </template>
 
@@ -214,15 +252,15 @@ export default {
       cursor: pointer;
     }
   }
-  .email{
+  .email {
     background-color: #f54545;
-    &:hover{
+    &:hover {
       background-color: #ef9a95;
     }
   }
-  .copy{
+  .copy {
     background-color: #8da8d3;
-    &:hover{
+    &:hover {
       background-color: #bfc9d9;
     }
   }
