@@ -12,7 +12,7 @@ export default {
   },
   methods: {
     ...mapActions(dataStore, [""]),
-    findCutDate(){
+    findCutDate(){  // 篩出對應帳單的契約 => 先抓到全部租約，再一層一層篩
       let empty = {};
       fetch("http://localhost:8080/contract/contratSearch", {
         method: "post",

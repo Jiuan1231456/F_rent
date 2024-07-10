@@ -11,7 +11,7 @@ export default {
       changeIf: "no",
       newBillSearch: [],
       newnewBillSearch: [],
-      cutDateBill:[]
+      cutDateBill: [],
     };
   },
   components: {
@@ -30,11 +30,18 @@ export default {
     ]),
   },
   methods: {
-    ...mapActions(dataStore, ["setPage", "setPerBill","setFinalBill","setBillToContract"]),
+    ...mapActions(dataStore, [
+      "setPage",
+      "setPerBill",
+      "setFinalBill",
+      "setBillToContract",
+    ]),
     showElectric() {
+      // 更新帳單資料的彈跳視窗的開關
       this.elecModal = !this.elecModal;
     },
-    search() {  // 篩出房東和截止日前的帳單
+    search() {
+      // 篩出房東和截止日前的帳單
       let empty = {};
       // 讓當天日期變成post欄位stardate的值
       let today = new Date();
@@ -64,19 +71,24 @@ export default {
             (item) => item.paymentDate > todayStr
           );
           console.log("未截止", this.newnewBillSearch);
+          this.newnewBillSearch.sort((a, b) => {
+        return new Date(a.paymentDate) - new Date(b.paymentDate);
+      });
         });
     },
-    bringToEdit(index) { // 將選擇的帳單帶到輸入用電量的視窗
+    bringToEdit(index) {
+      // 將選擇的帳單帶到輸入用電量的視窗
       // this.newnewBillSearch[index];
       this.setPerBill(this.newnewBillSearch[index]);
       console.log("選的帳單", this.perBill);
       this.perBill.eletricV = "";
     },
-    updateElectricV(){  // 更新用電量
+    updateElectricV() {
+      // 更新用電量
       let electricObj = {
-        ai:this.perBill.ai,
-        eletricV:this.perBill.eletricV
-      }
+        ai: this.perBill.ai,
+        eletricV: this.perBill.eletricV,
+      };
       fetch("http://localhost:8080/bill/updateBill", {
         method: "post",
         headers: {
@@ -88,10 +100,11 @@ export default {
         .then((data) => {
           console.log("更新完用電量的", data);
           this.setFinalBill(data.billList[0]);
-          console.log("pinia裡的finalBill",this.finalBill);
+          console.log("pinia裡的finalBill", this.finalBill);
         });
     },
-    findCutDate(){
+    findCutDate() {
+      // // 篩出對應帳單的契約 => 先抓到全部租約，再一層一層篩
       let empty = {};
       fetch("http://localhost:8080/contract/contratSearch", {
         method: "post",
@@ -104,17 +117,24 @@ export default {
         .then((data) => {
           console.log(data);
           this.cutDateBill = data.contractList.filter(
-            (item) => (item.ownerName === this.loginObj.ownerName) && (item.tenantIdentity === this.perBill.tenantIdentity) && (item.address === this.perBill.address)
+            (item) =>
+              item.ownerName === this.loginObj.ownerName &&
+              item.tenantIdentity === this.perBill.tenantIdentity &&
+              item.address === this.perBill.address
           );
-          console.log("篩出此筆帳單的租約",this.cutDateBill);
+          console.log("篩出此筆帳單的租約", this.cutDateBill);
           this.setBillToContract(this.cutDateBill);
         });
-    }
+    },
+    sortByPaymentDate() {
+      this.newnewBillSearch.sort((a, b) => {
+        return new Date(a.paymentDate) - new Date(b.paymentDate);
+      });
+    },
   },
   mounted() {
     this.setPage(10);
     this.search();
-    
   },
 };
 </script>
@@ -145,7 +165,9 @@ export default {
             <td scope="col" class="thead">承租人</td>
             <td scope="col" class="thead">地址</td>
             <td scope="col" class="thead">計費期間</td>
-            <td scope="col" class="thead">繳費期限</td>
+            <td scope="col" class="thead">
+              繳費期限
+            </td>
             <td scope="col" class="thead">選擇此筆</td>
           </tr>
         </thead>
@@ -162,7 +184,6 @@ export default {
                 @click="
                   this.showElectric();
                   this.bringToEdit(index);
-                  
                 "
               >
                 選擇
@@ -205,7 +226,18 @@ export default {
         </template>
         <template v-slot:footer>
           <div class="footerArea">
-            <RouterLink to="/billFinalDetail"><button type="submit" class="submit" @click="this.updateElectricV();this.findCutDate();">提交</button></RouterLink>
+            <RouterLink to="/billFinalDetail"
+              ><button
+                type="submit"
+                class="submit"
+                @click="
+                  this.updateElectricV();
+                  this.findCutDate();
+                "
+              >
+                提交
+              </button></RouterLink
+            >
           </div>
         </template>
       </electricModal>

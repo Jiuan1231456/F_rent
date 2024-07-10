@@ -33,21 +33,18 @@ export default {
   },
   computed: {
     ...mapState(dataStore, ["page", "loginObj", "monthBill", "billObj"]),
-    totalpages() {
-      // 計算搜尋結果總頁數
+    totalpages() {  // 計算搜尋結果總頁數
       return Math.ceil(this.newnewBillSearch.length / this.itemsPerPage);
     },
-    calData() {
+    calData() {  // 資料分頁
       console.log("開始要算分頁的資料", this.newnewBillSearch);
-      // 資料分頁
       // 起始索引位置 : 當前頁數1，共 10筆，因此當頁資料起始位置為0，第一頁的資料為0-10筆
       const startPage = (this.currentPage - 1) * this.itemsPerPage;
       const endPage = startPage + this.itemsPerPage;
       // slice : 從 newBillSearch 中提取從 startPage 到 endPage 的數據，但不包含 endPage
       return this.newnewBillSearch.slice(startPage, endPage);
     },
-    calPages() {
-      // 動態生成頁碼
+    calPages() { // 動態生成頁碼
       let pages = []; // 將全部頁碼變成一個陣列
       const total = this.totalpages;
       // 從 1 遍歷到總頁數，生成對應的頁碼
@@ -60,7 +57,7 @@ export default {
   },
   methods: {
     ...mapActions(dataStore, ["setPage", "setBillObj", "setMonthBill"]),
-    search() {
+    search() {  // 帳單列表搜索
       let searchObj = {
         address: this.billFilters.address,
         tenantName: this.billFilters.tenantName,
@@ -88,7 +85,7 @@ export default {
           console.log("全部房東的", data);
           //   this.newBillSearch = data
           this.newBillSearch = data.billList.filter(
-            (item) => item.ownerName === this.loginObj.ownerName
+            (item) => (item.ownerName === this.loginObj.ownerName)
           );
           console.log("只有現在房東的", this.newBillSearch);
           this.newnewBillSearch = this.newBillSearch.filter(
@@ -98,14 +95,12 @@ export default {
           this.cacheNewnewBillSearch = this.newnewBillSearch;
         });
     },
-    bringToDetail(index) {
-      // 偵測到選的帳單並存到pinia
+    bringToDetail(index) { // 偵測到選的帳單並存到pinia
       this.setBillObj(this.newnewBillSearch[index]);
       console.log('選的帳單',this.newBillSearch[index]);
       index = "";
     },
-    generateBill() {
-      // 帳單生成
+    generateBill() { // 帳單生成
       // 讓當天日期變成post欄位stardate的值
       let today = new Date();
       let month = today.getMonth() + 1;
@@ -135,37 +130,31 @@ export default {
           console.log("pinia裡的當期帳單", this.monthBill);
         });
     },
-    nextPage() {
-      // 分頁功能：下一頁
+    nextPage() { // 分頁功能：下一頁
       // 如果當前頁數比總頁數小，當前頁數 + 1 (翻到下一頁)
       if (this.currentPage < this.totalpages) {
         this.currentPage++;
       }
     },
-    prevPage() {
-      // 分頁功能：上一頁
+    prevPage() { // 分頁功能：上一頁
       // 如果當前頁數不是1，當前頁數 - 1 (翻到前一頁)
       if (this.currentPage > 1) {
         this.currentPage--;
       }
     },
-    changePage(page) {
-      // 分頁功能：跳轉到指定頁
+    changePage(page) { // 分頁功能：跳轉到指定頁
       this.currentPage = page;
     },
-    handleFocus(input) {
-      // 偵測輸入框被選到
+    handleFocus(input) { // 偵測輸入框被選到
       this[`input${input}`].isFocused = true;
     },
-    handleBlur(input) {
-      // 偵測輸入框沒被選到
+    handleBlur(input) { // 偵測輸入框沒被選到
       this[`input${input}`].isFocused = false;
     },
-    checkContentAdd(input) {
-      // 偵測地址輸入框有無填東西
+    checkContentAdd(input) { // 偵測地址輸入框有無填東西(地址搜尋框)
       this[`input${input}`].hasContent = this.billFilters.address.length > 0;
     },
-    checkContentName(input) {
+    checkContentName(input) { // 偵測地址輸入框有無填東西(承租人搜尋框)
       this[`input${input}`].hasContent = this.billFilters.tenantName.length > 0;
     },
     tenantStatus(start, end) {  // 區分承租中和契約結束的狀態
@@ -180,13 +169,13 @@ export default {
         return "承租中"
       }
     },
-    filterTenanting(){
+    filterTenanting(){  // 篩出承租中的所有帳單
       this.newnewBillSearch = this.cacheNewnewBillSearch.filter(item => this.tenantStatus(item.startDate,item.endDate) === "承租中");
     },
-    filterEnded(){
+    filterEnded(){ // 篩出契約結束的所有帳單
       this.newnewBillSearch = this.cacheNewnewBillSearch.filter(item => this.tenantStatus(item.startDate,item.endDate) === "契約已結束");
     },
-    filterAll(){
+    filterAll(){  // 篩出全部帳單
       this.newnewBillSearch = this.cacheNewnewBillSearch;
     }
   },
