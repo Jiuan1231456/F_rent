@@ -22,6 +22,9 @@ export default {
             rOther: "",
             photo: "",
 
+            imageFile: null,
+            imageUrl: null,
+
         }
     },
     computed: {
@@ -29,30 +32,32 @@ export default {
     },
     methods: {
         ...mapActions(dataStore, ['setPage']),
+
+        handleFileUpload(event) {//處理文件上傳事件並將文件保存到 photo 屬性中 
+            this.photo = event.target.files[0];
+        },
+
         addRoomToDB() {//新增房間資訊到DB
-            let testObj = {
-                address: this.address,
-                account: this.loginObj.ownerAccount, //pinia暫存的房東帳號
-                floor: this.floor,
-                rId: this.rId,
-                rentP: this.rentP,
-                deposit: this.deposit,
-                cutP: this.cutP,
-                eletricP: this.eletricP,
-                waterP: this.waterP,
-                manageP: this.manageP,
-                acreage: this.acreage,
-                parking: this.parking,
-                equip: this.equip,
-                rOther: this.rOther,
-                photo: this.photo,
-            }
-            fetch("http://localhost:8080/room/creatRoom1", {
+            let formData = new FormData();
+            formData.append('photo', this.photo);
+            formData.append('address', this.address);
+            formData.append('account', this.loginObj.ownerAccount); // pinia暫存的房東帳號
+            formData.append('floor', this.floor);
+            formData.append('rId', this.rId);
+            formData.append('rentP', this.rentP);
+            formData.append('deposit', this.deposit);
+            formData.append('cutP', this.cutP);
+            formData.append('eletricP', this.eletricP);
+            formData.append('waterP', this.waterP);
+            formData.append('manageP', this.manageP);
+            formData.append('acreage', this.acreage);
+            formData.append('parking', this.parking);
+            formData.append('equip', this.equip);
+            formData.append('rOther', this.rOther);
+
+            fetch("http://localhost:8080/room/creatRoom", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(testObj)
+                body: formData
             })
                 .then(res => res.json())
                 .then(data => {
@@ -72,9 +77,16 @@ export default {
                         });
                     }
                 })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "上傳失敗",
+                    });
+                });
         },
 
-        
+
     },
     mounted() {
         this.setPage(3);
@@ -91,50 +103,73 @@ export default {
         <div class="title">
             <h1>新增房間資訊</h1>
         </div>
-        <div class="inputArea">
-            <span>住址&nbsp;:&nbsp;&nbsp;</span>
-            <input class="address inp" type="text" v-model="this.address">
-
-            <span>樓層&nbsp;:&nbsp;&nbsp;</span>
-            <input class="floor inp" type="text" v-model="this.floor">樓
-
-            <span>房號&nbsp;:&nbsp;&nbsp;</span>
-            <input class="rId inp" type="text" v-model="this.rId">
-            <br>
-            <span>租金&nbsp;:&nbsp;&nbsp;</span>
-            <input class="rentP inp" type="text" v-model="this.rentP">元/月
-
-            <span>押金&nbsp;:&nbsp;&nbsp;</span>
-            <input class="deposit inp" type="text" v-model="this.deposit">元
-
-            <span>違約金&nbsp;:&nbsp;&nbsp;</span>
-            <input class="cutP inp" type="text" v-model="this.cutP">元
-            <br>
-            <span>電費&nbsp;:&nbsp;&nbsp;</span>
-            <input class="eletricP inp" type="text" v-model="this.eletricP">元/度
-
-            <span>水費&nbsp;:&nbsp;&nbsp;</span>
-            <input class="waterP inp" type="text" v-model="this.waterP">元/月
-
-            <span>管理費&nbsp;:&nbsp;&nbsp;</span>
-            <input class="manageP inp" type="text" v-model="this.manageP">
-            <br>
-            <span>坪數&nbsp;:&nbsp;&nbsp;</span>
-            <input class="acreage inp" type="text" v-model="this.acreage">
-
-            <span>車位&nbsp;:&nbsp;&nbsp;</span>
-            <input class="parking inp" type="checkbox" v-model="this.parking">
+        <div class="create-room">
+            <form @submit.prevent="addRoomToDB">
+                <div>
+                    <label for="address">地址:</label>
+                    <input type="text" id="address" v-model="address">
+                </div>
+                <div>
+                    <label for="floor">樓層:</label>
+                    <input type="text" id="floor" v-model="floor">
+                </div>
+                <div>
+                    <label for="rId">房號:</label>
+                    <input type="text" id="rId" v-model="rId">
+                </div>
+                <div>
+                    <label for="rentP">租金:</label>
+                    <input type="text" id="rentP" v-model="rentP">元/月
+                </div>
+                <div>
+                    <label for="deposit">押金:</label>
+                    <input type="text" id="deposit" v-model="deposit">
+                </div>
+                <div>
+                    <label for="cutP">違約金:</label>
+                    <input type="text" id="cutP" v-model="cutP">
+                </div>
+                <div>
+                    <label for="eletricP">電費:</label>
+                    <input type="text" id="eletricP" v-model="eletricP">元/度
+                </div>
+                <div>
+                    <label for="waterP">水費:</label>
+                    <input type="text" id="waterP" v-model="waterP">元/月
+                </div>
+                <div>
+                    <label for="manageP">管理費:</label>
+                    <input type="text" id="manageP" v-model="manageP">元/月
+                </div>
+                <div>
+                    <label for="acreage">坪數:</label>
+                    <input type="text" id="acreage" v-model="acreage">坪
+                </div>
+                <div>
+                    <label for="parking">車位:</label>
+                    <input type="checkbox" id="parking" v-model="parking">
+                </div>
+                <div>
+                    <label for="equip">物件備註:</label>
+                    <textarea class="equip inp" id="equip" style="resize: none; width: 80%; height: 40%;" v-model="equip"></textarea>
+                </div>
+                <div>
+                    <label for="rOther">屋況:</label>
+                    <textarea class="rOther inp" id="rOther" style="resize: none; width: 80%; height: 40%;" v-model="rOther"></textarea>
+                </div>
+                <div>
+                    <label for="photo">圖片:</label>
+                    <input type="file" id="photo" @change="handleFileUpload">
+                </div>
+                <button type="submit">確定新增</button>
+            </form>
         </div>
-        <div class="equipDiv">
-            <span>物件備註&nbsp;:&nbsp;&nbsp;</span>
-            <textarea class="equip inp" style="resize: none; width: 80%; height: 40%;" v-model="this.equip"></textarea>
-        </div>
-        <div class="rOtherDiv">
-            <span>特色描述&nbsp;:&nbsp;&nbsp;</span>
-            <textarea class="rOther inp" style="resize: none; width: 80%; height: 40%;"
-                v-model="this.rOther"></textarea>
-        </div>
-        <button @click="addRoomToDB()">確定新增</button>
+        
+        
+        
+
+
+        <!-- <button @click="addRoomToDB()">確定新增</button> -->
     </div>
 </template>
 

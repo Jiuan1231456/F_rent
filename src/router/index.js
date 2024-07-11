@@ -65,6 +65,27 @@ const router = createRouter({
       name: 'editRoom',
       component: () => import('../views/EditRoom.vue')
     },
+    {//查看契約詳情
+      path: '/Contract_Detail',
+      name: 'Contract_Detail',
+      component: () => import('../views/Contract_Detail.vue'),
+      props: true // 允許通過路由傳參
+
+    },
+    // {//註冊
+    //   path: '/Register',
+    //   name: 'Register',
+    //   component: () => import('../views/Register.vue'),
+    //   props: true // 允許通過路由傳參
+
+    // },
+    {
+      path: '/Cutcontract_Edit',
+      name: 'Cutcontract_Edit',
+      component: () => import('../views/Cutcontract_Edit.vue'),
+      props: true // 允許通過路由傳參
+
+    },
 
   ]
 })

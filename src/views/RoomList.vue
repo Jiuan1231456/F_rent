@@ -5,19 +5,19 @@ import Swal from 'sweetalert2'
 export default {
     data() {
         return {
-            obj: {
+            obj: {//搜尋用
                 address: "",
                 roomId: "",
             },
             roomList: [],
-            deleteCheckbox: [],
+            deleteCheckbox: [],//刪除用
         }
     },
     computed: {
-        ...mapState(dataStore, ['page', 'loginObj', 'roomDetail'])
+        ...mapState(dataStore, ['page', 'loginObj', ])
     },
     methods: {
-        ...mapActions(dataStore, ['setPage', 'setRoomD']),
+        ...mapActions(dataStore, ['setPage', 'setRoomObj','setLoginObj']),
 
         search() { //搜尋房間
             console.log("input輸入的地址和房號", this.obj);
@@ -30,11 +30,18 @@ export default {
             })
                 .then(res => res.json())
                 .then(data => {
-                    console.log("符合搜尋條件的結果", data)
+                    console.log("搜尋結果(包含其他人)", data)
                     // 篩選出當前account的問卷
                     this.roomList = data.roomList.filter(item => item.account === this.loginObj.ownerAccount);
                     console.log("篩選出當前登入者的所有房間", this.roomList)
                 })
+        },
+
+        //第三層:篩選取得特定房東的特定房間資訊
+        getRoomInfo(index){
+            console.log("選特定房東的特定房間資訊",this.roomList[index]);//印出來供看console
+            this.setRoomObj(this.roomList[index]);
+        
         },
 
         deleteSelectedRoom() {  //從DB中刪除勾選的房間
@@ -75,12 +82,12 @@ export default {
 
                     })
             };
-            this.deleteCheckbox = [];
+            this.deleteCheckbox = [];//刪完要清空這個欲刪除的陣列
         },
 
-        browse(index) { //瀏覽詳細資訊、編輯先抓資料
-            this.setRoomD(this.roomList[index]);
-            console.log("pinia的setRoomD", this.roomDetail)
+        browse(index) { //跳轉到Detail和Edit前，先抓取點選的該筆資料暫存到pinia
+            this.setRoomObj(this.roomList[index]);
+            console.log("pinia的setRoomObj", this.roomObj)
         },
 
     },
@@ -146,7 +153,7 @@ export default {
                 <td style="width: 13%;">
                     <RouterLink to="/editRoom" class="edit" @click="this.browse(index)">編輯</RouterLink> <br>
                     <br>
-                    <RouterLink to="/contractAdd" class="contractAdd">新增契約</RouterLink>
+                    <RouterLink to="/contractAdd" class="contractAdd" @click="getRoomInfo(index)">新增契約</RouterLink>
                 </td>
             </tr>
         </table>
