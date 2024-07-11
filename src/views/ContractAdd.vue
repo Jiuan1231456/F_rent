@@ -44,10 +44,10 @@ export default {
             r_other: "",
 
             //////////////////
-            loginObj: { // 添加 loginObj 並初始化為空物件
-                ownerIdentity: ""
-            },
-            registerInfo:[]//存放找到的特定註冊資料
+            // loginObj: { // 添加 loginObj 並初始化為空物件
+            //     ownerIdentity: ""
+            // },
+            // registerInfo:[]//存放找到的特定註冊資料
     }
 },
     computed: {
