@@ -117,26 +117,6 @@ export default {
             console.log(data);
         });
         },
-    //     //連接註冊資料庫資料
-    //     findCutDate(){
-    //   let empty = {};
-    //   fetch("http://localhost:8080/rent/account", {
-    //     method: "post",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(empty),
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       console.log(data);
-    //       this.registerInfo = data.register.filter(
-    //         (item) => (item.ownerName === this.register.ownerName) && (item.ownerIdentity === this.perRegister.ownerIdentity) && (item.ownerPhone === this.perRegister.ownerPhone)
-    //       );
-    //       console.log("篩出此筆租約與註冊相關資料",this.registerInfo[0]);
-    //       this. 這邊要去pinia創造一個將註冊資訊存到契約的地方(this.registerInfo[0]);
-    //     });
-    // }
     },
     components: {
         contractInput,
@@ -167,7 +147,7 @@ export default {
                     <br>
                     樓層:<p>{{ roomObj.floor }}</p>
                     <br>
-                    <!-- 這邊的rId是小徐的，創建完後才會變成我的roomId -->
+                    <!-- rId是小徐的，創建完後才會變成我的roomId -->
                     房號:<p>{{ roomObj.roomId }}</p>
                     <br>
                     租金/月:<p>{{roomObj.rentP }} </p>

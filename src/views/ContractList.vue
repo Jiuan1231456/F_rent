@@ -16,7 +16,8 @@ export default {
                 endDate: ""
             },
             selectedContracts: [], // 新增選中(checkbox)的契約狀態,用於存儲選中的契約。
-            statusFilter: "" // 新增狀態過濾器
+            statusFilter: "" ,// 新增狀態過濾器
+            
         }
     },
     computed: {
@@ -28,7 +29,7 @@ export default {
     },
     methods: {
     
-        ...mapActions(dataStore, ['setOneContractObj','setRoomObj','getRoomInfo']),
+        ...mapActions(dataStore, ['setOneContractObj','setRoomObj']),
         // 跳轉到新增契約頁面
         goToContractAdd() {
         // 使用 Vue Router 的方式進行跳轉
@@ -66,6 +67,25 @@ export default {
                 .catch(error => {
                 console.error("Error fetching data:", error); //處理錯誤
             });
+        },
+        //搜尋房間
+
+        searchRoom() { //搜尋房間
+            console.log("input輸入的地址和房號",this.obj);
+            fetch("http://localhost:8080/room/roomSearch", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(this.obj)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log("符合搜尋條件的結果",data)
+                    // 篩選出當前account的問卷
+                    this.roomList = data.roomList.filter(item => item.account === this.loginObj.ownerAccount);
+                    console.log("篩選出當前登入者的所有房間",this.roomList)
+                })
         },
 // 計算總頁數
 calculateTotalPages(totalItems) {
@@ -111,20 +131,39 @@ calculateTotalPages(totalItems) {
         selectRoomInfo(index){
             console.log("選特定房東的特定房間資訊",this.contractList[index]);//印出來供看console
             this.setOneContractObj(this.contractList[index]);
-            //this.getRoomInfo(index2)
-             // 跳轉到詳細頁面並傳遞資料
-            // this.$router.push({ name: 'Contract_Detail', params: { id: this.contractList[index].ai } });
+           
         },
+        //找出該契約的房間資訊
+        findRoomInfo() {
+            //設定特定房間搜尋條件確保與所選契約的房間條件相符合
+            let searchCriteria = {
+                account: this.loginObj.ownerAccount,
+                address: this.oneContractObj.address,
+                roomId: this.oneContractObj.roomId,
+                floor: this.oneContractObj.floor
+            };
 
+            fetch("http://localhost:8080/room/roomSearch", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(searchCriteria),
+            })
+            .then(res => res.json())
+            .then(data => {
+                this.roomInfoContract = data.roomList;
+                console.log("特定房間資訊:",this.roomInfoContract)
+                this.setRoomObj(this.roomInfoContract);
+                console.log("pinia裡的roomObj",this.roomObj)
+            });
+        },
         // 計算總頁數
         calculateTotalPages(totalItems) {
             const pageSize = 10; // 假設每頁顯示 10 筆資料
             const totalPages = Math.ceil(totalItems / pageSize);
             console.log("Total Pages:", totalPages); // 打印總頁數以供參考
         },
-
-        
-
 
     },
     created(){
@@ -143,13 +182,13 @@ calculateTotalPages(totalItems) {
         <div class="inputPlace">
             <span class="label">承租地址　：</span>
             <div class="InputContainer">
-                <input placeholder="Search.." id="input" class="input" name="text" type="text" v-model="this.contractFilters.address">
+                <input placeholder="Search.." id="input" class="input" name="text" type="text" v-model="contractFilters.address">
             </div>
         </div>
         <div class="inputPlace">
             <span class="label">承租人姓名：</span>
             <div class="InputContainer">
-                <input placeholder="Search.." id="input" class="input" name="text" type="text" v-model="this.contractFilters.tenantName">
+                <input placeholder="Search.." id="input" class="input" name="text" type="text" v-model="contractFilters.tenantName">
             </div>
         </div>
         <!-- 選擇日期 -->
@@ -158,7 +197,7 @@ calculateTotalPages(totalItems) {
             <input type="date" id="start" name="trip-start" min="1970-01-01" max="2050-12-31" style="font-size: 22px;">
             <label for="end_time" style="background-color:  #FFC89A;">到：</label>
             <input type="date" id="end" name="trip-end" min="1970-01-01" max="2050-12-31" style="font-size: 22px;">
-            <button class="searchbtn" type="button" @click="search()">搜尋</button>
+            <button class="searchbtn" type="button" @click="search">搜尋</button>
         </p>
     </div>
 
@@ -205,7 +244,7 @@ calculateTotalPages(totalItems) {
                 <td>{{ item.endDate }}</td>
                 <td>{{ item.rentP }}</td>
                 <td><RouterLink to="/Contract_Detail" @click="selectRoomInfo(index)"> 契約中止編輯</RouterLink></td>
-                <td><RouterLink to="/Contract_Detail" @click="selectRoomInfo(index)"> 查看詳情</RouterLink></td>
+                <td><RouterLink to="/Contract_Detail" @click="selectRoomInfo(index); $nextTick(findRoomInfo)"> 查看詳情</RouterLink></td>
             </tr>
         </tbody>
         </table>
