@@ -4,6 +4,8 @@ import { RouterLink } from "vue-router";
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
 import electricModal from "@/components/electricModal.vue";
+import Swal from "sweetalert2";
+
 export default {
   data() {
     return {
@@ -72,8 +74,8 @@ export default {
           );
           console.log("未截止", this.newnewBillSearch);
           this.newnewBillSearch.sort((a, b) => {
-        return new Date(a.paymentDate) - new Date(b.paymentDate);
-      });
+            return new Date(a.paymentDate) - new Date(b.paymentDate);
+          });
         });
     },
     bringToEdit(index) {
@@ -131,6 +133,16 @@ export default {
         return new Date(a.paymentDate) - new Date(b.paymentDate);
       });
     },
+    electricIsRequired() {
+      if (this.perBill.eletricV === "") {
+        Swal.fire({
+          title: "請填寫本期用電量",
+          icon: "warning",
+        });
+      }else{
+        this.$router.push('/billFinalDetail')
+      }
+    },
   },
   mounted() {
     this.setPage(10);
@@ -150,14 +162,14 @@ export default {
   <div class="bigArea">
     <!-- <div class="bar"></div> -->
     <div class="topArea">
-      <span class="billTitle">帳單生成</span>
+      <span class="billTitle">當期帳單</span>
       <!-- <div class="generate">生成帳單</div> -->
     </div>
     <div class="middleArea">
       <span style="font-size: 1.2em; margin-left: 51px"
         >請選擇欲結算的帳單</span
       >
-      <div class="tableTitle">當期帳單</div>
+      <div class="tableTitle">繳費期限尚未截止之帳單</div>
       <table class="lastMonth">
         <thead>
           <tr>
@@ -165,10 +177,8 @@ export default {
             <td scope="col" class="thead">承租人</td>
             <td scope="col" class="thead">地址</td>
             <td scope="col" class="thead">計費期間</td>
-            <td scope="col" class="thead">
-              繳費期限
-            </td>
-            <td scope="col" class="thead">選擇此筆</td>
+            <td scope="col" class="thead">繳費期限</td>
+            <td scope="col" class="thead">更新用電量</td>
           </tr>
         </thead>
         <tbody>
@@ -181,12 +191,13 @@ export default {
             <td>
               <button
                 type="button"
+                style="border: none;background-color: transparent;"
                 @click="
                   this.showElectric();
                   this.bringToEdit(index);
                 "
               >
-                選擇
+              <i class="fa-solid fa-pen"></i>
               </button>
             </td>
           </tr>
@@ -219,6 +230,8 @@ export default {
                 id="electric"
                 style="margin-bottom: 23px"
                 class="input-box"
+                required
+                :valid
                 v-model="this.perBill.eletricV"
               />&nbsp;度<br />
             </div>
@@ -226,18 +239,17 @@ export default {
         </template>
         <template v-slot:footer>
           <div class="footerArea">
-            <RouterLink to="/billFinalDetail"
-              ><button
+            <button
                 type="submit"
                 class="submit"
                 @click="
                   this.updateElectricV();
                   this.findCutDate();
+                  this.electricIsRequired();
                 "
               >
                 提交
-              </button></RouterLink
-            >
+              </button>
           </div>
         </template>
       </electricModal>
@@ -296,6 +308,11 @@ export default {
       font-size: 1.4em;
       padding-left: 15px;
       font-weight: 500;
+    }
+    .fa-pen{
+      &:hover{
+        color: #a4663f;
+      }
     }
     .lastMonth {
       margin: 0 auto;
@@ -371,6 +388,9 @@ export default {
     border-color: #ff9d60;
     outline: none;
     transform: scaleX(1);
+  }
+  .input-box:valid {
+    border-bottom: 2px solid green;
   }
 
   label {

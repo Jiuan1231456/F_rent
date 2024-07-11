@@ -1,139 +1,165 @@
 <script>
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
+import { RouterLink } from 'vue-router';
 export default {
     data() {
         return {
-            address: "",
-            account: "",//從登入完的pinia抓
-            floor: "",
-            rId: "",
-            rentP: "",
-            deposit: "",
-            cutP: "",
-            eletricP: "",
-            waterP: "",
-            manageP: "",
-            acreage: "",
-            parking: false,
-            equip: "",
-            rOther: "",
+            obj: {
+                address: "",
+                roomId: "",
+            },
+            roomList:[],//儲存房間列表
+            deleteCheckbox:[],
+            roomImage:[
+                {image:'public/FRentImageNC/0.jpg'},
+                {image:'/FRentImageNC/0.jpg'}
+            ],
+    
+
+            
+
 
         }
     },
     computed: {
-        ...mapState(dataStore, ['page', 'loginObj'])
+        ...mapState(dataStore, ['page', 'loginObj']),
+        RouterLink 
     },
     methods: {
-        ...mapActions(dataStore, ['setPage']),
-        addRoomToDB() {
-            let testObj = {
-                address: this.address,
-                account: this.loginObj.ownerAccount, //pinia暫存的房東帳號
-                floor: this.floor,
-                rId: this.rId,
-                rentP: this.rentP,
-                deposit: this.deposit,
-                cutP: this.cutP,
-                eletricP: this.eletricP,
-                waterP: this.waterP,
-                manageP: this.manageP,
-                acreage: this.acreage,
-                parking: this.parking,
-                equip: this.equip,
-                rOther: this.rOther,
-            }
-            fetch("http://localhost:8080/room/creatRoom1", {
+        ...mapActions(dataStore, ['setPage','setRoomObj']),
+
+        search() { //搜尋房間
+            console.log(this.obj);
+            fetch("http://localhost:8080/room/roomSearch", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(testObj)
+                body: JSON.stringify(this.obj)
             })
                 .then(res => res.json())
                 .then(data => {
                     console.log(data)
+                    // 第二層:篩選出當前account的問卷
+                    this.roomList = data.roomList.filter(item => item.account === this.loginObj.ownerAccount);
+                
                 })
-        }
+        },
+        //第三層:篩選取得特定房東的特定房間資訊
+        getRoomInfo(index){
+            this.selectIndex=index;
+            console.log("選特定房東的特定房間資訊",this.roomList[index]);//印出來供看console
+            this.setRoomObj(this.roomList[index]);
+        
+        },
+
+        deleteSelectedRoom() {  //從DB中刪除勾選的房間
+            let deleteObj = {
+                addressList: this.deleteCheckbox,
+            };
+            console.log(deleteObj)
+            if (this.deleteCheckbox.length > 0) {
+                this.roomList = this.roomList.filter(
+                    (item) => !this.deleteCheckbox.includes(item.id)
+                )
+
+                fetch("http://localhost:8080/room/deleteRoom", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(deleteObj)
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        console.log(data)
+                    })
+            };
+            this.deleteCheckbox = [];
+        },
+
+
 
     },
     mounted() {
-        this.setPage(3);
-        console.log(this.loginObj)
+        this.setPage(2),
+        this.search()
+        //this.getRoomInfo()
+
     }
 }
 </script>
 
 <template>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <div class="bigArea">
-        <div class="title">
-            <h1>新增房間資訊</h1>
+
+        <div class="search">
+            地址<input type="text" class="searchInput1" title="依地址模糊搜尋" v-model="this.obj.address">
+            房號<input type="text" class="searchInput2" title="依房號模糊搜尋" v-model="this.obj.roomId">
+            <button class="searchButton bt" @click="search()">搜尋</button>
         </div>
-        <div class="inputArea">
-            <span>住址&nbsp;:&nbsp;&nbsp;</span>
-            <input class="address inp" type="text" v-model="this.address">
+        
 
-            <span>樓層&nbsp;:&nbsp;&nbsp;</span>
-            <input class="floor inp" type="text" v-model="this.floor">樓
+        <table class="roomList">
+            <tr>
+                <th style="width: 4%;"></th>
+                <th style="width: 6%;">項次</th>
+                <th style="width: 17%;">圖片</th>
+                <th style="width: 36%;">地址</th>
+                <th style="width: 7%;">樓層</th>
+                <th style="width: 7%;">房號</th>
+                <th style="width: 12%;">租金</th>
+                <th style="width: 13%;">管理</th>
+            </tr>
 
-            <span>房號&nbsp;:&nbsp;&nbsp;</span>
-            <input class="rId inp" type="text" v-model="this.rId">
-            <br>
-            <span>租金&nbsp;:&nbsp;&nbsp;</span>
-            <input class="rentP inp" type="text" v-model="this.rentP">元/月
-
-            <span>押金&nbsp;:&nbsp;&nbsp;</span>
-            <input class="deposit inp" type="text" v-model="this.deposit">元
-
-            <span>違約金&nbsp;:&nbsp;&nbsp;</span>
-            <input class="cutP inp" type="text" v-model="this.cutP">元
-            <br>
-            <span>電費&nbsp;:&nbsp;&nbsp;</span>
-            <input class="eletricP inp" type="text" v-model="this.eletricP">元/度
-
-            <span>水費&nbsp;:&nbsp;&nbsp;</span>
-            <input class="waterP inp" type="text" v-model="this.waterP">元/月
-
-            <span>管理費&nbsp;:&nbsp;&nbsp;</span>
-            <input class="manageP inp" type="text" v-model="this.manageP">
-            <br>
-            <span>坪數&nbsp;:&nbsp;&nbsp;</span>
-            <input class="acreage inp" type="text" v-model="this.acreage">
-
-            <span>車位&nbsp;:&nbsp;&nbsp;</span>
-            <input class="parking inp" type="checkbox" v-model="this.parking">
-        </div>
-        <div class="equipDiv">
-            <span>設備備註&nbsp;:&nbsp;&nbsp;</span>
-            <textarea class="equip inp" style="resize: none; width: 80%; height: 40%;" v-model="this.equip"></textarea>
-        </div>
-        <div class="rOtherDiv">
-            <span>特色說明(其他備註)&nbsp;:&nbsp;&nbsp;</span>
-            <textarea class="rOther inp" style="resize: none; width: 80%; height: 40%;" v-model="this.rOther"></textarea>
-        </div>
-        <button @click="addRoomToDB()">確定新增</button>
+            <tr v-for="(item, index) in this.roomList" :key="index">
+                <td style="width: 4%;"><input type="checkbox"></td>
+                <td style="width: 6%;">{{ index+1 }}</td>
+                <td style="width: 17%;">圖片</td>
+                <td style="width: 36%; text-align: left; padding-left: 1%;">{{ item.address }}</td>
+                <td style="width: 7%;">{{ item.floor }}</td>
+                <td style="width: 7%;">{{ item.roomId }}</td>
+                <td style="width: 12%;">{{ item.rentP }}</td>
+                <td style="width: 13%;">
+                    <RouterLink to="/roomDetail" class="edit">編輯</RouterLink>  <br>
+                    <button class="deleteButton" @click="deleteSelectedRoom()">刪除</button> <br>
+                    <td><RouterLink to="/ContractAdd" @click="getRoomInfo(index)"> 新增租約</RouterLink></td>
+                </td>
+            </tr>
+        </table>
     </div>
 </template>
 
 <style scoped lang="scss">
+*{
+    margin-top: 20%;
+}
 .bigArea {
     width: 80%;
     padding: 1%;
-    position: relative;
+    margin: 0 auto;
 }
 
-.address {
-    width: 45%;
-}
+.roomList {
+    width: 75dvw;
+    margin: auto;
+    border-collapse: collapse; //table合併邊框
 
-.inp{
-    padding-left: 5px;
-}
+    th {
+        font-size: 20px;
+        background: rgb(254, 175, 126);
+        // border: solid 1px rgb(0, 0, 0);
+        color: rgb(0, 0, 0);
+        text-align: center;
+    }
 
-.roomDetailDiv {
-    width: 80%;
-    height: 60%;
-    display: flex;
+    td {
+        height: 140px;
+        font-size: 17px;
+        text-align: center;
+        border: solid 1px rgb(209, 209, 209);
+        padding: 4px 0;
+    }
 }
 </style>

@@ -1,4 +1,5 @@
-<!-- src="print.js" --><script>
+<!-- src="print.js" -->
+<script>
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
 
@@ -17,8 +18,8 @@ export default {
             tenant_email: "",
             owner_name: "",  //從註冊資訊抓
             owner_identity: "", //從註冊資訊抓
-            owner_home_address: "", //從註冊資訊抓
-            owner_contact_address: "", //從註冊資訊抓
+            owner_home_address: "", 
+            owner_contact_address: "", 
             owner_phone: "",  //從註冊資訊抓
             start_date: "",
             end_date: "",
@@ -46,11 +47,12 @@ export default {
             loginObj: { // 添加 loginObj 並初始化為空物件
                 ownerIdentity: ""
             },
+            registerInfo:[]//存放找到的特定註冊資料
     }
 },
     computed: {
        //使用pinia中房間站存資訊
-       ...mapState(dataStore, ['roomObj'])
+       ...mapState(dataStore, ['roomObj','loginObj'])
     },
     created() {
         // this.getRegisterData();
@@ -62,7 +64,9 @@ export default {
        
     },
     methods: {
-        ...mapActions(dataStore,['setPage']),
+      
+        ...mapActions(dataStore,['setPage','setLoginObj']),
+        
         addContractToDB() {
         let testObj = {
             tenantIdentity: this.tenant_identity,  
@@ -71,11 +75,11 @@ export default {
             tenantContactAddress: this.tenant_contact_address,
             tenantPhone: this.tenant_phone,
             tenantEmail: this.tenant_email,
-            ownerName: this.owner_name, //從註冊資訊抓
-            ownerIdentity: this.owner_identity, //從註冊資訊抓
-            ownerHomeAddress: this.owner_home_address, //從註冊資訊抓
-            ownerContactAddress: this.owner_contact_address, //從註冊資訊抓
-            ownerPhone: this.owner_phone, //從註冊資訊抓
+            ownerName: this.loginObj.ownerName, //從註冊資訊抓
+            ownerIdentity: this.loginObj.ownerIdentity, //從註冊資訊抓
+            ownerHomeAddress: this.owner_home_address, 
+            ownerContactAddress: this.owner_contact_address, 
+            ownerPhone: this.loginObj.ownerPhone, //契約的表沒有這個欄位，要從註冊抓，但我建議再SQL新增這個欄位，因為房東可能想註冊的電話跟連絡他的電話不一樣
             startDate: this.start_date,
             endDate: this.end_date,
             cOther: this.c_other,
@@ -84,21 +88,20 @@ export default {
             cutDate: this.cut_date,
             ai:this.ai,
             //從房間抓
-            address: this.address,
-            floor: this.floor,
-            roomId: this.r_id,
-            rentP: this.rent_p,
-            deposit: this.deposit,
-            cutP: this.cut_p,
-            eletricP: this.eletric_p,
-            waterP: this.water_p,
-            manageP: this.manage_p,
-            acreage: this.acreage,
-            parking: this.parking,
-            equip: this.equip,
-            signDate: this.sign_date,
-            rOther: this.r_other,
-           
+            address: this.roomObj.address,
+            floor: this.roomObj.floor,
+            roomId: this.roomObj.roomId,
+            rentP: this.roomObj.rentP,
+            deposit: this.roomObj.deposit,
+            cutP: this.roomObj.cutP,
+            eletricP: this.roomObj.eletricP,
+            waterP: this.roomObj.waterP,
+            manageP: this.roomObj.manageP,
+            acreage: this.roomObj.acreage,
+            parking: this.roomObj.parking,
+            equip: this.roomObj.equip,
+            rOther: this.roomObj.rOther,
+        
         };
         fetch("http://localhost:8080/contract/createContract", {
             method: "POST",
@@ -111,7 +114,27 @@ export default {
         .then(data => {
             console.log(data);
         });
-        }
+        },
+    //     //連接註冊資料庫資料
+    //     findCutDate(){
+    //   let empty = {};
+    //   fetch("http://localhost:8080/rent/account", {
+    //     method: "post",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(empty),
+    //   })
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //       console.log(data);
+    //       this.registerInfo = data.register.filter(
+    //         (item) => (item.ownerName === this.register.ownerName) && (item.ownerIdentity === this.perRegister.ownerIdentity) && (item.ownerPhone === this.perRegister.ownerPhone)
+    //       );
+    //       console.log("篩出此筆租約與註冊相關資料",this.registerInfo[0]);
+    //       this. 這邊要去pinia創造一個將註冊資訊存到契約的地方(this.registerInfo[0]);
+    //     });
+    // }
     },
     
     components:{
@@ -174,15 +197,16 @@ export default {
                 <h2>立契約書人</h2>
                 <div class="Info">
                     <br>
-                    <h4>出租人姓名:</h4> <input type="text" v-model="owner_name" class="input-box"  style="font-weight: bold; font-size: 20px;">
+                    <h4>出租人姓名:</h4> <p>{{loginObj.ownerName}}</p>
                     <br>
-                    身分證字號: <input type="text" v-model="owner_identity" class="input-box">
+                    身分證字號: <p> {{loginObj.ownerIdentity}}</p>
                     <br>
                     戶籍地址(營業登記地址): <input type="text" v-model="owner_home_address" class="input-box">
                     <br>
                     通訊地址: <input type="text" v-model="owner_contact_address" class="input-box">
                     <br>
-                    連絡電話: <input type="text" v-model="owner_phone" class="input-box">
+                    <!-- 這邊房東電話不建議寫死，因為註冊電話應該可以和連絡電話不一樣，，建議再器樂的SQL表另外新增owner_phone欄位而不是直接引用註冊的電話 -->
+                    連絡電話:{{ loginObj.ownerPhone }}
                     <br>
                     <br>
                     <h4>承租人姓名:</h4> <input type="text" v-model="tenant_name" class="input-box" style="font-weight: bold; font-size: 20px;">
@@ -214,8 +238,8 @@ export default {
                     <span class="underline"></span>
                 </div>
                 <br>
-                <h3>立約日期:</h3>
-                <input type="date" id="sign_date" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="sign_date"/>
+                <h3>立約日期:  <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="sign_date"/></h3>
+
             
                 <div class="btn"> 
                 
@@ -224,78 +248,7 @@ export default {
             </div>
         </div>
     </div>
-<!-- 
-<div class="bigArea3">
-        <h1>定型化契約條款</h1>
 
-        <div class="lawcontent">
-            <br>
-        <p>
-        第一條 使用租賃住宅之限制
-        <br>
-        本租賃住宅係供居住使用，承租人不得變更用途。
-        承租人同意遵守公寓大廈規約或其他住戶應遵行事項，不得違法使
-        用、存放有爆炸性或易燃性物品。
-        承租人應經出租人同意始得將本租賃住宅之全部或一部分轉租、出
-        借或以其他方式供他人使用，或將租賃權轉讓於他人。
-        前項出租人同意轉租者，應出具同意書(如附件二)載明同意轉租之
-        範圍、期間及得終止本契約之事由，供承租人轉租時向次承租人提示。
-    </p>
-    <p>
-        第二條 修繕
-        <br>
-        租賃住宅或附屬設備損壞時，應由出租人負責修繕。但租賃雙方另
-        有約定、習慣或其損壞係可歸責於承租人之事由者，不在此限。
-        前項由出租人負責修繕者，承租人得定相當期限催告修繕，如出租
-        人未於承租人所定相當期限內修繕時，承租人得自行修繕，並請求出租
-        人償還其費用或於第三條約定之租金中扣除。
-        出租人為修繕租賃住宅所為之必要行為，應於相當期間先期通知，
-        承租人無正當理由不得拒絕。
-        前項出租人於修繕期間，致租賃住宅全部或一部不能居住使用者，
-        承租人得請求出租人扣除該期間全部或一部之租金。
-        第九條 室內裝修
-        承租人有室內裝修之需要，應經出租人同意並依相關法令規定辦
-        理，且不得損害原有建築結構之安全。
-        4
-        承租人經出租人同意裝修者，其裝修增設部分若有損壞，由承租人
-        負責修繕。
-        第一項情形，承租人返還租賃住宅時，應□負責回復原狀□現況返
-        還□其他 。
-    </p>
-    <p>
-        第三條 出租人之義務及責任
-        <br>
-        出租人應出示有權出租本租賃住宅之證明文件及國民身分證或其
-        他足資證明身分之文件，供承租人核對。
-        出租人應以合於所約定居住使用之租賃住宅，交付承租人，並應於
-        租賃期間保持其合於居住使用之狀態。
-        出租人與承租人簽訂本契約前，租賃住宅有由承租人負責修繕之項
-        目及範圍者，出租人應先向承租人說明並經承租人確認（如附件三），
-        未經約明確認者，出租人應負責修繕，並提供有修繕必要時之聯絡方式。
-    </p>
-        第四條 承租人之義務及責任
-        <br>
-        承租人應於簽訂本契約時，出示國民身分證或其他足資證明身分之
-        文件，供出租人核對。
-        承租人應以善良管理人之注意，保管、使用租賃住宅。
-        承租人違反前項義務，致租賃住宅毀損或滅失者，應負損害賠償責
-        任。但依約定之方法或依租賃住宅之性質使用、收益，致有變更或毀損
-        者，不在此限。
-        前項承租人應賠償之金額，得由第四條第一項規定之押金中抵充，
-        如有不足，並得向承租人請求給付不足之金額。
-        承租人經出租人同意轉租者，與次承租人簽訂轉租契約時，應不得
-        逾出租人同意轉租之範圍及期間，並應於簽訂轉租契約後三十日內，以
-        書面將轉租範圍、期間、次承租人之姓名及通訊住址等相關資料通知出
-        租人。
-    <p>
-        <br>
-        第五條 租賃住宅部分滅失
-        <br>
-        租賃關係存續中，因不可歸責於承租人之事由，致租賃住宅之一部
-        滅失者，承租人得按滅失之部分，請求減少租金。
-    </p>
-        </div>
-</div> -->
 
 </template>
   

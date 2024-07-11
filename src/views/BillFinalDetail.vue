@@ -2,6 +2,7 @@
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
 import emailjs from "emailjs-com";
+import Swal from "sweetalert2";
 import JSZip from "jszip";
 import Docxtemplater from "docxtemplater";
 import { saveAs } from "file-saver";
@@ -20,26 +21,47 @@ export default {
   },
   methods: {
     ...mapActions(dataStore, ["setBillToContract"]),
-    sendEmail() {  // 寄信功能
+    sendEmail() {
+      // 寄信功能
       var templateParams = {
         tenantName: this.finalBill.tenantName,
+        tenantAddress:this.finalBill.address,
+        rentP:this.finalBill.rentP,
+        manageP:this.finalBill.manageOneP,
+        waterP:this.finalBill.waterOneP,
+        electricP:this.finalBill.eletricP,
+        electricV:this.finalBill.eletricV,
+        eletricOneP:this.finalBill.eletricOneP,
+        cutP:this.finalBill.cutP,
+        totalOneP:this.finalBill.totalOneP,
+        bankAccount:this.loginObj.accountBank,
         periodStart: this.finalBill.periodStart,
         periodEnd: this.finalBill.periodEnd,
         paymentDate: this.finalBill.paymentDate,
         ownerName: this.finalBill.ownerName,
-        tenantEmail: this.billToContract.tenantEmail,
+        // tenantEmail: this.billToContract.tenantEmail,
+        tenantEmail: "lighters0406@gmail.com",
         ownerEmail: this.loginObj.ownerEmail,
       };
       emailjs.send("service_azp4v8s", "template_h9952ii", templateParams).then(
         function (response) {
           console.log("SUCCESS!", response.status, response.text);
+          Swal.fire({
+          title: "寄信成功",
+          icon: "success",
+        });
         },
         function (error) {
           console.log("FAILED...", error);
+          Swal.fire({
+          title: "好像發生了一點錯誤...",
+          icon: "error",
+        });
         }
       );
     },
-    async loadTemplate() {  // 提供一個列印的模板
+    async loadTemplate() {
+      // 提供一個列印的模板
       try {
         const response = await axios.get("/test.docx", {
           responseType: "arraybuffer",
@@ -50,7 +72,8 @@ export default {
         throw error;
       }
     },
-    async print() {  // 列印功能
+    async print() {
+      // 列印功能
       // try{
       const templateArrayBuffer = await this.loadTemplate();
       // console.log('Template loaded successfully');
@@ -214,7 +237,12 @@ export default {
     <button class="email inform" style="right: 13%" @click="sendEmail()">
       寄信通知
     </button>
-    <button class="copy inform" style="right: 25%" @click="print()">
+    <button
+      class="copy inform"
+      style="right: 25%"
+      @click="print()"
+      title="點此即下載繳費單"
+    >
       列印帳單
     </button>
   </div>
@@ -226,6 +254,7 @@ export default {
   height: 100%;
   margin-bottom: 53px;
   position: relative;
+  margin-left: 261px;
   .back {
     position: absolute;
     bottom: -3%;
@@ -238,6 +267,9 @@ export default {
     &:hover {
       cursor: pointer;
       background-color: #f0c49f;
+    }
+    &:active {
+      background-color: #f0974f;
     }
   }
   .inform {
@@ -257,11 +289,17 @@ export default {
     &:hover {
       background-color: #ef9a95;
     }
+    &:active {
+      background-color: #f54545;
+    }
   }
   .copy {
     background-color: #8da8d3;
     &:hover {
       background-color: #bfc9d9;
+    }
+    &:active {
+      background-color: #8da8d3;
     }
   }
 }

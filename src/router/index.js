@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Login from '../views/Login.vue'
+import Login from '../components/Login.vue'
 
 
 const router = createRouter({
@@ -8,16 +8,9 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: Login
+      component: () => import('../views/Login.vue')
     },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    },
+   
      {//房間列表
       path: '/roomList',
       name: 'roomList',
@@ -81,6 +74,19 @@ const router = createRouter({
       path: '/billFinalDetail',
       name: 'billFinalDetail',
       component: () => import('../views/BillFinalDetail.vue')
+    },
+    {
+      path: '/Register',
+      name: 'Register',
+      component: () => import('../views/Register.vue'),
+      props: true // 允許通過路由傳參
+
+    },
+    {
+      path: '/Cutcontract_Edit',
+      name: 'Cutcontract_Edit',
+      component: () => import('../views/Cutcontract_Edit.vue'),
+      props: true // 允許通過路由傳參
     },
   ]
 

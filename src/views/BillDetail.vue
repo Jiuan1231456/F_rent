@@ -36,7 +36,7 @@ export default {
     console.log('此筆帳單',this.billObj);
     
   },
-  beforeCreate(){
+  Created(){
     this.findCutDate();
   }
 };

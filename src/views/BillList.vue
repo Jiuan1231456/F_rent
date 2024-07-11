@@ -273,7 +273,7 @@ export default {
       </button>
       <button
         class="generate"
-        style="position: absolute; bottom: 6%; right: 0%"
+        style="position: absolute; bottom: 6%; right: 0%;width: 14%;"
         @click="this.generateBill(new Date())"
       >
         <RouterLink
@@ -283,7 +283,7 @@ export default {
             text-decoration: none;
             color: white;
           "
-          >帳單生成</RouterLink
+          >查看當期帳單</RouterLink
         >
       </button>
     </div>
