@@ -75,11 +75,11 @@ export default {
             tenantContactAddress: this.tenant_contact_address,
             tenantPhone: this.tenant_phone,
             tenantEmail: this.tenant_email,
-            ownerName: this.loginObj.ownerName, //從註冊資訊抓
-            ownerIdentity: this.loginObj.ownerIdentity, //從註冊資訊抓
+            ownerName: this.loginObj.ownerName, //從登入資訊抓
+            ownerIdentity: this.loginObj.ownerIdentity, //從登入資訊抓
             ownerHomeAddress: this.owner_home_address, 
             ownerContactAddress: this.owner_contact_address, 
-            ownerPhone: this.loginObj.ownerPhone, //契約的表沒有這個欄位，要從註冊抓，但我建議再SQL新增這個欄位，因為房東可能想註冊的電話跟連絡他的電話不一樣
+            ownerPhone: this.loginObj.ownerPhone, //契約的表沒有這個欄位，要從登入抓，但我建議再SQL新增這個欄位，因為房東可能想註冊的電話跟連絡他的電話不一樣
             startDate: this.start_date,
             endDate: this.end_date,
             cOther: this.c_other,
@@ -88,6 +88,7 @@ export default {
             cutDate: this.cut_date,
             signDate: this.sign_date,
             ai:this.ai,
+            owner_account:this.loginObj.ownerAccount,//從登入資訊抓
             //從房間抓
             address: this.roomObj.address,
             floor: this.roomObj.floor,
