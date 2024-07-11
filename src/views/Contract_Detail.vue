@@ -25,7 +25,11 @@ export default {
     
     },
     methods:{
-    
+        //將日期顯示為特定格式
+        formatDate(dateString) {
+            const date = new Date(dateString);
+            return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+        }
     
     }
 }
@@ -115,7 +119,7 @@ export default {
             <textarea>{{oneContractObj.cOther  }}</textarea>
         <br>
         <br>
-        <h3 class="signdate">立約日期:{{ oneContractObj.signDate }}</h3>
+        <h3 class="signdate">立約日期：{{ formatDate(oneContractObj.signDate) }}</h3>
     
     
         <div class="btn"> 

@@ -43,11 +43,7 @@ export default {
             equip: "",
             r_other: "",
 
-            //////////////////
-            // loginObj: { // 添加 loginObj 並初始化為空物件
-            //     ownerIdentity: ""
-            // },
-            // registerInfo:[]//存放找到的特定註冊資料
+        
     }
 },
     computed: {
@@ -55,8 +51,6 @@ export default {
        ...mapState(dataStore, ['roomObj','loginObj'])
     },
     created() {
-        // this.getRegisterData();
-        //this.getRoomData();
          // 從路由參數中獲取房間資訊
         this.roomInfo = this.$route.params.roomInfo;
     },
