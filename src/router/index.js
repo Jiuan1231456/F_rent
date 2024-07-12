@@ -42,16 +42,47 @@ const router = createRouter({
       path: '/contractAdd',
       name: 'contractAdd',
       component: () => import('../views/ContractAdd.vue')
-      },
-    {
-      path: '/roomdetail',
-      name: 'roomdetail',
+    },
+    {//房間列表
+      path: '/roomList',
+      name: 'roomList',
+      component: () => import('../views/RoomList.vue')
+    },
+    {//新增房間
+      path: '/addRoom',
+      name: 'addRoom',
+      component: () => import('../views/AddRoom.vue')
+    },
+    {//單一房間詳細資訊
+      path: '/roomDetail',
+      name: 'roomDetail',
       component: () => import('../views/RoomDetail.vue')
     },
+    {//編輯單一房間資訊
+      path: '/editRoom',
+      name: 'editRoom',
+      component: () => import('../views/EditRoom.vue')
+    },
+    {//查看契約詳情
+      path: '/Contract_Detail',
+      name: 'Contract_Detail',
+      component: () => import('../views/Contract_Detail.vue'),
+      props: true // 允許通過路由傳參
+
+    },
+    // {//註冊
+    //   path: '/Register',
+    //   name: 'Register',
+    //   component: () => import('../views/Register.vue'),
+    //   props: true // 允許通過路由傳參
+
+    // },
     {
-      path: '/addroom',
-      name: 'addroom',
-      component: () => import('../views/AddRoom.vue')
+      path: '/Cutcontract_Edit',
+      name: 'Cutcontract_Edit',
+      component: () => import('../views/Cutcontract_Edit.vue'),
+      props: true // 允許通過路由傳參
+
     },
     {//帳單列表
       path: '/lookupbill',

@@ -4,50 +4,47 @@ import { mapState, mapActions } from "pinia";
 export default {
     data() {
         return {
-            
+
         }
     },
     computed: {
-        ...mapState(dataStore, ['page'])
+        ...mapState(dataStore, ['page', 'loginObj', 'roomObj'])
     },
     methods: {
-        ...mapActions(dataStore, ['setPage'])
+        ...mapActions(dataStore, ['setPage']),
     },
     mounted() {
-        this.setPage(2)
+        this.setPage(5)
     }
 }
 </script>
 
 <template>
-    <div class="bigArea">
-        <table class="roomList">
-            <tr>
-                <th style="width: 4%;">項次</th>
-                <th style="width: 7%;">地址</th>
-                <th style="width: 35%;">樓層</th>
-                <th style="width: 11%;">房號</th>
-                <th style="width: 16%;">租金</th>
-                <th style="width: 16%;">結束時間</th>
-                <th style="width: 11%;">結果</th>
-            </tr>
-
-            <tr>
-                <td style="width: 4%;"></td>
-                <td style="width: 7%;">編號</td>
-                <td style="width: 35%;">名稱</td>
-                <td style="width: 11%;">狀態</td>
-                <td style="width: 16%;">開始時間</td>
-                <td style="width: 16%;">結束時間</td>
-                <td style="width: 11%;">結果</td>
-            </tr>
-        </table>
+<div class="bigArea">
+    <h1>房間詳細資訊</h1>
+    <h4>地址 : {{roomObj.address}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        樓層 : {{this.roomObj.floor}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        房號 : {{this.roomObj.roomId}}</h4>
+    <h4>租金 : {{this.roomObj.rentP}}元/月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        押金 : {{this.roomObj.deposit}}元&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        違約金 : {{this.roomObj.cutP}}元</h4>
+    <h4>電費 : {{this.roomObj.eletricP}}元/度&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        水費 : {{this.roomObj.waterP}}元/月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        管理費 : {{this.roomObj.manageP}}元/月</h4>
+    <h4>坪數 : {{this.roomObj.acreage}}坪</h4>
+    <h4 v-if="this.roomObj.parking" >車位 : 有</h4>
+    <h4 v-else>車位 : 無</h4>
+    <h4>物件備註 : {{this.roomObj.equip}}</h4>
+    <h4>特色描述 : {{this.roomObj.rOther}}</h4>
+    <div v-if="this.roomObj.photo"> 
+                        <img :src="'data:image/jpeg;base64,' + this.roomObj.photo" alt="Image">
+                    </div>
     </div>
 </template>
 
 <style scoped lang="scss">
 .bigArea{
-    width: 80%;
-    padding: 1%;
+width: 80%;
+margin: 0 auto;
 }
 </style>

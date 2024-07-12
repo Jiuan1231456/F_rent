@@ -9,6 +9,7 @@ import send_btn from '../components/send_btn.vue';
 
 export default {
     data() {
+   
         return {
             tenant_identity: "",  
             tenant_name: "",
@@ -58,60 +59,8 @@ export default {
        
     },
     methods: {
-      
-        ...mapActions(dataStore,['setPage','setLoginObj']),
-        
-        addContractToDB() {
-        let testObj = {
-            tenantIdentity: this.tenant_identity,  
-            tenantName: this.tenant_name,
-            tenantHomeAddress: this.tenant_home_address,
-            tenantContactAddress: this.tenant_contact_address,
-            tenantPhone: this.tenant_phone,
-            tenantEmail: this.tenant_email,
-            ownerName: this.loginObj.ownerName, //從登入資訊抓
-            ownerIdentity: this.loginObj.ownerIdentity, //從登入資訊抓
-            ownerHomeAddress: this.owner_home_address, 
-            ownerContactAddress: this.owner_contact_address, 
-            ownerPhone: this.loginObj.ownerPhone, //契約的表沒有這個欄位，要從登入抓，但我建議再SQL新增這個欄位，因為房東可能想註冊的電話跟連絡他的電話不一樣
-            startDate: this.start_date,
-            endDate: this.end_date,
-            cOther: this.c_other,
-            signDate: this.sign_date,
-            cutReason: this.cut_reason,
-            cutDate: this.cut_date,
-            ai:this.ai,
-            owner_account:this.loginObj.ownerAccount,//從登入資訊抓
-            //從房間抓
-            address: this.roomObj.address,
-            floor: this.roomObj.floor,
-            roomId: this.roomObj.roomId,
-            rentP: this.roomObj.rentP,
-            deposit: this.roomObj.deposit,
-            cutP: this.roomObj.cutP,
-            eletricP: this.roomObj.eletricP,
-            waterP: this.roomObj.waterP,
-            manageP: this.roomObj.manageP,
-            acreage: this.roomObj.acreage,
-            parking: this.roomObj.parking,
-            equip: this.roomObj.equip,
-            rOther: this.roomObj.rOther,
-        
-        };
-        fetch("http://localhost:8080/contract/createContract", {
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json"
-            },
-            body: JSON.stringify(testObj)
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-        });
-        },
+        ...mapActions(dataStore,['setPage'])
     },
-    
     components:{
         contractInput,
         preview_btn,
@@ -271,7 +220,7 @@ export default {
         display: flex;
         .space-between { 
         margin-right: 30%;
-        margin-top: 5%;}
+        margin-top: 5%;
     }
 
   
@@ -305,6 +254,7 @@ export default {
       transform: scaleX(1);
     }
   }
+  }
   </style>
   
 <!-- PDF列印按鈕 -->
@@ -323,6 +273,8 @@ export default {
     width: 100%;
     background-color: transparent;
     transition: border-color 0.3s ease-in-out;
+    }
+
     .underline {
     position: absolute;
     bottom: 0;
@@ -343,7 +295,7 @@ export default {
     transform: scaleX(1);
     }
 
-}
+
 
 
 

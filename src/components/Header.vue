@@ -90,6 +90,7 @@ export default {
     letter-spacing: 8px;
     justify-content: center;
     padding: 5%;
+
     &:hover {
       cursor: pointer;
       background-color: #ff9d60;
@@ -98,13 +99,70 @@ export default {
       border-radius: 11% 0px 0px 11%;
     }
   }
-
+  .accordion-body {
+    padding: 0;
+    background-color: #ffc89a;
+    // padding-left: 33px;
+  }
+  .accordion-item {
+    border: 0px;
+    background-color: #ffc89a;
+  }
+  .dropdownBtn {
+    color: black;
+    background-color: #ffc89a;
+    text-decoration: none;
+    font-size: 22px;
+    display: flex;
+    letter-spacing: 8px;
+    justify-content: center;
+    padding: 5%;
+    &:hover {
+      cursor: pointer;
+      background-color: #ff9d60;
+      font-weight: 400;
+      border-left: 16px solid #ffc89a;
+      border-radius: 11% 0px 0px 11%;
+      padding-left: 10px;
+      padding-bottom: 10px;
+    }
+    &:checked {
+      background-color: #ff9d60;
+    }
+  }
+  .dropdownBtn[aria-expanded="true"] {
+    background-color: #f6b47d; /* 展開時的背景顏色 */
+  }
+  .dropdownItem {
+    background-color: #f2dcca;
+    font-size: 18px;
+    justify-content: center;
+    height: 45px;
+    width: 100%;
+    display: flex;
+    text-decoration: none;
+    letter-spacing: 8px;
+    color: black;
+    border-left: 16px solid #ffc89a;
+    border-radius: 11% 0px 0px 11%;
+    align-items: center;
+    padding: 5%;
+    &:hover {
+      cursor: pointer;
+      background-color: #ff9d60;
+      font-weight: 400;
+      border-right: 0px;
+      border-left: 16px solid #ffc89a;
+      border-radius: 11% 0px 0px 11%;
+    }
+  }
   .selectedPage {
     background-color: #faf0e9;
     border-radius: 11% 0px 0px 11%;
     border-left: 16px solid #ffc89a;
     // padding-left: 25px;
     font-weight: 500;
+
     &:hover {
       cursor: default;
       background-color: #faf0e9;
