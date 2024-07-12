@@ -214,10 +214,10 @@ export default {
               依租賃契約規定辦理
             </td>
             <td v-if="this.finalBill.cutP === 0">無</td>
-            <td v-else>
-              {{ this.finalBill.cutP }}，違約日期：{{
+            <td v-else style="text-align: justify;padding-left: 95px;">
+              {{ this.finalBill.cutP }} <br>違約日期：{{
                 this.billToContract[0].cutDate
-              }}，違約理由：{{ this.billToContract[0].cutReason }}
+              }}<br>違約理由：{{ this.billToContract[0].cutReason }}
             </td>
           </tr>
           <tr class="content">

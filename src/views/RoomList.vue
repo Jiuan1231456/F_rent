@@ -27,7 +27,7 @@ export default {
         RouterLink 
     },
     methods: {
-        ...mapActions(dataStore, ['setPage','setRoomObj']),
+        ...mapActions(dataStore, ['setPage','setRoomObj','setLoginObj']),
 
         search() { //搜尋房間
             console.log(this.obj);

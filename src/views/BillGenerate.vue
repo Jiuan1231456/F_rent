@@ -197,8 +197,8 @@ export default {
               <i class="fa-solid fa-pen"></i>
               </button>
             </td>
-            <td v-if="this.perBill.eletricV">尚未更新</td>
-            <td v-else>已更新</td>
+            <td v-if="this.newnewBillSearch.eletricV"><i class="fa-solid fa-circle-exclamation" style="color:red;"></i></td>
+            <td v-else><i class="fa-solid fa-circle-check" style="color: green;"></i></td>
           </tr>
         </tbody>
       </table>

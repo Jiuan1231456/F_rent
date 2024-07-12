@@ -8,7 +8,6 @@ export default defineStore("dataStore", {
     roomObj: {},
     oneContractObj: {}, //存放單一筆房間契約的資訊
     registerObj: {}, //存放註冊資訊
-    perRegister:{},
     billObj: {},  // 存放歷史帳單的單筆帳單(之後要顯示明細)
     monthBill:{}, // 存放當期帳單  
     perBill:{}, // 存放單期帳單的單筆帳單(之後要輸入用電量)
@@ -48,9 +47,7 @@ export default defineStore("dataStore", {
     setRegisterObj(obj) {
       this.registerObj = obj;
     },
-    setPerRegisterObj(obj){
-      this.perRegisterObj=obj
-      },
+
     setBillObj(obj) {
       this.billObj = obj;
     },
@@ -71,3 +68,4 @@ export default defineStore("dataStore", {
     },
   },
 });
+

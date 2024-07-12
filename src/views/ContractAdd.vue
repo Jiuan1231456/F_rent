@@ -43,11 +43,7 @@ export default {
             equip: "",
             r_other: "",
 
-            //////////////////
-            loginObj: { // 添加 loginObj 並初始化為空物件
-                ownerIdentity: ""
-            },
-            registerInfo:[]//存放找到的特定註冊資料
+        
     }
 },
     computed: {
@@ -55,8 +51,6 @@ export default {
        ...mapState(dataStore, ['roomObj','loginObj'])
     },
     created() {
-        // this.getRegisterData();
-        //this.getRoomData();
          // 從路由參數中獲取房間資訊
         this.roomInfo = this.$route.params.roomInfo;
     },
@@ -75,11 +69,11 @@ export default {
             tenantContactAddress: this.tenant_contact_address,
             tenantPhone: this.tenant_phone,
             tenantEmail: this.tenant_email,
-            ownerName: this.loginObj.ownerName, //從註冊資訊抓
-            ownerIdentity: this.loginObj.ownerIdentity, //從註冊資訊抓
+            ownerName: this.loginObj.ownerName, //從登入資訊抓
+            ownerIdentity: this.loginObj.ownerIdentity, //從登入資訊抓
             ownerHomeAddress: this.owner_home_address, 
             ownerContactAddress: this.owner_contact_address, 
-            ownerPhone: this.loginObj.ownerPhone, //契約的表沒有這個欄位，要從註冊抓，但我建議再SQL新增這個欄位，因為房東可能想註冊的電話跟連絡他的電話不一樣
+            ownerPhone: this.loginObj.ownerPhone, //契約的表沒有這個欄位，要從登入抓，但我建議再SQL新增這個欄位，因為房東可能想註冊的電話跟連絡他的電話不一樣
             startDate: this.start_date,
             endDate: this.end_date,
             cOther: this.c_other,
@@ -87,6 +81,7 @@ export default {
             cutReason: this.cut_reason,
             cutDate: this.cut_date,
             ai:this.ai,
+            owner_account:this.loginObj.ownerAccount,//從登入資訊抓
             //從房間抓
             address: this.roomObj.address,
             floor: this.roomObj.floor,
@@ -115,26 +110,6 @@ export default {
             console.log(data);
         });
         },
-    //     //連接註冊資料庫資料
-    //     findCutDate(){
-    //   let empty = {};
-    //   fetch("http://localhost:8080/rent/account", {
-    //     method: "post",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(empty),
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       console.log(data);
-    //       this.registerInfo = data.register.filter(
-    //         (item) => (item.ownerName === this.register.ownerName) && (item.ownerIdentity === this.perRegister.ownerIdentity) && (item.ownerPhone === this.perRegister.ownerPhone)
-    //       );
-    //       console.log("篩出此筆租約與註冊相關資料",this.registerInfo[0]);
-    //       this. 這邊要去pinia創造一個將註冊資訊存到契約的地方(this.registerInfo[0]);
-    //     });
-    // }
     },
     
     components:{
@@ -166,7 +141,7 @@ export default {
                     <br>
                     樓層:<p>{{ roomObj.floor }}</p>
                     <br>
-                    <!-- 這邊的rId是小徐的，創建完後才會變成我的roomId -->
+                    <!-- rId是小徐的，創建完後才會變成我的roomId -->
                     房號:<p>{{ roomObj.roomId }}</p>
                     <br>
                     租金/月:<p>{{roomObj.rentP }} </p>

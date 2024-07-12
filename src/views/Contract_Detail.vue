@@ -19,13 +19,17 @@ export default {
     },
     created(){
         console.log(this.roomObj);
-        // this.pointRoom(roomObj.ownerIdentity,roomObj.ownerPhone)
+ 
     },
     mounted(){
-       
+    
     },
     methods:{
-        // ...mapActions(dataStore, ['pointRoom']),
+        //將日期顯示為特定格式
+        formatDate(dateString) {
+            const date = new Date(dateString);
+            return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+        }
     
     }
 }
@@ -47,27 +51,27 @@ export default {
         
             </div>
             <br>
-            租賃物件地址: {{roomObj.address}}
+            租賃物件地址: {{roomObj[0].address}}
             <br>
-            樓層: {{ roomObj.floor }}
+            樓層: {{ roomObj[0].floor }}
             <br>
-            房號: {{ roomObj.roomId }}
+            房號: {{ roomObj[0].roomId }}
             <br>
-            租金/月: {{ roomObj.rentP}}
+            租金/月: {{ roomObj[0].rentP}}
             <br>
-            押金: {{ roomObj.deposit }}
+            押金: {{ roomObj[0].deposit }}
             <br>
-            管理費/月: {{roomObj.manageP}}
+            管理費/月: {{roomObj[0].manageP}}
             <br>
-            電費/度: {{roomObj.eletricP}}
+            電費/度: {{roomObj[0].eletricP}}
             <br>
-            水費/月: {{ roomObj.waterP}}
+            水費/月: {{ roomObj[0].waterP}}
             <br>
-            面積: {{roomObj.acreage}}
+            面積: {{roomObj[0].acreage}}
             <br>
-            設備:{{ roomObj.equip }}
+            設備:{{ roomObj[0].equip }}
             <br>
-            物件備註:{{ roomObj.rOther }}
+            物件備註:{{ roomObj[0].rOther }}
             <div class="input-wrapper">
         
             </div>
@@ -115,8 +119,8 @@ export default {
             <textarea>{{oneContractObj.cOther  }}</textarea>
         <br>
         <br>
-        <h3 class="signdate">立約日期:{{ oneContractObj.signDate }}</h3>
-       
+        <h3 class="signdate">立約日期：{{ formatDate(oneContractObj.signDate) }}</h3>
+    
     
         <div class="btn"> 
         
@@ -214,4 +218,3 @@ h1{
     color: rgb(0, 0, 0);
 }
 </style>
-
