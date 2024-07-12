@@ -1,0 +1,329 @@
+<script>
+import dataStore from "@/stores/dataStore";
+import { mapState, mapActions } from "pinia";
+import Swal from 'sweetalert2'
+
+export default {
+    data() {
+        return {
+            new_name: "",
+            new_pwd: "",
+            new_phone: "",
+            new_email: "",
+            new_bank: "",
+            // 用於控制顯示的狀態
+            showName: false,
+            showPwd: false,
+            showPhone: false,
+            showEmail: false,
+            showBank: false
+        };
+    },
+    computed: {
+        ...mapState(dataStore, ['loginObj','registerObj'])
+    },
+    methods: {
+        ...mapActions(dataStore, ['setLoginObj','setRegisterObj']),
+
+        updateAccountToDB() {
+            // 構建更新資料的對象
+            const updatedInfo = {
+                owner_name: this.new_name || this.loginObj.ownerName, // 如果 new_name 為空，使用 loginObj.ownerName
+                owner_pwd: this.new_pwd, // 密碼可能是空的，這裡不使用默認值
+                owner_phone: this.new_phone || this.loginObj.ownerPhone,
+                owner_email: this.new_email || this.loginObj.ownerEmail,
+                account_bank: this.new_bank || this.loginObj.account_bank
+            };
+
+            // 檢查是否有至少一個字段被更新
+            if (!this.new_name && !this.new_pwd && !this.new_phone && !this.new_email && !this.new_bank) {
+                Swal.fire({
+                    icon: "error",
+                    title: "更新失敗",
+                    text: "至少需要更新一個字段"
+                });
+                return;
+            }
+
+            // 發送更新請求
+            fetch("http://localhost:8080/contract/updateContract", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updatedInfo)
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                if (data.code === 200) {
+                    Swal.fire({
+                        title: "更新成功!",
+                        text: "您的資料已成功更新",
+                        icon: "success"
+                    });
+                    // 更新本地的 loginObj
+                    this.setLoginObj(data.updatedUser);
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "更新失敗",
+                        text: data.message || "發生錯誤，請稍後再試"
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("更新請求發生錯誤", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "更新失敗",
+                    text: "系統發生錯誤，請稍後再試"
+                });
+            });
+        },
+        // 控制顯示狀態的方法
+        toggleShow(field) {
+            this.showName = field === 'name';
+            this.showPwd = field === 'pwd';
+            this.showPhone = field === 'phone';
+            this.showEmail = field === 'email';
+            this.showBank = field === 'bank';
+        }
+    }
+}
+</script>
+
+<template>
+    <!-- 選擇修改欄位按鈕 -->
+
+    <div class="btnarea">
+        <div class="circle">
+           <div class="string">&nbsp&nbsp選擇修改資訊&nbsp&nbsp</div>
+        </div>
+        <div class="choosetypebtn">
+            <button class="name" @click="toggleShow('name')">姓名</button>
+            <button class="pwd" @click="toggleShow('pwd')">密碼</button>
+            <button class="email" @click="toggleShow('email')">郵件地址</button>
+            <button class="phone"@click="toggleShow('phone')">手機</button>
+            <button class="bank"@click="toggleShow('bank')">銀行帳戶</button>
+           
+        </div>
+    </div>
+    <!-- 修改欄位資訊 -->
+    <div class="accountInfo">
+        <div v-if="showName" class="name">
+            <h3>當前姓名: {{loginObj.ownerName}}</h3>
+            <h4>更新姓名:</h4>
+            <input v-model="new_name" type="text" placeholder="輸入新的姓名" />
+        </div>
+
+        <div v-if="showPwd" class="pwd">
+            <h3>當前密碼: {{loginObj.ownerPwd}}</h3>
+            <h4>更新密碼:</h4>
+            <input v-model="new_pwd" type="password" placeholder="輸入新的密碼" />
+        </div>
+
+        <div v-if="showPhone" class="phone">
+            <h3>當前手機: {{loginObj.ownerPhone}}</h3>
+            <h4>更新手機:</h4>
+            <input v-model="new_phone" type="text" placeholder="輸入新的手機號碼" />
+        </div>
+
+        <div v-if="showEmail" class="email">
+            <h3>當前Email郵件地址: {{loginObj.ownerEmail}}</h3>
+            <h4>更新Email郵件地址:</h4>
+            <input v-model="new_email" type="email" placeholder="輸入新的郵件地址" />
+        </div>
+
+        <div v-if="showBank" class="bank">
+            <h3>現行銀行帳戶: {{loginObj.account_bank}}</h3>
+            <h4>更新銀行帳戶:</h4>
+            <input v-model="new_bank" type="text" placeholder="輸入新的銀行帳戶" />
+        </div>
+
+        <button @click="updateAccountToDB">更新資料</button>
+    </div>
+</template>
+
+<style scoped lang="scss">
+* { 
+    margin-left: 10%; 
+    margin-top: 10%;
+}
+.circle{
+    width: 20rem;
+    height: 20rem;
+    background-color: rgb(207, 178, 140);
+    border-radius: 50%;
+    position: absolute;
+    left: 15%;
+    top: 0;
+}
+.string{
+    font-size: 3rem;
+    width:25rem ;
+    margin: auto;
+    position: relative;
+    top:38%;
+    left:-4%;
+    justify-content: center;
+    align-items: center;
+    
+}
+//切換欄位按鈕
+.choosetypebtn{
+    position: relative;
+    top: 50%;
+    width: 15dvw;
+    display: flex;
+    color: #110f0f;
+    font-size: 18px;
+    margin-top: 5%;
+    :active{
+    font-size:20px;
+    font-weight: 600;}
+    
+    .name{
+        margin-bottom: 26px;
+        margin-left: 54px;
+        width: 100px;
+        height: 30px;
+        border: 0px;
+        background-color: #f9ddc6;
+        border-radius: 20px;
+    }
+    .pwd{  
+        margin-bottom: 26px;
+        margin-left: 54px;
+        width: 100px;
+        height: 30px;
+      
+        border: 0px;
+        background-color: #fcc395;
+        border-radius: 20px;
+        &:hover {
+        background-color: #f0c49f;
+        }}
+    .email{ 
+        margin-bottom: 26px;
+        margin-left: 54px;
+        width: 100px;
+        height: 30px;
+        border: 0px;
+        background-color: #f9ddc6;
+        border-radius: 20px;}
+    .phone{ margin-bottom: 26px;
+        margin-left: 54px;
+        width: 100px;
+        height: 30px;
+        border: 0px;
+        background-color: #fcc395;
+        border-radius: 20px;
+        &:hover {
+        background-color: #f0c49f;}
+    .bank{ 
+        margin-bottom: 26px;
+        margin-left: 54px;
+        width: 100px;
+        height: 30px;
+        border: 0px;
+        background-color: #f9ddc6;
+        border-radius: 20px;}
+}
+
+}
+
+
+.accountInfo{
+    width: 70%;
+}
+    
+
+
+input {
+    width: 200px;
+}
+
+//切換欄位按鈕
+
+.statusButtons{
+    width: 80dvw;
+    display: flexbox;
+    color: #110f0f;
+    font-size: 18px;
+    margin-top: 5%;
+ :active{
+    font-size:20px;
+    font-weight: 600;
+ }
+
+    .renting{
+        margin-bottom: 26px;
+        margin-left: 54px;
+        width: 12%;
+        height: 30px;
+        border: 0px;
+        background-color: #f9ddc6;
+        border-radius: 20px;
+        
+        &:hover {
+        background-color: #f0c49f;
+        }
+    }
+    .empty{
+        margin-bottom: 26px;
+        margin-left: 54px;
+        width: 12%;
+        height: 30px;
+      
+        border: 0px;
+        background-color: #fcc395;
+        border-radius: 20px;
+        &:hover {
+        background-color: #f0c49f;
+        }
+    }
+    .goingtostart{
+        margin-bottom: 26px;
+        margin-left: 54px;
+        width: 12%;
+        height: 30px;
+       
+        border: 0px;
+        background-color: #f9ddc6;
+        border-radius: 20px;
+        &:hover {
+        background-color: #f0c49f;
+        }
+    }
+    .ended{
+        margin-bottom: 26px;
+        margin-left: 54px;
+        width: 12%;
+        height: 30px;
+      
+        border: 0px;
+        background-color: #fcc395;
+        border-radius: 20px;
+        &:hover {
+        background-color: #f0c49f;
+        }
+    }
+
+    .all{
+        margin-bottom: 26px;
+        margin-left: 54px;
+        width: 12%;
+        height: 30px;
+      
+        border: 0px;
+        background-color: #ebcbcb;
+        border-radius: 20px;
+        &:hover {
+        background-color: #f0c49f;
+        }
+    }
+}
+
+
+</style>
