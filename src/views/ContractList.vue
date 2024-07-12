@@ -98,7 +98,8 @@ calculateTotalPages(totalItems) {
             const now = new Date();
             const startDate = new Date(contract.startDate);
             const endDate = new Date(contract.endDate);
-            if (now < startDate) {
+            const signDate = new Date(contract.signDate);
+            if (signDate <= now && now < startDate) {
                 return "待生效";
             } else if (now >= startDate && now <= endDate) {
                 return "出租中";

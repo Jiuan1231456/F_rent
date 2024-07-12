@@ -25,7 +25,11 @@ export default {
     
     },
     methods:{
-    
+     //將日期顯示為特定格式
+     formatDate(dateString) {
+            const date = new Date(dateString);
+            return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+        }
     
     }
 }

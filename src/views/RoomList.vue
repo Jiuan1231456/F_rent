@@ -9,15 +9,18 @@ export default {
                 address: "",
                 roomId: "",
             },
-            roomList: [],
+            roomList: [],//儲存房間列表
             deleteCheckbox: [],//刪除用
+            contractList: [],//儲存契約列表
+            statusFilter: "",// 新增狀態過濾器
+            addressList: [],//放篩選完狀態的地址
         }
     },
     computed: {
-        ...mapState(dataStore, ['page', 'loginObj', ])
+        ...mapState(dataStore, ['page', 'loginObj',])
     },
     methods: {
-        ...mapActions(dataStore, ['setPage', 'setRoomObj','setLoginObj']),
+        ...mapActions(dataStore, ['setPage', 'setRoomObj', 'setLoginObj']),
 
         search() { //搜尋房間
             console.log("input輸入的地址和房號", this.obj);
@@ -37,14 +40,13 @@ export default {
                 })
         },
 
-        //第三層:篩選取得特定房東的特定房間資訊
-        getRoomInfo(index){
-            console.log("選特定房東的特定房間資訊",this.roomList[index]);//印出來供看console
+        getRoomInfo(index) { //第三層:篩選取得特定房東的特定房間資訊
+            console.log("選特定房東的特定房間資訊", this.roomList[index]);//印出來供看console
             this.setRoomObj(this.roomList[index]);
-        
+
         },
 
-        deleteSelectedRoom() {  //從DB中刪除勾選的房間
+        deleteSelectedRoom() { //從DB中刪除勾選的房間
             let deleteObj = {
                 addressList: this.deleteCheckbox,
             };
@@ -90,6 +92,68 @@ export default {
             console.log("pinia的setRoomObj", this.roomObj)
         },
 
+        searchContractList() { //從契約列表抓出出租中的地址
+            let empty = {};
+            fetch("http://localhost:8080/contract/contratSearch", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(empty)
+            })
+                .then(res => res.json())//將回應轉換為 JSON
+                .then(data => {
+                    console.log("所有契約(不分房東):", data);// 第一層:顯示所有契約(沒有包含特定房東)
+
+                    // 第二層:篩選出當前身份證字號的契約問卷，即顯示特定房東的所有房間資訊
+                    this.contractList = data.contractList.filter(item => item.ownerIdentity === this.loginObj.ownerIdentity);
+                    console.log("只有當前房東的(篩選特定房東):", this.contractList);
+                    this.addInAddressList();
+
+                    let newRoomList = []; 
+                    for (let i = 0; i < this.roomList.length; i++) {
+                        for (let j = 0; j < this.addressList.length; j++) {
+                            if (this.roomList[i].address === this.addressList[j].address) {
+                                newRoomList.push(this.roomList[i]);
+                            }
+                            continue; // 一旦找到匹配的地址就跳出內層迴圈
+                        }
+                    }
+                    console.log(newRoomList)
+                    this.roomList = newRoomList;
+
+
+
+
+                    // 計算總頁數
+                    // this.calculateTotalPages(this.contractList.length)
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error); //處理錯誤
+                });
+        },
+
+        addInAddressList() {// searchContractList()中 用來判斷租約狀態
+            let today = new Date();
+            let month = today.getMonth() + 1;
+            let day = today.getDate();
+            // 確保日期格式符合 2024-06-05，否則會變成 2024-6-5
+            month = month < 10 ? "0" + month : month;
+            day = day < 10 ? "0" + day : day;
+
+            let todayStr = today.getFullYear() + "-" + month + "-" + day;
+            console.log(todayStr);
+            this.addressList = this.contractList.filter(item => (todayStr < item.startDate && todayStr >= item.signDate) || (todayStr >= item.startDate && todayStr <= item.endDate));
+            console.log("契約列表撈出 狀態出租中", this.addressList);
+        },
+
+
+        // calculateTotalPages(totalItems) { // 計算總頁數
+        //     const pageSize = 10; // 假設每頁顯示 10 筆資料
+        //     const totalPages = Math.ceil(totalItems / pageSize);
+        //     console.log("Total Pages:", totalPages); // 打印總頁數以供參考
+        // },
+
     },
 
     created() {
@@ -115,6 +179,9 @@ export default {
             <input type="text" class="searchInput2" title="依房號模糊搜尋" v-model="this.obj.roomId">
             &nbsp;&nbsp;&nbsp;&nbsp;
             <button class="searchButton bt" @click="search()">搜尋</button>
+            <button class="searchButton bt">空房</button>
+            <button class="searchButton bt" @click="searchContractList()">出租中</button>
+
         </div>
         <div class="aAndD">
             <button class="deleteButton bt" @click="deleteSelectedRoom()">刪除</button>
@@ -140,7 +207,7 @@ export default {
                 <td style="width: 6%;">{{ index + 1 }}</td>
                 <td style="width: 17%; padding: 4px;;">
                     <!-- 使用 img 标签显示图片，src 属性绑定 base64 编码的图片数据，格式为 data:image/jpeg;base64, + item.photo -->
-                    <div v-if="item.photo"> 
+                    <div v-if="item.photo">
                         <img :src="'data:image/jpeg;base64,' + item.photo" alt="Image">
                     </div>
                 </td>
@@ -264,7 +331,7 @@ export default {
     bottom: 15px;
 }
 
-img{
+img {
     width: 200px;
     height: 150px;
 }
