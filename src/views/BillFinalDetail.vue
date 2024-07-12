@@ -126,9 +126,14 @@ export default {
       //   console.log('pdf生成失敗',error);
       //   throw error;
     },
+    testDate(){
+      const now = new Date();
+      console.log(now);
+    }
   },
   mounted() {
     emailjs.init("l4QPcOaCIqMDx_T_L");
+    this.testDate();
   },
 };
 </script>

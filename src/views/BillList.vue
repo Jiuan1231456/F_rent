@@ -350,8 +350,10 @@ export default {
 
 <style scoped lang="scss">
 .bigArea {
-  width: 80%;
+  width: 100%;
   height: 100%;
+  margin-left: 21%;
+    margin-top: 22px;
   .billTitle {
     font-size: 2.3em;
     font-weight: 500;
@@ -530,8 +532,13 @@ export default {
   }
   button:disabled {
     cursor: not-allowed;
-    color: #a2a1a1;
-    background-color: #e1e1e1d3;
+      color: #a2a1a1;
+      background-color: #e1e1e1d3;
+    &:hover{
+      cursor: not-allowed;
+      color: #a2a1a1;
+      background-color: #e1e1e1d3;
+    }
   }
 }
 </style>

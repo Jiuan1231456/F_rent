@@ -42,8 +42,7 @@ export default {
       // 更新帳單資料的彈跳視窗的開關
       this.elecModal = !this.elecModal;
     },
-    search() {
-      // 篩出房東和截止日前的帳單
+    search() { // 篩出房東和截止日前的帳單
       let empty = {};
       // 讓當天日期變成post欄位stardate的值
       let today = new Date();
@@ -73,20 +72,18 @@ export default {
             (item) => item.paymentDate > todayStr
           );
           console.log("未截止", this.newnewBillSearch);
-          this.newnewBillSearch.sort((a, b) => {
+          this.newnewBillSearch.sort((a, b) => {  // 繳費期限由小到大排序
             return new Date(a.paymentDate) - new Date(b.paymentDate);
           });
         });
     },
-    bringToEdit(index) {
-      // 將選擇的帳單帶到輸入用電量的視窗
+    bringToEdit(index) { // 將選擇的帳單帶到輸入用電量的視窗
       // this.newnewBillSearch[index];
       this.setPerBill(this.newnewBillSearch[index]);
       console.log("選的帳單", this.perBill);
       this.perBill.eletricV = "";
     },
-    updateElectricV() {
-      // 更新用電量
+    updateElectricV() { // 更新用電量
       let electricObj = {
         ai: this.perBill.ai,
         eletricV: this.perBill.eletricV,
@@ -105,8 +102,7 @@ export default {
           console.log("pinia裡的finalBill", this.finalBill);
         });
     },
-    findCutDate() {
-      // // 篩出對應帳單的契約 => 先抓到全部租約，再一層一層篩
+    findCutDate() {  // 篩出對應帳單的契約 => 先抓到全部租約，再一層一層篩
       let empty = {};
       fetch("http://localhost:8080/contract/contratSearch", {
         method: "post",
@@ -128,12 +124,12 @@ export default {
           this.setBillToContract(this.cutDateBill);
         });
     },
-    sortByPaymentDate() {
+    sortByPaymentDate() { // 依繳費期限由近到遠排序
       this.newnewBillSearch.sort((a, b) => {
         return new Date(a.paymentDate) - new Date(b.paymentDate);
       });
     },
-    electricIsRequired() {
+    electricIsRequired() {  // 用電量欄位防呆
       if (this.perBill.eletricV === "") {
         Swal.fire({
           title: "請填寫本期用電量",
@@ -179,6 +175,7 @@ export default {
             <td scope="col" class="thead">計費期間</td>
             <td scope="col" class="thead">繳費期限</td>
             <td scope="col" class="thead">更新用電量</td>
+            <td scope="col" class="thead">狀態</td>
           </tr>
         </thead>
         <tbody>
@@ -200,6 +197,8 @@ export default {
               <i class="fa-solid fa-pen"></i>
               </button>
             </td>
+            <td v-if="this.perBill.eletricV">尚未更新</td>
+            <td v-else>已更新</td>
           </tr>
         </tbody>
       </table>
@@ -261,8 +260,10 @@ export default {
 <style scoped lang="scss">
 .bigArea {
   width: 122dvw;
-  height: 100dvh;
+  height: 94dvh;
   background-color: #faf0e9;
+  margin-left: 17%;
+    margin-top: 30px;
   .billTitle {
     font-size: 2.3em;
     font-weight: 500;
@@ -295,7 +296,7 @@ export default {
     }
   }
   .middleArea {
-    width: 93%;
+    width: 100%;
     height: 50%;
     margin-top: 10px;
     .tableTitle {
@@ -328,6 +329,7 @@ export default {
         background-color: rgb(255 253 253 / 47%);
         height: 33px;
         box-shadow: 0px 1px 0px 0px gray;
+        padding: 8px;
       }
     }
   }
