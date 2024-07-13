@@ -177,12 +177,17 @@ export default {
 </template>
   
   <style scoped lang="scss">
-
+*{
+    margin-top: 11%;
+    // margin-left: 
+}
 .areaMom{
+
     width: 100%;
         .area{
             width: 100%;
             display: flex;
+            margin-left:6%;
             
             //物件資訊
             .bigArea {
@@ -198,7 +203,7 @@ export default {
                 border-left: 2px dashed rgb(223, 189, 140);
                 height:300%;
                 margin-top: 8%;
-                left: 55%;
+                left: 56%;
                 position: absolute;
             }
             // 立契約書人
@@ -206,6 +211,7 @@ export default {
                 width: 40%;
                 margin-top: 2%;
                 padding: 3%;
+                margin-left: -5%;
                 font-size: 18px   
             }
         

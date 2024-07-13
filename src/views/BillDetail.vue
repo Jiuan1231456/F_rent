@@ -115,6 +115,8 @@ export default {
   height: 100%;
   margin-bottom: 53px;
   position: relative;
+  margin-left: 23%;
+  margin-top: 1%;
   .back{
     position: absolute;
     bottom: -3%;

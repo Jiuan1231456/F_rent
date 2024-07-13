@@ -132,15 +132,13 @@ export default {
 
 
 <style scoped lang="scss">
-*{
-margin-right: 0% ;
-}
+
 .bigArea{
    
-    margin-top: 3%;
-    padding: 3%;
+    margin-top: 5%;
+    padding: 5%;
     margin-bottom: 3%;
-    margin-left: 10%;
+    margin-left: 30%;
     width: 55%;
     background-color: white;
     border: 1px solid rgba(12, 12, 12, 0.096);
@@ -169,7 +167,7 @@ h3{
     background-color: white;
     background-color: white;
     background-color: rgb(247, 203, 150);
-    width: 25%;
+    width: 23%;
 
     padding: 2%;
     // text-align: center;
@@ -178,7 +176,7 @@ h3{
 }
 .other{
         
-width: 43%;
+width: 55%;
     }
 .signdate{
     width: 43%;
@@ -194,7 +192,7 @@ h4{
 h2{
     background-color: white;
     background-color: rgb(247, 203, 150);
-    width: 25%;
+    width: 35%;
     padding: 1%;
     text-align: center;
     box-shadow: rgba(0, 0, 0, 0.15) 2.95px 2.95px 3.6px;

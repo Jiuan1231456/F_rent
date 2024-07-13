@@ -232,7 +232,8 @@ export default {
 .bigArea {
     width: 80%;
     padding: 1%;
-    margin: 0 auto;
+    margin: 2% auto;
+    margin-left: 18%;
     position: relative;
 }
 

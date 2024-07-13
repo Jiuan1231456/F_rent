@@ -131,7 +131,6 @@ calculateTotalPages(totalItems) {
         selectRoomInfo(index){
             console.log("選特定房東的特定房間資訊",this.contractList[index]);//印出來供看console
             this.setOneContractObj(this.contractList[index]);
-           
         },
         //找出該契約的房間資訊
         findRoomInfo() {
@@ -211,7 +210,7 @@ calculateTotalPages(totalItems) {
             <!-- 顯示名下所有契約 -->
             <button class="all" @click="showAllContracts()" :class="{ active: statusFilter === '' }">顯示所有契約</button>
         </div>
- 
+
 
     <!--租約列表 con=contract -->
     <div class="conlist">
@@ -253,7 +252,7 @@ calculateTotalPages(totalItems) {
 </template>
 
     <style scoped lang="scss">
-    *{margin-top: 5%;}
+    *{margin-top: 3%;}
     .manageArea {
         width: 100dvw;
         height: 100dvh;
@@ -269,22 +268,22 @@ calculateTotalPages(totalItems) {
     }
 //搜尋
     .searchPlace {
-        width: 66%;
-        height: 35%;
+        width: 70%;
+        height: 45%;
         color: black;
         font-size: 22px;
         background-color: #FFC89A;
         border: 1em solid #fae1cd;
         text-align: left;
         margin-top: 5%;
-        margin-left: 7%;
+        margin-left: 5%;
         padding: 3% 3% 5% 3%;}
     
 
     .inputPlace {
         display: flex; /* 使用 Flexbox 使元素並排 */
         align-items: center; /* 垂直居中對齊 */
-        margin-top: -5%;
+        margin-top: -3%;
         margin-bottom: 2%; /* 可以根據需要調整間距 */
         background-color: #FFC89A;
     }
@@ -349,10 +348,10 @@ calculateTotalPages(totalItems) {
     }
     
     .conlist {
-        width: 135dvh;
+        width: 165dvh;
         height: auto;
         margin-top: 1%;
-        
+        margin-left: -5%;
         color: black;
         background-color: antiquewhite;
         border: none;
@@ -372,7 +371,7 @@ calculateTotalPages(totalItems) {
         color: #110f0f;
         width: 25vw;
         height: 70px;
-        font-size: 22px;
+        font-size: 20px;
     }
 
     td {
@@ -405,6 +404,7 @@ calculateTotalPages(totalItems) {
     color: #110f0f;
     font-size: 18px;
     margin-top: 0;
+    margin-left: -5%;
  :active{
     font-size:20px;
     font-weight: 600;

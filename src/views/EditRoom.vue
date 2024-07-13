@@ -109,11 +109,17 @@ export default {
 .bigArea {
     width: 80%;
     margin: 0 auto;
+    margin-left: 19%;
+    margin-top: 3%;
+}
+
+h4{
+    margin: 2%;
 }
 
 .inp {
     padding-left: 5px;
-    width: 18%;
+    width: 16%;
 }
 
 .parking{

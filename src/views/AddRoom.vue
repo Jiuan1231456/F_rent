@@ -174,10 +174,13 @@ export default {
 </template>
 
 <style scoped lang="scss">
+
 .bigArea {
     width: 80%;
     padding: 1%;
     position: relative;
+    margin-left: 17%;
+    margin-top: 2%;
 }
 
 .address {
