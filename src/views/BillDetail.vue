@@ -13,6 +13,7 @@ export default {
   methods: {
     ...mapActions(dataStore, [""]),
     findCutDate(){  // 篩出對應帳單的契約 => 先抓到全部租約，再一層一層篩
+      this.findRoomData();
       let empty = {};
       fetch("http://localhost:8080/contract/contratSearch", {
         method: "post",
@@ -30,7 +31,21 @@ export default {
           console.log("篩出此筆帳單的租約",this.cutDateBill);
           // this.setBillToContract(this.cutDateBill);
         });
-    }
+    },
+    findRoomData(){
+      let empty = {};
+      fetch("http://localhost:8080/contract/contratSearch", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(empty),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log('全部房東的房間',data);
+
+    })
   },
   mounted() {
     console.log('此筆帳單',this.billObj);
@@ -39,6 +54,7 @@ export default {
   Created(){
     this.findCutDate();
   }
+}
 };
 </script>
 

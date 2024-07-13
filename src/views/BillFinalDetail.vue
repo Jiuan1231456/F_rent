@@ -21,8 +21,7 @@ export default {
   },
   methods: {
     ...mapActions(dataStore, ["setBillToContract"]),
-    sendEmail() {
-      // 寄信功能
+    sendEmail() { // 寄信功能
       var templateParams = {
         tenantName: this.finalBill.tenantName,
         tenantAddress:this.finalBill.address,
@@ -39,8 +38,8 @@ export default {
         periodEnd: this.finalBill.periodEnd,
         paymentDate: this.finalBill.paymentDate,
         ownerName: this.finalBill.ownerName,
-        // tenantEmail: this.billToContract.tenantEmail,
-        tenantEmail: "lighters0406@gmail.com",
+        tenantEmail: this.billToContract[0].tenantEmail,
+        // tenantEmail: "lighters0406@gmail.com",
         ownerEmail: this.loginObj.ownerEmail,
       };
       emailjs.send("service_azp4v8s", "template_h9952ii", templateParams).then(
@@ -60,8 +59,7 @@ export default {
         }
       );
     },
-    async loadTemplate() {
-      // 提供一個列印的模板
+    async loadTemplate() { // 提供一個列印的模板
       try {
         const response = await axios.get("/test.docx", {
           responseType: "arraybuffer",
@@ -72,8 +70,7 @@ export default {
         throw error;
       }
     },
-    async print() {
-      // 列印功能
+    async print() { // 列印功能
       // try{
       const templateArrayBuffer = await this.loadTemplate();
       // console.log('Template loaded successfully');
@@ -85,8 +82,24 @@ export default {
 
       // 設置文檔內容
       doc.setData({
-        ownerName: this.finalBill.ownerName,
         tenantName: this.finalBill.tenantName,
+        address:this.finalBill.address,
+        rentP:this.finalBill.rentP,
+        manageP:this.finalBill.manageOneP,
+        waterP:this.finalBill.waterOneP,
+        electricP:this.finalBill.eletricP,
+        electricV:this.finalBill.eletricV,
+        eletricOneP:this.finalBill.eletricOneP,
+        cutP:this.finalBill.cutP,
+        totalOneP:this.finalBill.totalOneP,
+        bankAccount:this.loginObj.accountBank,
+        periodStart: this.finalBill.periodStart,
+        periodEnd: this.finalBill.periodEnd,
+        paymentDate: this.finalBill.paymentDate,
+        ownerName: this.finalBill.ownerName,
+        ownerPhone:this.loginObj.ownerPhone,
+        tenantPhone:this.billToContract[0].tenantPhone
+        
       });
       console.log("Data set for the template");
 
@@ -104,7 +117,7 @@ export default {
         mimeType:
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       });
-      saveAs(out, "test1.docx");
+      saveAs(out, "本期租賃繳費單.docx");
       // ========================================================================= 以下是生成pdf
       // console.log('Buffer generated successfully');
       // 將Docx文檔轉換為PDF
@@ -126,14 +139,9 @@ export default {
       //   console.log('pdf生成失敗',error);
       //   throw error;
     },
-    testDate(){
-      const now = new Date();
-      console.log(now);
-    }
   },
   mounted() {
     emailjs.init("l4QPcOaCIqMDx_T_L");
-    this.testDate();
   },
 };
 </script>

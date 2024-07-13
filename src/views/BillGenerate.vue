@@ -175,7 +175,7 @@ export default {
             <td scope="col" class="thead">計費期間</td>
             <td scope="col" class="thead">繳費期限</td>
             <td scope="col" class="thead">更新用電量</td>
-            <td scope="col" class="thead">狀態</td>
+            <td scope="col" class="thead">是否已更新</td>
           </tr>
         </thead>
         <tbody>
