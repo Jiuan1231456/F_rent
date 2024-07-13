@@ -61,6 +61,12 @@ export default {
         to="/lookupBill"
         >帳單管理</RouterLink
       >
+      <RouterLink
+        class="routerItem"
+        :class="{ selectedPage: this.page === 12 }"
+        to="/TenantBillFirst"
+        >房客帳單</RouterLink
+      >
     <!-- </nav> -->
     </div>
 </template>

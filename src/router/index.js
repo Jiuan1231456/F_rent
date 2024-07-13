@@ -119,6 +119,11 @@ const router = createRouter({
       component: () => import('../views/Cutcontract_Edit.vue'),
       props: true // 允許通過路由傳參
     },
+    {
+      path: '/TenantBillFirst',
+      name: 'TenantBillFirst',
+      component: () => import('../views/TenantBillFirst.vue'),
+    },
   ]
 
 })
