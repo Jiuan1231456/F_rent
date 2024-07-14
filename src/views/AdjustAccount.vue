@@ -221,6 +221,7 @@ export default {
         border-radius: 20px;
         &:hover {
         background-color: #f0c49f;}
+    }
     .bank{ 
         margin-bottom: 26px;
         margin-left: 54px;
@@ -229,8 +230,6 @@ export default {
         border: 0px;
         background-color: #f9ddc6;
         border-radius: 20px;}
-}
-
 }
 
 
