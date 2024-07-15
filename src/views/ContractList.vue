@@ -133,7 +133,7 @@ calculateTotalPages(totalItems) {
             this.setOneContractObj(this.contractList[index]);
            
         },
-        //找出該契約的房間資訊
+        //找出該契約的房間資訊，這是不使用過濾方法，先將所有的房間列出來，再依照所設定的條件做指定物件的篩選，因為是模糊搜尋，所以最好指定多個條件才能精準符合物件，但這個條件必須要是兩張table裡都有的欄位
         findRoomInfo() {
             //設定特定房間搜尋條件確保與所選契約的房間條件相符合
             let searchCriteria = {
@@ -243,7 +243,7 @@ calculateTotalPages(totalItems) {
                 <td>{{ item.startDate }}</td>
                 <td>{{ item.endDate }}</td>
                 <td>{{ item.rentP }}</td>
-                <td><RouterLink to="/Contract_Detail" @click="selectRoomInfo(index)"> 契約中止編輯</RouterLink></td>
+                <td><RouterLink to="/Cutcontract_Edit" @click="selectRoomInfo(index)"> 契約中止編輯</RouterLink></td>
                 <td><RouterLink to="/Contract_Detail" @click="selectRoomInfo(index); $nextTick(findRoomInfo)"> 查看詳情</RouterLink></td>
             </tr>
         </tbody>
@@ -253,7 +253,7 @@ calculateTotalPages(totalItems) {
 </template>
 
     <style scoped lang="scss">
-    *{margin-top: 5%;}
+  
     .manageArea {
         width: 100dvw;
         height: 100dvh;
@@ -284,7 +284,7 @@ calculateTotalPages(totalItems) {
     .inputPlace {
         display: flex; /* 使用 Flexbox 使元素並排 */
         align-items: center; /* 垂直居中對齊 */
-        margin-top: -5%;
+        margin-top: 0%;
         margin-bottom: 2%; /* 可以根據需要調整間距 */
         background-color: #FFC89A;
     }
@@ -404,7 +404,7 @@ calculateTotalPages(totalItems) {
     display: flexbox;
     color: #110f0f;
     font-size: 18px;
-    margin-top: 0;
+    margin-top: 5%;
  :active{
     font-size:20px;
     font-weight: 600;

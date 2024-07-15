@@ -61,11 +61,7 @@ const router = createRouter({
       component: () => import('../views/AddRoom.vue')
     },
     
-    // {
-    //   path: '/ ContractPreview',
-    //   name: 'ContractPreview',
-    //   component: () => import('../views/ContractPreview.vue')
-    // },
+
     //查看契約詳情
     {
       path: '/Contract_Detail',
@@ -81,10 +77,18 @@ const router = createRouter({
       props: true // 允許通過路由傳參
 
     },
+    //契約中止編輯
     {
-      path: '/Cutcontract_Edit',
-      name: 'Cutcontract_Edit',
-      component: () => import('../views/Cutcontract_Edit.vue'),
+      path: '/CutcontractEdit',
+      name: 'CutcontractEdit',
+      component: () => import('../views/CutcontractEdit.vue'),
+      props: true // 允許通過路由傳參
+
+    },//修改帳戶資訊
+    {
+      path: '/AdjustAccount',
+      name: 'AdjustAccount',
+      component: () => import('../views/AdjustAccount.vue'),
       props: true // 允許通過路由傳參
 
     },

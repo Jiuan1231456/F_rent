@@ -28,7 +28,8 @@ export default {
             cut_reason: "",
             cut_date: "",
             ai:"",
-        // 房間資訊抓
+            r_condtion:"",        
+            // 房間資訊抓
             address: "",
             floor: "",
             r_id: "",
@@ -42,6 +43,7 @@ export default {
             parking: false,
             equip: "",
             r_other: "",
+
 
         
     }
@@ -80,9 +82,9 @@ export default {
             signDate: this.sign_date,
             cutReason: this.cut_reason,
             cutDate: this.cut_date,
-            signDate: this.sign_date,
             ai:this.ai,
             owner_account:this.loginObj.ownerAccount,//從登入資訊抓
+            rCondition:this.r_condtion, 
             //從房間抓
             address: this.roomObj.address,
             floor: this.roomObj.floor,
@@ -197,7 +199,7 @@ export default {
                     連絡電話: <input type="text" v-model="tenant_phone" class="input-box">
                 </div>
                 <br>
-                <h3>契約中止</h3>
+                <!-- <h3>契約中止</h3>
                 <div class="cut">
                     <br>
                     中止原因: <input type="text" v-model="cut_reason" class="input-box">
@@ -205,7 +207,7 @@ export default {
                     違約金: <input type="text" v-model="cut_p" class="input-box">
                     <br>
                     中止日期: <input type="text" v-model="cut_date" class="input-box">
-                </div>
+                </div> -->
                 <br>
                 <h3>其他備註(或個別磋商條款)</h3>
                 <div class="input-wrapper">
@@ -213,7 +215,7 @@ export default {
                     <span class="underline"></span>
                 </div>
                 <br>
-                <h3>立約日期:  <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="start_date"/></h3>
+                <h3>立約日期:  <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="sign_date"/></h3>
 
             
                 <div class="btn"> 

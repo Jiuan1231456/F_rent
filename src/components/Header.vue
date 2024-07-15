@@ -62,15 +62,20 @@ export default {
       class="routerItem"
       
       to="/Contract_Detail"
-      >租約詳情/契約中止編輯</RouterLink
+      >租約詳情</RouterLink
     >
     <RouterLink
       class="routerItem"
       
-      to="/Cutcontract_Edit"
+      to="/CutcontractEdit"
       >租約中止編輯</RouterLink
     >
-   
+    <RouterLink
+      class="routerItem"
+      
+      to="/AdjustAccount"
+      >修改帳戶資訊</RouterLink
+    >
     <RouterLink
       class="routerItem"
       :class="{ selectedPage: this.page === 10 }"

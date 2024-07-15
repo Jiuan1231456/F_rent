@@ -108,11 +108,11 @@ export default {
             <input class="parking inp" type="checkbox" v-model="this.parking">
         </div>
         <div class="equipDiv">
-            <span>物件備註&nbsp;:&nbsp;&nbsp;</span>
+            <span>設備&nbsp;:&nbsp;&nbsp;</span>
             <textarea class="equip inp" style="resize: none; width: 80%; height: 40%;" v-model="this.equip"></textarea>
         </div>
         <div class="rOtherDiv">
-            <span>特色描述&nbsp;:&nbsp;&nbsp;</span>
+            <span>屋況&nbsp;:&nbsp;&nbsp;</span>
             <textarea class="rOther inp" style="resize: none; width: 80%; height: 40%;"
                 v-model="this.rOther"></textarea>
         </div>

@@ -68,13 +68,13 @@ export default defineComponent({
         },
         register() {
             let registerObj1 = {
-                ownerAccount: this.owner_account,
-                ownerPwd: this.owner_pwd,
-                ownerEmail: this.owner_email,
-                ownerPhone: this.owner_phone,
-                ownerIdentity: this.owner_identity,
-                ownerName: this.owner_name,
-                accountBank: this.account_bank
+                owner_account: this.owner_account,
+                owner_pwd: this.owner_pwd,
+                owner_email: this.owner_email,
+                owner_phone: this.owner_phone,
+                owner_identity: this.owner_identity,
+                owner_name: this.owner_name,
+                account_bank: this.account_bank
             };
             // 檢查所有字段是否都有值
             if (!this.owner_account || !this.owner_pwd || !this.owner_email || 
@@ -176,8 +176,8 @@ export default defineComponent({
                 <input v-model="owner_phone" type="tel" placeholder="09xx-xxx-xxx" />
                 <label>密碼</label>
                 <input v-model="owner_pwd" type="text" placeholder="6-10位英數密碼" />
-                <label>銀行帳戶</label>
-                <input v-model="account_bank" type="text"  placeholder="(行號)10碼數字，要加()" />
+                <!-- <label>銀行帳戶</label> -->
+                <!-- <input v-model="account_bank" type="text"  placeholder="(行號)10碼數字，要加()" /> -->
                 <button type="button" @click="register">註冊確認</button>
                 <p class="message"><a href="#" @click.prevent="toggleForm">登入</a></p>
             </form>
@@ -207,6 +207,8 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-top:2% ;
+    padding-bottom: 2%;
     }
 
 

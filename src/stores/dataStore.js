@@ -5,8 +5,8 @@ export default defineStore('dataStore',{
         page:1,  // 讀取當頁頁碼
         loginObj:{},  // 存放房東登入資訊
         roomObj:{},//存放房間資訊
-      
         oneContractObj:{},//存放單一筆房間契約的資訊
+        cutContractObj:{},
         registerObj:{},//存放註冊資訊
         billObj: {},  // 存放歷史帳單的單筆帳單(之後要顯示明細)
         monthBill:{}, // 存放當期帳單  
@@ -14,13 +14,13 @@ export default defineStore('dataStore',{
         finalBill:{}, // 存放輸入完用電量的帳單
         billToContract:{}, // 找出該帳單的契約
         tenantData:{}, // 房客登入(房客的電話和身分證字號)
-       
+    
     }),
     getters:{  // 返回變數或數據
         getPage:(state) => state.page,
         getLoginObj:(state) => state.loginObj,
         getRoomObj:(state)=>state.roomObj,
-      
+        getCutContractObj:(state)=>state.cutContractObj,
         getoneContractObj:(state)=>state.oneContractObj,
         getRegisterObj:(state)=>state.registerObj,
         getBillObj: (state) => state.billObj,
@@ -29,7 +29,7 @@ export default defineStore('dataStore',{
         getFinalBill:(state) => state.finalBill,
         getBillToContract:(state) => state.billToContract,
         getTenantData:(state) => state.tenantData,
-      
+    
 
 
     },
@@ -43,7 +43,9 @@ export default defineStore('dataStore',{
         setRoomObj(obj) {
             this.roomObj = obj;
         },
-       
+        setCutContractObj(obj){
+            this.cutContractObj=obj;
+        },
         setOneContractObj(obj){
         this.oneContractObj=obj
         },

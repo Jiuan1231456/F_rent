@@ -48,7 +48,8 @@ export default {
         },
         //第三層:篩選取得特定房東的特定房間資訊
         getRoomInfo(index){
-            this.selectIndex=index;
+            // this.selectIndex=index;
+            // console.log("看這是啥:",this.selectIndex)
             console.log("選特定房東的特定房間資訊",this.roomList[index]);//印出來供看console
             this.setRoomObj(this.roomList[index]);
         

@@ -2,122 +2,58 @@
 import dataStore from "@/stores/dataStore";
 import { mapState } from "pinia";
 import { RouterLink } from 'vue-router';
-import send_btn from '../components/send_btn.vue';
 
 export default {
     data() {
         return {
-            tenant_identity: "",  
-            tenant_name: "",
-            tenant_home_address: "",
-            tenant_contact_address: "",
-            tenant_phone: "",
-            tenant_email: "",
-            owner_name: "",  //從註冊資訊抓
-            owner_identity: "", //從註冊資訊抓
-            owner_home_address: "", 
-            owner_contact_address: "", 
-            owner_phone: "",  //從註冊資訊抓
-            start_date: "",
-            end_date: "",
-            c_other: "",
-            sign_date: "",
-            cut_reason: "",
-            cut_date: "",
-            ai:"",
-            r_condtion:"",        
-            // 房間資訊抓
-            address: "",
-            floor: "",
-            r_id: "",
-            rent_p: "",
-            deposit: "",
-            cut_p: "",
-            eletric_p: "",
-            water_p: "",
-            manage_p: "",
-            acreage: "",
-            parking: false,
-            equip: "",
-            r_other: "",
+            cut_reason:"",
+            cut_date:"",
             cutContractSearch:[], //存放搜尋到的特定契約，放更新完的契約
-            
+            cutDateContract:[]//存放特定契約的中止日
+
         }
     },
-
     computed: {
         // 綁定 Pinia 狀態
         // 'oneContractObj' 在 pinia 檔裡的 state
-        ...mapState(dataStore, ['oneContractObj','roomObj','loginObj'])
+        ...mapState(dataStore, ['oneContractObj'])
     },
     components: {
-        RouterLink,
-        send_btn,
-    },
-    created(){
-        console.log(this.roomObj);
- 
-    },
-    mounted(){
-    
+        RouterLink 
     },
     methods:{
-        //將日期顯示為特定格式
-        formatDate(dateString) {
-            const date = new Date(dateString);
-            return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-        },
-        sendCutContractToDB(){
-            let cutObj={
-            tenantIdentity: this.tenant_identity,  
-            tenantName: this.tenant_name,
-            tenantHomeAddress: this.tenant_home_address,
-            tenantContactAddress: this.tenant_contact_address,
-            tenantPhone: this.tenant_phone,
-            tenantEmail: this.tenant_email,
-            ownerName: this.loginObj.ownerName, //從登入資訊抓
-            ownerIdentity: this.loginObj.ownerIdentity, //從登入資訊抓
-            ownerHomeAddress: this.owner_home_address, 
-            ownerContactAddress: this.owner_contact_address, 
-            ownerPhone: this.loginObj.ownerPhone, //契約的表沒有這個欄位，要從登入抓，但我建議再SQL新增這個欄位，因為房東可能想註冊的電話跟連絡他的電話不一樣
-            startDate: this.start_date,
-            endDate: this.end_date,
-            cOther: this.c_other,
-            signDate: this.sign_date,
-            cutReason: this.cut_reason,
-            cutDate: this.cut_date,
-            ai:this.ai,
-            owner_account:this.loginObj.ownerAccount,//從登入資訊抓
-            rCondition:this.r_condtion, 
-            //從房間抓
-            address: this.roomObj.address,
-            floor: this.roomObj.floor,
-            roomId: this.roomObj.roomId,
-            rentP: this.roomObj.rentP,
-            deposit: this.roomObj.deposit,
-            cutP: this.roomObj.cutP,
-            eletricP: this.roomObj.eletricP,
-            waterP: this.roomObj.waterP,
-            manageP: this.roomObj.manageP,
-            acreage: this.roomObj.acreage,
-            parking: this.roomObj.parking,
-            equip: this.roomObj.equip,
-            rOther: this.roomObj.rOther,
-            };
-            fetch("http://localhost:8080/contract/updateContract", {
+        ...mapActions(dataStore,['setLoginObj']),
+        
+        addCutContractToDB(){
+        let cutContractObj ={
+            cut_reason:this.cut_reason,
+            cut_date:this.cut_date,
+            cutContractSearch:[], //存放搜尋到的特定契約，放更新完的契約
+            cutDateContract:[]
+        };
+        fetch("http://localhost:8080/contract/updateContract", {
             method: "POST",
             headers: {
             "Content-Type": "application/json"
             },
-            body: JSON.stringify(cutObj)
+            body: JSON.stringify(cutContractObj)
         })
         .then(res => res.json())
         .then(data => {
             console.log(data);
         });
+        },
+        //將日期顯示為特定格式
+        formatDate(dateString) {
+            const date = new Date(dateString);
+            return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+        },
+        edit(){
+
         }
-    
+        
     }
+//    
 }
 </script>
 
@@ -193,25 +129,23 @@ export default {
         <h3>契約中止</h3>
         <div class="cut">
             <br>
-            中止原因: <textarea type="text" v-model="cut_reason" class="input-box"></textarea>
+            中止原因: <input type="text" v-model="cut_reason" class="input-box">
             <br>
-            違約金:  {{ roomObj[0].cutP }}
+            違約金: {{ roomObj.cutP }}
             <br>
-            中止日期:  <input type="date" id="end" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="cut_date" />
+            中止日期: <input type="date" v-model="cut_date" class="input-box">
         </div>
         <br>
         <h3 class="other">其他備註(或個別磋商條款)</h3>
         <br>
-            <textarea disabled>{{oneContractObj.cOther  }}</textarea>
+            <textarea>{{oneContractObj.cOther  }}</textarea>
         <br>
         <br>
         <h3 class="signdate">立約日期：{{ formatDate(oneContractObj.signDate) }}</h3>
-
-        契約編號:{{oneContractObj.ai}}
     
     
         <div class="btn"> 
-            <send_btn class="space-between" @click="sendCutContractToDB"/> 
+        
         </div>
     </div>
 </template>
@@ -224,7 +158,7 @@ export default {
 margin-right: 0% ;
 }
 .bigArea{
-
+   
     margin-top: 3%;
     padding: 3%;
     margin-bottom: 3%;
