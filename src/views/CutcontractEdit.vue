@@ -2,58 +2,66 @@
 import dataStore from "@/stores/dataStore";
 import { mapState } from "pinia";
 import { RouterLink } from 'vue-router';
+import send_btn from '../components/send_btn.vue';
 
 export default {
     data() {
         return {
-            cut_reason:"",
-            cut_date:"",
-            cutContractSearch:[], //存放搜尋到的特定契約，放更新完的契約
-            cutDateContract:[]//存放特定契約的中止日
-
+          
+            sign_date: "",
+            cut_reason: "",
+            cut_date: "",
+            ai:"",
+   
+            
         }
     },
+
     computed: {
         // 綁定 Pinia 狀態
         // 'oneContractObj' 在 pinia 檔裡的 state
-        ...mapState(dataStore, ['oneContractObj'])
+        ...mapState(dataStore, ['oneContractObj','roomObj','loginObj'])
     },
     components: {
-        RouterLink 
+        RouterLink,
+        send_btn,
+    },
+    created(){
+        console.log(this.roomObj);
+ 
+    },
+    mounted(){
+    
     },
     methods:{
-        ...mapActions(dataStore,['setLoginObj']),
-        
-        addCutContractToDB(){
-        let cutContractObj ={
-            cut_reason:this.cut_reason,
-            cut_date:this.cut_date,
-            cutContractSearch:[], //存放搜尋到的特定契約，放更新完的契約
-            cutDateContract:[]
-        };
-        fetch("http://localhost:8080/contract/updateContract", {
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json"
-            },
-            body: JSON.stringify(cutContractObj)
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-        });
-        },
         //將日期顯示為特定格式
         formatDate(dateString) {
             const date = new Date(dateString);
             return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
         },
-        edit(){
-
+        sendCutContractToDB(){
+            let cutObj={
+          
+            ai:this.oneContractObj.ai,
+            address:this.oneContractObj.address,
+            cutReason: this.cut_reason,
+            cutDate: this.cut_date,
+           
+            };
+            fetch("http://localhost:8080/contract/updateContract", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json"
+            },
+            body: JSON.stringify(cutObj)
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+        });
         }
-        
+    
     }
-//    
 }
 </script>
 
@@ -73,15 +81,15 @@ export default {
         
             </div>
             <br>
-            租賃物件地址: {{roomObj[0].address}}
+            租賃物件地址: {{oneContractObj.address}}
             <br>
-            樓層: {{ roomObj[0].floor }}
+            樓層: {{ oneContractObj.floor }}
             <br>
-            房號: {{ roomObj[0].roomId }}
+            房號: {{oneContractObj.roomId }}
             <br>
-            租金/月: {{ roomObj[0].rentP}}
+            租金/月: {{oneContractObj.rentP}}
             <br>
-            押金: {{ roomObj[0].deposit }}
+            押金: {{ oneContractObj.deposit }}
             <br>
             管理費/月: {{roomObj[0].manageP}}
             <br>
@@ -129,23 +137,25 @@ export default {
         <h3>契約中止</h3>
         <div class="cut">
             <br>
-            中止原因: <input type="text" v-model="cut_reason" class="input-box">
+            中止原因: <textarea type="text" v-model="cut_reason" class="input-box"></textarea>
             <br>
-            違約金: {{ roomObj.cutP }}
+            違約金:  {{ roomObj[0].cutP }}
             <br>
-            中止日期: <input type="date" v-model="cut_date" class="input-box">
+            中止日期:  <input type="date" id="end" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="cut_date" />
         </div>
         <br>
         <h3 class="other">其他備註(或個別磋商條款)</h3>
         <br>
-            <textarea>{{oneContractObj.cOther  }}</textarea>
+            <textarea disabled>{{oneContractObj.cOther  }}</textarea>
         <br>
         <br>
         <h3 class="signdate">立約日期：{{ formatDate(oneContractObj.signDate) }}</h3>
+
+        契約編號:{{oneContractObj.ai}}
     
     
         <div class="btn"> 
-        
+            <send_btn class="space-between" @click="sendCutContractToDB()"/> 
         </div>
     </div>
 </template>
@@ -158,7 +168,7 @@ export default {
 margin-right: 0% ;
 }
 .bigArea{
-   
+
     margin-top: 3%;
     padding: 3%;
     margin-bottom: 3%;
