@@ -21,9 +21,9 @@ export default {};
       </button>
       <slot name="content"></slot>
       <slot name="footer"></slot>
-      <button type="button" class="closefooter" @click="$emit('alertModal')">
+      <!-- <button type="button" class="closefooter" @click="$emit('alertModal')">
         取消
-      </button>
+      </button> -->
     </div>
     <div class="bg"></div>
     <!-- 彈出視窗框框外的背景-->

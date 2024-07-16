@@ -67,6 +67,12 @@ export default {
         to="/TenantBillFirst"
         >房客帳單</RouterLink
       >
+      <RouterLink
+        class="routerItem"
+        :class="{ selectedPage: this.page === 13 }"
+        to="/Overview"
+        >總覽</RouterLink
+      >
     <!-- </nav> -->
     </div>
 </template>

@@ -151,6 +151,7 @@ export default defineComponent({
     },
     beforeUnmount() {
         window.removeEventListener('click', this.closePopup);
+        this.toggleForm();
     }
 });
 </script>
