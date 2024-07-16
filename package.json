@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "boostrap": "^2.0.0",
     "pinia": "^2.1.7",
     "print-js": "^1.6.0",
     "rollup": "^4.18.0",

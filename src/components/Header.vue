@@ -2,10 +2,13 @@
 import { RouterLink, RouterView } from "vue-router";
 import dataStore from "../stores/dataStore";
 import { mapState } from "pinia";
+import Login from "../components/Login.vue";
+
 export default {
   // 在 template 當標籤使用的方法或是元件，import進來後要宣告在components:{}裡面
   components: {
     RouterLink,
+    Login
   },
   computed: {
     ...mapState(dataStore, ["page"]),
@@ -17,6 +20,7 @@ export default {
 <template>
 
   <div class="topArea">
+    <Login />
   </div>
   <div class="headerArea">
     <RouterLink

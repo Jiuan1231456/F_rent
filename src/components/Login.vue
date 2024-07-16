@@ -51,6 +51,7 @@ export default defineComponent({
                     });
                     this.showPopup = false; // 登入成功後關閉彈窗
                     this.loggedIn = true; // 設置登入狀態為已登入
+                    sessionStorage.setItem("當前帳號", this.loginObj.ownerAccount);//將帳號放入session
                 } else if(data.code === 400){   
                     Swal.fire({
                         icon: "error",
@@ -165,9 +166,16 @@ export default defineComponent({
 
     mounted() {
         this.setPage(1);
+        this.loggedIn = sessionStorage.getItem("當前帳號")? true:false;
+        console.log("Hii");
+        console.log(sessionStorage.getItem("當前帳號"));
+        console.log(this.loggedIn);
         window.addEventListener('click', this.closePopup);
     },
     beforeUnmount() {
+        console.log("BBBB");
+        console.log(sessionStorage.getItem("當前帳號"));
+        console.log(this.loggedIn);
         // 移除全局點擊事件監聽器
         window.removeEventListener('click', this.closePopup);
     }
@@ -216,17 +224,18 @@ export default defineComponent({
             </form>
         </div>
 
-        <!-- 登入後顯示的按鈕區域 -->
-        <div  class="loggedin-buttons">
-            <span v-if="loggedIn">管理者!您好!</span>
-            <button  v-if="loggedIn" class="logout" @click="logout">登出</button>
-        </div>
+      
     </div>
     <!-- 表單結束 -->
 
     <button v-if="!loggedIn" class="login" @click="customizeWindowEvent">登入/註冊</button>
    
-
+  <!-- 登入後顯示的按鈕區域 -->
+     <div v-else class="loggedin-buttons">
+            <p >親愛的房東&nbsp&nbsp{{loginObj.ownerAccount}}&nbsp&nbsp&nbsp 已登入~</p>
+            <RouterLink to="AdjustAccount" class="editaccount">修改帳戶資訊</RouterLink>
+            <button   class="logout" @click="logout">登出</button>
+        </div>
 </template>
 
 <style scoped>
@@ -377,12 +386,27 @@ label {
     position: absolute;
     right: 5%;
     border: none;
+    padding-top: 0.5%;
     background-color: transparent;
     color: #433a2f;
     font-weight: 500;
+    justify-content: space-around;
+    display: flex;
     &:hover {
         color: #a08b71;
     }
+    p {
+    position: relative;
+    right: 150px;
+    background-color: rgba(255, 166, 0, 0);
+}
+.editaccount{
+    position: fixed;
+    position: relative;
+    right: 60px;
+    background-color: rgba(0, 0, 0, 0);
+    color: #433a2f;
+}
 
 }
 </style>
