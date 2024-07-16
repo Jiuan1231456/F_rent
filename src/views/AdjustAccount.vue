@@ -11,6 +11,7 @@ export default {
             new_phone: "",
             new_email: "",
             new_bank: "",
+            owner_account:"",
             // 用於控制顯示的狀態
             showName:  true,   // 初始顯示更改姓名
             showPwd: false,
@@ -21,18 +22,19 @@ export default {
         };
     },
     computed: {
-        ...mapState(dataStore, ['loginObj','registerObj'])
+        ...mapState(dataStore, ['loginObj'])
     },
     methods: {
-        ...mapActions(dataStore, ['setLoginObj','setRegisterObj']),
+        ...mapActions(dataStore, ['setLoginObj']),
 
         updateAccountToDB() {
             // 構建更新資料的對象
             const updatedInfo = {
+                owner_account:this.loginObj.ownerAccount,
                 owner_name: this.new_name || this.loginObj.ownerName,
                 owner_phone: this.new_phone || this.loginObj.ownerPhone,
                 owner_email: this.new_email || this.loginObj.ownerEmail,
-                account_bank: this.new_bank || this.loginObj.account_bank
+                account_bank: this.new_bank || this.loginObj.account_bank,
             };
 
             // 檢查是否有至少一個字段被更新
@@ -94,7 +96,9 @@ export default {
             }
 
             const updatedPassword = {
-                owner_pwd: this.new_pwd
+                owner_account:this.loginObj.account,
+                owner_pwd: this.ownerNewPwd || this.loginObj.ownerPwd
+
             };
 
             // 發送更新密碼請求
@@ -165,6 +169,9 @@ export default {
 
     <!-- 修改欄位資訊 -->
     <div class="accountInfo">
+
+        <h5>當前帳號:{{loginObj.ownerAccount}}</h5>
+
         <div v-if="showName" class="name">
             <h3>當前姓名: </h3>
             <p>{{loginObj.ownerName}}</p>
@@ -176,7 +183,7 @@ export default {
             <h3>當前密碼: </h3>
             <p>{{loginObj.ownerPwd}}</p>
             <h4>更新密碼:</h4>
-            <input v-model="new_pwd" type="password" placeholder="輸入新的密碼" />
+            <input v-model="new_pwd" type="text" placeholder="輸入新的密碼" />
         </div>
 
         <div v-if="showPhone" class="phone">
@@ -195,9 +202,9 @@ export default {
 
         <div v-if="showBank" class="bank">
             <h3>現行銀行帳戶: </h3>
-            <p>{{loginObj.account_bank}}</p>
+            <p>{{loginObj.accountBank}}</p>
             <h4>更新銀行帳戶:</h4>
-            <input v-model="new_bank" type="text" placeholder="輸入新的銀行帳戶" />
+            <input v-model="new_bank" type="text" placeholder="(分行碼)+10碼帳號，如:(102)1111111111" />
         </div>
 
         <button v-if="!showPwd"  @click="updateAccountToDB">更新資料</button>
