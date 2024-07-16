@@ -228,9 +228,10 @@ export default defineComponent({
       
     </div>
     <!-- 表單結束 -->
-
-    <button v-if="!this.loggedIn" class="login" @click="customizeWindowEvent" key="login">登入/註冊</button>
-   
+     <!-- v-if不能綁button，只能綁在div上 -->
+    <div v-if="!this.loggedIn"  class="loginregister">
+        <button class="login" @click="customizeWindowEvent" key="login">登入/註冊</button>
+    </div>
   <!-- 登入後顯示的按鈕區域 -->
      <div v-else class="loggedin-buttons" key="button">
             <p >親愛的房東&nbsp&nbsp{{loginObj.ownerAccount}}&nbsp&nbsp&nbsp 已登入~</p>
