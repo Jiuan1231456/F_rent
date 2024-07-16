@@ -140,6 +140,7 @@ export default defineComponent({
             // 執行登出相關的邏輯，例如清除用戶資訊、重置登入狀態等
             this.loggedIn = false;
             // 這裡可以加入其他登出相關的邏輯
+            sessionStorage.removeItem("當前帳號");
         },
 
         customizeWindowEvent() {
@@ -228,10 +229,10 @@ export default defineComponent({
     </div>
     <!-- 表單結束 -->
 
-    <button v-if="!loggedIn" class="login" @click="customizeWindowEvent">登入/註冊</button>
+    <button v-if="!this.loggedIn" class="login" @click="customizeWindowEvent" key="login">登入/註冊</button>
    
   <!-- 登入後顯示的按鈕區域 -->
-     <div v-else class="loggedin-buttons">
+     <div v-else class="loggedin-buttons" key="button">
             <p >親愛的房東&nbsp&nbsp{{loginObj.ownerAccount}}&nbsp&nbsp&nbsp 已登入~</p>
             <RouterLink to="AdjustAccount" class="editaccount">修改帳戶資訊</RouterLink>
             <button   class="logout" @click="logout">登出</button>
