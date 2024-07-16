@@ -1,9 +1,9 @@
-<script>
+<script >
+
 import { defineComponent } from 'vue';
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
-import Swal from 'sweetalert2'
-
+import Swal from 'sweetalert2';
 
 export default defineComponent({
     data() {
@@ -17,13 +17,14 @@ export default defineComponent({
             owner_email: "",
             owner_phone: "",
             account_bank: "",
+            loggedIn: false // 增加登入狀態的判斷
         };
     },
     computed: {
-        ...mapState(dataStore, ['page', 'loginObj','registerObj'])
+        ...mapState(dataStore, ['page', 'loginObj', 'registerObj'])
     },
     methods: {
-        ...mapActions(dataStore, ['setPage', 'setLoginObj','setRegisterObj']),
+        ...mapActions(dataStore, ['setPage', 'setLoginObj', 'setRegisterObj']),
         login() {
             const loginObj1 = {
                 owner_account: this.owner_account,
@@ -49,6 +50,7 @@ export default defineComponent({
                         icon:"success"
                     });
                     this.showPopup = false; // 登入成功後關閉彈窗
+                    this.loggedIn = true; // 設置登入狀態為已登入
                 } else if(data.code === 400){   
                     Swal.fire({
                         icon: "error",
@@ -114,6 +116,7 @@ export default defineComponent({
                         icon: "success"
                     });
                     this.showPopup = false; // 註冊成功後關閉彈窗
+                    this.loggedIn = true; // 設置登入狀態為已登入
                 } else if (data.code === 400) {
                     Swal.fire({
                         icon: "error",
@@ -132,14 +135,29 @@ export default defineComponent({
             });
         },
 
+        logout() {
+            // 執行登出相關的邏輯，例如清除用戶資訊、重置登入狀態等
+            this.loggedIn = false;
+            // 這裡可以加入其他登出相關的邏輯
+        },
+
         customizeWindowEvent() {
             this.showPopup = true;
         },
         closePopup(e) {
-            if (e.target.id === "window-container") {
+            // 只檢查點擊的目標是否包含 'close' 類別
+            if (e.target.classList.contains('close')) {
                 this.showPopup = false;
             }
         },
+        //下面這個方法是點擊其他區域和叉叉按鈕就會關閉登入視窗的方法
+        // closePopup(e) {
+        //     // 檢查event是否存在
+        //     if (!e || (e.target.id !== "window-container" && !e.target.classList.contains('close'))) {
+        //         return;
+        //     }
+        //     this.showPopup = false;
+        // },
         toggleForm() {
             this.isLoginForm = !this.isLoginForm;
         }
@@ -150,6 +168,7 @@ export default defineComponent({
         window.addEventListener('click', this.closePopup);
     },
     beforeUnmount() {
+        // 移除全局點擊事件監聽器
         window.removeEventListener('click', this.closePopup);
     }
 });
@@ -157,11 +176,18 @@ export default defineComponent({
 
 
 <template>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+
     <div id="window-container" v-if="showPopup">
-        <div class="triangle"></div>
+        <!-- 房頂 -->
+        <!-- <div class="triangle"></div> -->
         <!-- 表單 -->
       
         <div class="form">
+          <!-- close按鈕，點擊時會觸發closePopup方法 -->
+          <button @click="closePopup" type="button" class="close" aria-label="Close"></button>
+           
+
             <form v-if="!isLoginForm" class="register-form">
                 <h5>註冊會員</h5>
                 <label>帳號</label>
@@ -176,8 +202,8 @@ export default defineComponent({
                 <input v-model="owner_phone" type="tel" placeholder="09xx-xxx-xxx" />
                 <label>密碼</label>
                 <input v-model="owner_pwd" type="text" placeholder="6-10位英數密碼" />
-                <!-- <label>銀行帳戶</label> -->
-                <!-- <input v-model="account_bank" type="text"  placeholder="(行號)10碼數字，要加()" /> -->
+                <!-- <label>銀行帳戶</label>
+                <input v-model="account_bank" type="text"  placeholder="(行號)10碼數字，要加()" /> -->
                 <button type="button" @click="register">註冊確認</button>
                 <p class="message"><a href="#" @click.prevent="toggleForm">登入</a></p>
             </form>
@@ -189,12 +215,19 @@ export default defineComponent({
                 <p class="message">尚未加入會員? <a href="#" @click.prevent="toggleForm">註冊</a></p>
             </form>
         </div>
+
+        <!-- 登入後顯示的按鈕區域 -->
+        <div  class="loggedin-buttons">
+            <span v-if="loggedIn">管理者!您好!</span>
+            <button  v-if="loggedIn" class="logout" @click="logout">登出</button>
+        </div>
     </div>
     <!-- 表單結束 -->
-   
-    <button @click="customizeWindowEvent">Click Me</button>
-</template>
 
+    <button v-if="!loggedIn" class="login" @click="customizeWindowEvent">登入/註冊</button>
+   
+
+</template>
 
 <style scoped>
 #window-container {
@@ -207,14 +240,20 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top:2% ;
-    padding-bottom: 2%;
-    }
+}
 
-
-    p{padding-bottom: 1rem;}
-
-   
+.triangle {
+    position: fixed;
+    width: 380px;
+    height: 200px;
+    background-color: rgba(0, 0, 0, 0);
+    top: 1.2%;
+    left: 39%;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    border-bottom: 80px solid #e9dfc8;
+    /* box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24); */
+}
 
 .form {
     position: relative;
@@ -224,7 +263,34 @@ export default defineComponent({
     margin: 0 auto 0px;
     padding: 40px;
     text-align: center;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    /* box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24); */
+    .close{
+        position: absolute;
+        right: 5px;
+        top: -10px;
+        width: 20px;
+        height: 20px;
+        opacity: 0.3;
+        }
+        .close:hover {
+        opacity: 1;
+        }
+        .close:before, .close:after {
+        position: absolute;
+        left: 15px;
+        top:0;
+        content: ' ';
+        height: 30px;
+        width: 2px;
+        background-color: #d4b4b4;
+        }
+        .close:before {
+        transform: rotate(45deg);
+        }
+        .close:after {
+        transform: rotate(-45deg);
+        }
+
     }
 
 .form input {
@@ -260,20 +326,20 @@ export default defineComponent({
     background: #4D5139;
 }
 
-    .form .message a {
+.form .message a {
     color: #4D5139;
     text-decoration: none;
     font-size: 16px;
 }
 
-    label {
+label {
     font-family: 'Noto Serif TC', serif;
     font-size: 16px;
     color: #887a53;
     font-weight: normal;
 }
 
-    .form h5 {
+.form h5 {
     font-weight: normal;
     color: #4D5139;
     text-decoration: underline;
@@ -281,15 +347,42 @@ export default defineComponent({
     padding-top: 5%;
     font-weight: 800;
 }
-   
 
-body {
-    font-family: 'Noto Serif TC', serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+.logout {
+    position: absolute;
+    right: 5%;
+    border: none;
+    background-color: transparent;
+    color: #433a2f;
+    font-weight: 500;
+    &:hover {
+        color: #a08b71;
+    }
+}
+
+.login {
+    position: absolute;
+    right: 5%;
+    border: none;
+    background-color: transparent;
+    color: #433a2f;
+    font-weight: 500;
+    &:hover {
+        color: #a08b71;
+    }
 }
 
 
+.loggedin-buttons{
+    position: absolute;
+    right: 5%;
+    border: none;
+    background-color: transparent;
+    color: #433a2f;
+    font-weight: 500;
+    &:hover {
+        color: #a08b71;
+    }
 
-
+}
 </style>
