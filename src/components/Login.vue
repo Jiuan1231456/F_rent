@@ -69,6 +69,33 @@ export default defineComponent({
                 });
             });
         },
+        logout() {
+            fetch("http://localhost:8080/rent/logout", {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json"
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                throw new Error("Logout failed");
+                }
+                // 清除本地存储的用户信息等操作（如需要）
+                sessionStorage.removeItem("當前帳號"); // 清除当前账号信息
+                this.loggedIn = false; // 重置登录状态
+                // 成功登出处理
+                console.log("Logout successful");
+                // 可以重定向到登出后的页面或其他操作
+            })
+            .catch(error => {
+                console.error("Logout request failed:", error);
+                // 处理登出失败情况
+            });
+              // 執行登出相關的邏輯，例如清除用戶資訊、重置登入狀態等
+              this.loggedIn = false;
+            // 這裡可以加入其他登出相關的邏輯
+            sessionStorage.removeItem("當前帳號");
+    },
         register() {
             let registerObj1 = {
                 owner_account: this.owner_account,
@@ -136,12 +163,12 @@ export default defineComponent({
             });
         },
 
-        logout() {
-            // 執行登出相關的邏輯，例如清除用戶資訊、重置登入狀態等
-            this.loggedIn = false;
-            // 這裡可以加入其他登出相關的邏輯
-            sessionStorage.removeItem("當前帳號");
-        },
+        // logout() {
+        //     // 執行登出相關的邏輯，例如清除用戶資訊、重置登入狀態等
+        //     this.loggedIn = false;
+        //     // 這裡可以加入其他登出相關的邏輯
+        //     sessionStorage.removeItem("當前帳號");
+        // },
 
         customizeWindowEvent() {
             this.showPopup = true;
@@ -152,14 +179,7 @@ export default defineComponent({
                 this.showPopup = false;
             }
         },
-        //下面這個方法是點擊其他區域和叉叉按鈕就會關閉登入視窗的方法
-        // closePopup(e) {
-        //     // 檢查event是否存在
-        //     if (!e || (e.target.id !== "window-container" && !e.target.classList.contains('close'))) {
-        //         return;
-        //     }
-        //     this.showPopup = false;
-        // },
+       
         toggleForm() {
             this.isLoginForm = !this.isLoginForm;
         }
