@@ -54,25 +54,27 @@ export default {
         
             </div>
             <br>
-            租賃物件地址: {{roomObj[0].address}}
+            租賃物件地址: {{oneContractObj.address}}
             <br>
-            樓層: {{ roomObj[0].floor }}
+            樓層: {{ oneContractObj.floor }}
             <br>
-            房號: {{ roomObj[0].roomId }}
+            房號: {{ oneContractObj.roomId }}
             <br>
-            租金/月: {{ roomObj[0].rentP}}
+            租金/月: {{ oneContractObj.rentP}}
             <br>
-            押金: {{ roomObj[0].deposit }}
+            車位:{{oneContractObj.parking}}
             <br>
-            管理費/月: {{roomObj[0].manageP}}
+            押金: {{ oneContractObj.deposit }}
             <br>
-            電費/度: {{roomObj[0].eletricP}}
+            管理費/月: {{oneContractObj.manageP}}
             <br>
-            水費/月: {{ roomObj[0].waterP}}
+            電費/度: {{oneContractObj.eletricP}}
             <br>
-            面積: {{roomObj[0].acreage}}
+            水費/月: {{ oneContractObj.waterP}}
             <br>
-            設備:{{ roomObj[0].equip }}
+            面積: {{oneContractObj.acreage}}
+            <br>
+            設備:{{ oneContractObj.equip }}
             <br>
             物件備註:{{ roomObj[0].rCondition }}
             <div class="input-wrapper">
@@ -112,7 +114,7 @@ export default {
             <br>
             中止原因: {{oneContractObj.cutReason}}
             <br>
-            違約金:  {{ roomObj[0].cutP }}
+            違約金:  {{ oneContractObj.cutP }}
             <br>
             中止日期: {{ oneContractObj.cutDate }}
         </div>
