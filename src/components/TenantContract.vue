@@ -23,6 +23,7 @@ export default {
     ...mapActions(dataStore, ["setTenantContract"]),
     test() {
       console.log("租約頁面上的tenantData",this.tenantData);
+      console.log("租約頁面上的tenantData",this.tenantData.billList[0].address);
       this.contractList = this.tenantData.contractList;
       this.billList = this.tenantData.billList;
     },
@@ -222,7 +223,7 @@ span {
   background-color: transparent;
   font-size: 2em;
   position: absolute;
-  top: 28%;
+  top: 23%;
   left: 10%;
 }
 .contractArea {

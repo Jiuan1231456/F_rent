@@ -34,6 +34,7 @@ export default {
   mounted() {
     this.setPage(12);
     console.log("房客首頁的tenantData",this.tenantData)
+    console.log("房客首頁的tenantData",this.tenantData.billList[0].address)
   },
   created(){
    this.hideHeader();
@@ -55,7 +56,7 @@ export default {
           value="A"
           name="questionaire"
           style="right: -41%;
-    top: 10%;"
+    top: -35px;"
         />
         <span class="contspan span" style="left: 48%;position: fixed;">租約資訊</span>
       </label>
@@ -67,9 +68,10 @@ export default {
           v-model="this.changeShow"
           value="B"
           name="preview"
-          style="left: 63%;
-    top: 15%;
-    position: fixed;width: 14%;"
+          style="left: 64%;
+    top: 9%;
+    width: 11%;
+    position: fixed;"
         />
         <span class="billspan span" style="left:65.5%;position: fixed;">帳單資訊</span>
       </label>
@@ -91,7 +93,7 @@ export default {
   // margin-top: 50px;
   .topArea{
     width: 100%;
-    height: 25dvh;
+    height: 19dvh;
     background-color: #ffdec2;
     margin-left: -245px;
     z-index: 0;
@@ -111,6 +113,7 @@ export default {
     letter-spacing: 4px;
     margin-left: 53px;
     margin-top: 92px;
+    background-color: transparent;
     .label {
       display: contents;
       &:checked {
@@ -121,7 +124,7 @@ export default {
         background: transparent;
         z-index: 99;
         font-size: 1.7em;
-        top: 17%;
+        top: 12%;
         &:hover {
           cursor: pointer;
         }
