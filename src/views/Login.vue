@@ -16,32 +16,53 @@ export default {
   methods: {
     ...mapActions(dataStore, ["setPage", "setLoginObj","setTenantData"]),
     login() {
-      let loginObj1 = {
+    let loginObj1 = {
         owner_account: this.owner_account,
         owner_pwd: this.owner_pwd,
-      };
-      // url
-      fetch("http://localhost:8080/rent/login", {
+    };
+
+    fetch("http://localhost:8080/rent/login", {
         method: "post",
         headers: {
-          "Content-Type": "application/json",
+            "Content-Type": "application/json",
         },
+        credentials: 'include',
         body: JSON.stringify(loginObj1),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          this.setLoginObj(data);
-          console.log("pinia裡的", this.loginObj);
-        });
-    },
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        console.log(data);
+        this.setLoginObj(data);
+        console.log("pinia裡的", this.loginObj);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+},
     saveTenant(){
       let tenantObj ={
-        tenant_phone: this.tenant_phone,
-        tenant_identity:this.tenant_identity
+        tenantPhone: this.tenant_phone,
+        tenantIdentity:this.tenant_identity
       };
-        this.setTenantData(tenantObj);
+      fetch("http://localhost:8080/bill/tenantList", {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: 'include',
+        body: JSON.stringify(tenantObj),
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        console.log(data);
+        console.log(data.billList[0].address);
+        this.setTenantData(data);
         console.log('pinia裡的房客資訊',this.tenantData)
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+        
     }
   },
   mounted() {

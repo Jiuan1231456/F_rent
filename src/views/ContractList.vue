@@ -52,6 +52,7 @@ export default {
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials: 'include',
                 body: JSON.stringify(searchObj)
             })
                 .then(res => res.json())//將回應轉換為 JSON
@@ -77,6 +78,7 @@ export default {
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials: 'include',
                 body: JSON.stringify(this.obj)
             })
                 .then(res => res.json())
@@ -148,6 +150,7 @@ calculateTotalPages(totalItems) {
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials: 'include',
                 body: JSON.stringify(searchCriteria),
             })
             .then(res => res.json())

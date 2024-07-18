@@ -123,6 +123,8 @@ const router = createRouter({
       path: '/TenantBillFirst',
       name: 'TenantBillFirst',
       component: () => import('../views/TenantBillFirst.vue'),
+      meta: { noHeader: true },
+
     },
   ]
 

@@ -29,6 +29,7 @@ export default {
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials: 'include',
                 body: JSON.stringify(this.obj)
             })
                 .then(res => res.json())
@@ -61,6 +62,7 @@ export default {
                     headers: {
                         "Content-Type": "application/json"
                     },
+                    credentials: 'include',
                     body: JSON.stringify(deleteObj)
                 })
                     .then((res) => res.json())
@@ -99,6 +101,7 @@ export default {
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials: 'include',
                 body: JSON.stringify(empty)
             })
                 .then(res => res.json())//將回應轉換為 JSON

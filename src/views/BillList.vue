@@ -78,6 +78,7 @@ export default {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include',
         body: JSON.stringify(searchObj),
       })
         .then((res) => res.json())
@@ -121,6 +122,7 @@ export default {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include',
         body: JSON.stringify(generateBillObj),
       })
         .then((res) => res.json())

@@ -57,6 +57,7 @@ export default {
 
             fetch("http://localhost:8080/room/creatRoom", {
                 method: "POST",
+                credentials: 'include',
                 body: formData
             })
                 .then(res => res.json())

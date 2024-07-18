@@ -8,7 +8,7 @@ import topHeader from"./components/topHeader.vue"
 <template>
   <!-- <div class="header"> -->
 
-    <Header />
+    <Header v-if="!$route.meta.noHeader"/>
   <!-- </div> -->
 <div class="top">
   <topHeader />

@@ -14,9 +14,8 @@ export default {};
     <!-- 彈出視窗的整個頁面 -->
     <div class="block">
       <!-- 彈出視窗的框框 -->
-      <slot name="header">
+      <slot name="header" >
       </slot>
-
       <button type="button" class="close" @click="$emit('alertModal')">
         <i class="fa-solid fa-xmark"></i>
       </button>
@@ -43,12 +42,12 @@ export default {};
 
   .block {
     // 彈出視窗
-    width: 800px;
-    height: 400px;
+    width: 83%;
+    height: 530px;
     background-color: #faf0e9;
     position: absolute;
-    top: 10%;
-    left: 19%;
+    top: 3%;
+    left: 9%;
     font-size: 36px;
     z-index: 2;
   }
@@ -80,6 +79,7 @@ export default {};
     color: #c6a387;
   }
 }
+
 .closefooter {
   border: none;
   background-color: #adadad;

@@ -27,16 +27,24 @@ export default {
     goToNextPage(show) {
       this.showNextPage = show;
     },
+    hideHeader(){
+      this.$emit('header',false)
+    }
   },
   mounted() {
     this.setPage(12);
+    console.log("房客首頁的tenantData",this.tenantData)
   },
+  created(){
+   this.hideHeader();
+  }
 };
 </script>
 
 <template>
   <div class="bigArea">
-    <span class="title">XXX&nbsp;承租人，您好</span>
+    <div class="topArea"></div>
+    <span class="title" style="position: fixed;">XXX&nbsp;承租人，您好</span>
     <div class="titleBox">
       <label for="contract" class="cont label">
         <input
@@ -46,9 +54,10 @@ export default {
           v-model="this.changeShow"
           value="A"
           name="questionaire"
-          style="left: 24px"
+          style="right: -41%;
+    top: 10%;"
         />
-        <span class="contspan span" style="left: 339px">租約資訊</span>
+        <span class="contspan span" style="left: 48%;position: fixed;">租約資訊</span>
       </label>
       <label for="bill" class="bill label">
         <input
@@ -58,13 +67,15 @@ export default {
           v-model="this.changeShow"
           value="B"
           name="preview"
-          style="left: 57px"
+          style="left: 63%;
+    top: 15%;
+    position: fixed;width: 14%;"
         />
-        <span class="billspan span" style="left: 549px">帳單資訊</span>
+        <span class="billspan span" style="left:65.5%;position: fixed;">帳單資訊</span>
       </label>
     </div>
     <!-- <div class="middleArea"> -->
-        <TenantContract v-if="changeShow === 'A'" ></TenantContract>
+         <TenantContract v-if="changeShow === 'A'" @next="changePage" :showNextPage="showNextPage" @goToNextPage="goToNextPage"></TenantContract>
         <TenantBill v-if="changeShow === 'B'" @next="changePage" :showNextPage="showNextPage" @goToNextPage="goToNextPage"></TenantBill>
 
     <!-- </div> -->
@@ -74,20 +85,32 @@ export default {
 <style scoped lang="scss">
 .bigArea {
   width: 90vw;
-  height: 100dvh;
+  height: 10dvh;
   margin-left: 248px;
   color: black;
-  margin-top: 50px;
+  // margin-top: 50px;
+  .topArea{
+    width: 100%;
+    height: 25dvh;
+    background-color: #ffdec2;
+    margin-left: -245px;
+    z-index: 0;
+  }
   .title {
     font-size: 2.5em;
     margin-left: 35px;
+    z-index: 1;
+    position: absolute;
+    background: transparent;
+    left: 4%;
+    top: 6%;
   }
   .titleBox {
-    margin: 0 auto;
     width: 76%;
     font-size: 1em;
     letter-spacing: 4px;
     margin-left: 53px;
+    margin-top: 92px;
     .label {
       display: contents;
       &:checked {
@@ -98,7 +121,7 @@ export default {
         background: transparent;
         z-index: 99;
         font-size: 1.7em;
-        top: 27%;
+        top: 17%;
         &:hover {
           cursor: pointer;
         }
@@ -111,7 +134,7 @@ export default {
       }
       .titleInput {
         -webkit-appearance: none;
-        background-color: rgb(240, 240, 240);
+        // background-color: rgb(240, 240, 240);
         color: white;
         margin-right: 3%;
         padding: 10px;
@@ -119,8 +142,8 @@ export default {
         width: 17%;
         top: 45px;
         position: relative;
-        background-color: #ffc89a;
-        border-radius: 10px;
+        background-color: #ffdec2;
+        // border-radius: 10px;
         &:hover {
           cursor: pointer;
         }
@@ -128,7 +151,7 @@ export default {
           cursor: pointer;
         }
         &:checked {
-          background-color: #ffffff;
+          border-bottom: 3px solid rgb(248, 134, 103);
         }
       }
     }
