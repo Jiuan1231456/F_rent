@@ -116,7 +116,7 @@ export default {
         <br>
         <h3 class="other">其他備註(或個別磋商條款)</h3>
         <br>
-            <textarea>{{oneContractObj.cOther  }}</textarea>
+            <textarea style="height: 165px; width: 685px; resize: none; padding: 1%;">{{oneContractObj.cOther  }}</textarea>
         <br>
         <br>
         <h3 class="signdate">立約日期：{{ formatDate(oneContractObj.signDate) }}</h3>
@@ -179,7 +179,7 @@ h3{
 width: 55%;
     }
 .signdate{
-    width: 43%;
+    width: 70%;
     background-color: white;
     box-shadow: none;
 }

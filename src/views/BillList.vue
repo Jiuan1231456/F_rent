@@ -78,6 +78,7 @@ export default {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include',
         body: JSON.stringify(searchObj),
       })
         .then((res) => res.json())
@@ -121,6 +122,7 @@ export default {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include',
         body: JSON.stringify(generateBillObj),
       })
         .then((res) => res.json())
@@ -231,14 +233,15 @@ export default {
       <button class="typeBtn" @click="filterEnded()" style="position: absolute; bottom: 6%; left: 48%">
         契約已結束
       </button>
-      <button class="generate" style="position: absolute; bottom: 15%; right: 11%; width: 14%;"
-        @click="this.generateBill(new Date())">
-        <RouterLink to="/generatebill" style="
+      <RouterLink to="/generatebill" style="
             background-color: transparent;
             text-decoration: none;
             color: white;
-          ">當期帳單</RouterLink>
-      </button>
+          ">
+      <button class="generate" style="position: absolute; bottom: 15%; right: 11%; width: 14%;"
+        @click="this.generateBill(new Date())">
+        當期帳單
+      </button></RouterLink>
     </div>
     <div class="listArea">
       <table class="contract">

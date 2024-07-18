@@ -52,6 +52,7 @@ export default {
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials: 'include',
                 body: JSON.stringify(searchObj)
             })
                 .then(res => res.json())//將回應轉換為 JSON
@@ -77,6 +78,7 @@ export default {
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials: 'include',
                 body: JSON.stringify(this.obj)
             })
                 .then(res => res.json())
@@ -147,6 +149,7 @@ calculateTotalPages(totalItems) {
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials: 'include',
                 body: JSON.stringify(searchCriteria),
             })
             .then(res => res.json())
@@ -180,15 +183,15 @@ calculateTotalPages(totalItems) {
     <div class="searchPlace">
         <div class="inputPlace">
             <span class="label">承租地址　：</span>
-            <div class="InputContainer">
+            <!-- <div class="InputContainer"> -->
                 <input placeholder="Search.." id="input" class="input" name="text" type="text" v-model="contractFilters.address">
-            </div>
+            <!-- </div> -->
         </div>
         <div class="inputPlace">
             <span class="label">承租人姓名：</span>
-            <div class="InputContainer">
+            <!-- <div class="InputContainer"> -->
                 <input placeholder="Search.." id="input" class="input" name="text" type="text" v-model="contractFilters.tenantName">
-            </div>
+            <!-- </div> -->
         </div>
         <!-- 選擇日期 -->
         <p class="datetime">
@@ -254,11 +257,11 @@ calculateTotalPages(totalItems) {
     <style scoped lang="scss">
     *{margin-top: 3%;}
     .manageArea {
-        width: 100dvw;
+        width: 70dvw;
         height: 100dvh;
         border: 1em solid #9a685200;
         //border-style:  inset;
-        margin-left: 25%;  // 移除 margin-left，並將 margin 設定為 auto
+        margin-left: 22.5%;  // 移除 margin-left，並將 margin 設定為 auto
         padding-top: 0;  // 確保 padding-top 為 0
         background-color: #FAF0E9;
     //搜尋欄文字背景顏色
@@ -268,7 +271,7 @@ calculateTotalPages(totalItems) {
     }
 //搜尋
     .searchPlace {
-        width: 70%;
+        width: 90%;
         height: 45%;
         color: black;
         font-size: 22px;
@@ -296,10 +299,10 @@ calculateTotalPages(totalItems) {
         justify-content: center;
         // background: linear-gradient(to bottom, #FF9D60, rgb(255, 231, 231));
         border-radius: 30px;
-        overflow: hidden;
+        // overflow: hidden;
         cursor: pointer;
         box-shadow: 2px 2px 2px rgba(163, 162, 162, 0.075);
-        display: inline-block;
+        // display: inline-block;
         vertical-align: middle; /* Optional: Align vertically */
         // flex: 1; /* 彈性增長，使 input 容器占據剩餘空間 */
     }
@@ -399,7 +402,7 @@ calculateTotalPages(totalItems) {
 
 //狀態按鈕
 .statusButtons{
-    width: 80dvw;
+    width: 74dvw;
     display: flexbox;
     color: #110f0f;
     font-size: 18px;

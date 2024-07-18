@@ -9,9 +9,9 @@ import send_btn from '../components/send_btn.vue';
 
 export default {
     data() {
-   
+
         return {
-            tenant_identity: "",  
+            tenant_identity: "",
             tenant_name: "",
             tenant_home_address: "",
             tenant_contact_address: "",
@@ -19,8 +19,8 @@ export default {
             tenant_email: "",
             owner_name: "",  //從註冊資訊抓
             owner_identity: "", //從註冊資訊抓
-            owner_home_address: "", 
-            owner_contact_address: "", 
+            owner_home_address: "",
+            owner_contact_address: "",
             owner_phone: "",  //從註冊資訊抓
             start_date: "",
             end_date: "",
@@ -28,8 +28,8 @@ export default {
             sign_date: "",
             cut_reason: "",
             cut_date: "",
-            ai:"",
-        // 房間資訊抓
+            ai: "",
+            // 房間資訊抓
             address: "",
             floor: "",
             r_id: "",
@@ -44,24 +44,74 @@ export default {
             equip: "",
             r_other: "",
 
-        
-    }
-},
+
+        }
+    },
     computed: {
-       //使用pinia中房間站存資訊
-       ...mapState(dataStore, ['roomObj','loginObj'])
+        //使用pinia中房間站存資訊
+        ...mapState(dataStore, ['roomObj', 'loginObj'])
     },
     created() {
-         // 從路由參數中獲取房間資訊
+        // 從路由參數中獲取房間資訊
         this.roomInfo = this.$route.params.roomInfo;
     },
     mounted() {
-       
+
     },
     methods: {
-        ...mapActions(dataStore,['setPage'])
+        ...mapActions(dataStore, ['setPage']),
+        addContractToDB() {
+            let testObj = {
+                tenantIdentity: this.tenant_identity,
+                tenantName: this.tenant_name,
+                tenantHomeAddress: this.tenant_home_address,
+                tenantContactAddress: this.tenant_contact_address,
+                tenantPhone: this.tenant_phone,
+                tenantEmail: this.tenant_email,
+                ownerName: this.loginObj.ownerName, //從註冊資訊抓
+                ownerIdentity: this.loginObj.ownerIdentity, //從註冊資訊抓
+                ownerHomeAddress: this.owner_home_address, //從註冊資訊抓
+                ownerContactAddress: this.owner_contact_address, //從註冊資訊抓
+                ownerPhone: this.loginObj.ownerPhone, //從註冊資訊抓
+                startDate: this.start_date,
+                endDate: this.end_date,
+                cOther: this.c_other,
+                signDate: this.sign_date,
+                cutReason: this.cut_reason,
+                cutDate: this.cut_date,
+                ai: this.ai,
+                //從房間抓
+                address: this.roomObj.address,
+                floor: this.roomObj.floor,
+                roomId: this.roomObj.roomId,
+                rentP: this.roomObj.rentP,
+                deposit: this.roomObj.deposit,
+                cutP: this.roomObj.cutP,
+                eletricP: this.roomObj.eletricP,
+                waterP: this.roomObj.waterP,
+                manageP: this.roomObj.manageP,
+                acreage: this.roomObj.acreage,
+                parking: this.roomObj.parking,
+                equip: this.roomObj.equip,
+                rOther: this.roomObj.rOther,
+
+            };
+            fetch("http://localhost:8080/contract/createContract", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'include',
+                body: JSON.stringify(testObj)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                });
+        },
     },
-    components:{
+
+    components: {
         contractInput,
         preview_btn,
         send_btn,
@@ -74,16 +124,18 @@ export default {
         <h1>新增契約書</h1>
         <div class="area">
             <div class="bigArea">
-                
+
                 <br>
                 <div class="roomInfo">
                     <h2>租賃物件資訊</h2>
                     <br>
                     <div class="rent_time">
-                    <label for="start_time">租賃期間 自：</label>
-                    <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="start_date"/>
-                    <label for="end_time">到：</label>
-                    <input type="date" id="end" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="end_date" />
+                        <label for="start_time">租賃期間 自：</label>
+                        <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31"
+                            v-model="start_date" />
+                        <label for="end_time">到：</label>
+                        <input type="date" id="end" style="font-size: 22px;" min="1970-01-01" max="2050-12-31"
+                            v-model="end_date" />
                     </div>
                     <br>
                     租賃物件地址: <p>{{ roomObj.address }}</p>
@@ -93,11 +145,11 @@ export default {
                     <!-- rId是小徐的，創建完後才會變成我的roomId -->
                     房號:<p>{{ roomObj.roomId }}</p>
                     <br>
-                    租金/月:<p>{{roomObj.rentP }} </p>
+                    租金/月:<p>{{ roomObj.rentP }} </p>
                     <br>
                     押金: <p>{{ roomObj.deposit }}</p>
                     <br>
-                    管理費/月:<p>{{roomObj.manageP}}</p>
+                    管理費/月:<p>{{ roomObj.manageP }}</p>
                     <br>
                     電費/度: <p>{{ roomObj.eletricP }}</p>
                     <br>
@@ -105,25 +157,27 @@ export default {
                     <br>
                     面積: <p>{{ roomObj.acreage }}</p>
                     <br>
-                    車位:<p>{{roomObj.parking}}</p>
+                    <p v-if="roomObj.parking">車位 : 有</p>
+                    <p v-else>車位 : 無</p>
                     <br>
                     設備:<p>{{ roomObj.equip }}</p>
                     <br>
                     物件備註:<p>{{ roomObj.rOther }}</p>
-                    
-                    </div>
-                </div>
 
-                <div class="line">
-                
                 </div>
+            </div>
+
+            <div class="line">
+
+            </div>
             <div class="bigArea2">
                 <h2>立契約書人</h2>
                 <div class="Info">
                     <br>
-                    <h4>出租人姓名:</h4> <p>{{loginObj.ownerName}}</p>
+                    <h4>出租人姓名:</h4>
+                    <p>{{ loginObj.ownerName }}</p>
                     <br>
-                    身分證字號: <p> {{loginObj.ownerIdentity}}</p>
+                    身分證字號: <p> {{ loginObj.ownerIdentity }}</p>
                     <br>
                     戶籍地址(營業登記地址): <input type="text" v-model="owner_home_address" class="input-box">
                     <br>
@@ -133,7 +187,8 @@ export default {
                     連絡電話:{{ loginObj.ownerPhone }}
                     <br>
                     <br>
-                    <h4>承租人姓名:</h4> <input type="text" v-model="tenant_name" class="input-box" style="font-weight: bold; font-size: 20px;">
+                    <h4>承租人姓名:</h4> <input type="text" v-model="tenant_name" class="input-box"
+                        style="font-weight: bold; font-size: 20px;">
                     <br>
                     身分證字號: <input type="text" v-model="tenant_identity" class="input-box">
                     <br>
@@ -158,16 +213,18 @@ export default {
                 <br>
                 <h3>其他備註(或個別磋商條款)</h3>
                 <div class="input-wrapper">
-                    <textarea class="input-box" type="textarea" placeholder="Enter your text" v-model="c_other"></textarea>
+                    <textarea class="input-box" type="textarea" placeholder="Enter your text"
+                        v-model="c_other"></textarea>
                     <span class="underline"></span>
                 </div>
                 <br>
-                <h3>立約日期:  <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="sign_date"/></h3>
+                <h3>立約日期: <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31"
+                        v-model="sign_date" /></h3>
 
-            
-                <div class="btn"> 
-                
-                    <send_btn class="space-between" @click="addContractToDB"/>
+
+                <div class="btn">
+
+                    <send_btn class="space-between" @click="addContractToDB()" />
                 </div>
             </div>
         </div>
@@ -175,100 +232,104 @@ export default {
 
 
 </template>
-  
-  <style scoped lang="scss">
-*{
-    margin-top: 11%;
-    // margin-left: 
-}
-.areaMom{
 
-    width: 100%;
-        .area{
+<style scoped lang="scss">
+// *{
+//     margin-top: 11%;
+//     // margin-left: 
+// }
+.areaMom {
+    width: 75%;
+    margin-left: 18%;
+    margin-top: 3%;
+
+    .area {
+        width: 100%;
+        display: flex;
+        // margin-left:6%;
+
+        //物件資訊
+        .bigArea {
+            width: 50%;
+            margin-top: 3%;
+            margin-left: 3%;
+            font-size: 22px;
+        }
+
+        .roomInfo{
             width: 100%;
-            display: flex;
-            margin-left:6%;
-            
-            //物件資訊
-            .bigArea {
-                width: 40%;
-                margin-top: 3%;
-                margin-left: 15%;
-                font-size: 22px;
-            }
-                
-            
-            //垂直分隔線
-            .line{
-                border-left: 2px dashed rgb(223, 189, 140);
-                height:300%;
-                margin-top: 8%;
-                left: 56%;
-                position: absolute;
-            }
-            // 立契約書人
-            .bigArea2{
-                width: 40%;
-                margin-top: 2%;
-                padding: 3%;
-                margin-left: -5%;
-                font-size: 18px   
-            }
-        
+        }
+
+
+        //垂直分隔線
+        .line {
+            border-left: 2px dashed rgb(223, 189, 140);
+            height: 220%;
+            margin-top: 8%;
+            left: 56%;
+            position: absolute;
+        }
+
+        // 立契約書人
+        .bigArea2 {
+            width: 40%;
+            margin-top: 3%;
+            padding: 3%;
+            margin-left: -2%;
+            font-size: 18px;
+        }
+
     }
-    
+
 }
 
 //送出預覽按鈕
-.btn{
-        margin-right: 0%;
-        margin-bottom: 5%;
-        display: flex;
-        .space-between { 
+.btn {
+    margin-right: 0%;
+    margin-bottom: 5%;
+    display: flex;
+
+    .space-between {
         margin-right: 30%;
         margin-top: 5%;
     }
 
-  
-  .input-box {
-    width: 600px;
-    font-size: 20px;
-    padding: 10px 0;
-    border: none;
-    border-bottom: 2px solid #ccc;
-    color: #0f0f0f;
-    background-color: transparent;
-    transition: border-color 0.3s ease-in-out;
-  
-    .underline {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background-color: #FF9D60;
-      transform: scaleX(0);
-      transition: transform 0.3s ease-in-out;
+    .input-box {
+        width: 600px;
+        font-size: 20px;
+        padding: 10px 0;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        color: #0f0f0f;
+        background-color: transparent;
+        transition: border-color 0.3s ease-in-out;
+
+        .underline {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #FF9D60;
+            transform: scaleX(0);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        &:focus {
+            border-color: #FF9D60;
+            outline: none;
+        }
+
+        &:focus+.underline {
+            transform: scaleX(1);
+        }
     }
-  
-    &:focus {
-      border-color: #FF9D60;
-      outline: none;
-    }
-  
-    &:focus + .underline {
-      transform: scaleX(1);
-    }
-  }
-  }
-  </style>
-  
+}
+</style>
+
 <!-- PDF列印按鈕 -->
 <!-- <button type="button" onclick="printJS('docs/printjs.pdf')">列印PDF</button> -->
 <style scoped lang="scss">
-
-
-
 .input-box {
     width: 600px;
     font-size: 20px;
@@ -279,9 +340,9 @@ export default {
     width: 100%;
     background-color: transparent;
     transition: border-color 0.3s ease-in-out;
-    }
+}
 
-    .underline {
+.underline {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -297,12 +358,7 @@ export default {
     outline: none;
 }
 
-.input-box:focus + .underline {
+.input-box:focus+.underline {
     transform: scaleX(1);
-    }
-
-
-
-
-
+}
 </style>

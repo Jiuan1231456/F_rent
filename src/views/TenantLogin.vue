@@ -26,6 +26,7 @@ export default {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include',
         body: JSON.stringify(loginObj1),
       })
         .then((res) => res.json())
@@ -66,4 +67,8 @@ export default {
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.middleArea{
+  margin-left: 20%;
+}
+</style>

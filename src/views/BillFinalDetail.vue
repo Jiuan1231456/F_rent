@@ -30,7 +30,7 @@ export default {
         waterP:this.finalBill.waterOneP,
         electricP:this.finalBill.eletricP,
         electricV:this.finalBill.eletricV,
-        eletricOneP:this.finalBill.eletricOneP,
+        electricOneP:this.finalBill.eletricOneP,
         cutP:this.finalBill.cutP,
         totalOneP:this.finalBill.totalOneP,
         bankAccount:this.loginObj.accountBank,

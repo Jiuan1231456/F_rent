@@ -35,6 +35,7 @@ export default defineComponent({
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials: 'include',
                 body: JSON.stringify(loginObj1)
             })
             .then(res => res.json())
@@ -46,7 +47,10 @@ export default defineComponent({
                     Swal.fire({
                         title:"登入成功!",
                         text:"您現在已成功登入帳號",
-                        icon:"success"
+                        icon:"success",
+                        didClose: () => {
+                                this.$router.push('/roomList');
+                            }
                     });
                     this.showPopup = false; // 登入成功後關閉彈窗
                 } else if(data.code === 400){   
@@ -114,6 +118,7 @@ export default defineComponent({
                         icon: "success"
                     });
                     this.showPopup = false; // 註冊成功後關閉彈窗
+                    this.isLoginForm = true; //預設變回登入彈窗
                 } else if (data.code === 400) {
                     Swal.fire({
                         icon: "error",
@@ -159,8 +164,8 @@ export default defineComponent({
 <template>
     <div id="window-container" v-if="showPopup">
         <div class="triangle"></div>
+
         <!-- 表單 -->
-      
         <div class="form">
             <form v-if="!isLoginForm" class="register-form">
                 <h5>註冊會員</h5>
@@ -179,7 +184,7 @@ export default defineComponent({
                 <label>銀行帳戶</label>
                 <input v-model="account_bank" type="text"  placeholder="(行號)10碼數字，要加()" />
                 <button type="button" @click="register">註冊確認</button>
-                <p class="message"><a href="#" @click.prevent="toggleForm">登入</a></p>
+                <a href="#" @click.prevent="toggleForm" class="message" ><p >登入</p></a>
             </form>
             <form v-else class="login-form">
                 <h5>會員登入</h5>
@@ -191,7 +196,7 @@ export default defineComponent({
         </div>
     </div>
     <!-- 表單結束 -->
-   
+    
     <button class="login"@click="customizeWindowEvent">登入/註冊</button>
 </template>
 
@@ -209,18 +214,16 @@ export default defineComponent({
     justify-content: center;
     }
 
-
     p{padding-bottom: 1rem;}
-
-   
 
 .form {
     position: relative;
     z-index: 1;
     background: #e9dfc8;
     max-width: 360px;
+    max-height: 680px;
     margin: 0 auto 0px;
-    padding: 40px;
+    padding: 10px;
     text-align: center;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
     }
@@ -231,8 +234,8 @@ export default defineComponent({
     background: #bdb499;
     width: 100%;
     border: 0;
-    margin: 15px 0;
-    padding: 15px;
+    margin: 2px 0;
+    padding: 10px;
     box-sizing: border-box;
     font-size: 14px;
 }
@@ -276,10 +279,9 @@ export default defineComponent({
     color: #4D5139;
     text-decoration: underline;
     font-size: 20px;
-    padding-top: 5%;
+    padding-top: 2%;
     font-weight: 800;
 }
-   
 
 body {
     font-family: 'Noto Serif TC', serif;
@@ -289,6 +291,7 @@ body {
 .login{
     position: absolute;
     right: 5%;
+    top: 14%;
     border: none;
     background-color: transparent;
     color: #433a2f;
@@ -296,6 +299,11 @@ body {
     &:hover{
         color: #a08b71;
     }
+}
+
+.message{
+    text-decoration:none;
+    color: inherit;
 }
 
 </style>

@@ -44,14 +44,14 @@ export default {
 <style scoped lang="scss">
 .bigArea {
     width: 80%;
-    margin: 0 auto;
+    margin: 4% auto;
     margin-left: 20%;
-    margin-top: 4%;
 }
 
 img {
     width: 400px;
     height: 300px;
+    margin: 0 2%;
 }
 
 h4{

@@ -24,8 +24,8 @@ export default {
   </div> -->
 
 
-    <div class="headerArea">
-      <!-- <input type="checkbox" id="leftBar" v-model="isNavVisible" />
+  <div class="headerArea">
+    <!-- <input type="checkbox" id="leftBar" v-model="isNavVisible" />
   <label for="leftBar" class="bars myMouse">
     <i class="fa-solid fa-bars fa-xl"></i>
   </label>
@@ -35,34 +35,16 @@ export default {
         <span>X</span>
       </label>
     </div> -->
-      <!-- ============== -->
-      <RouterLink
-        class="routerItem"
-        :class="{ selectedPage: this.page === 1 }"
-        to="/"
-        >登入
-      </RouterLink>
-      <RouterLink
-        class="routerItem"
-        :class="{ selectedPage: this.page === 4 }"
-        to="/roomlist"
-        >房間列表
-      </RouterLink>
+    <!-- ============== -->
 
-      <RouterLink
-        class="routerItem"
-        :class="{ selectedPage: this.page === 6 }"
-        to="/ContractList"
-        >租約管理列表</RouterLink
-      >
-      <RouterLink
-        class="routerItem"
-        :class="{ selectedPage: this.page === 11 }"
-        to="/lookupBill"
-        >帳單管理</RouterLink
-      >
+
+    <!-- <RouterLink class="routerItem" :class="{ selectedPage: this.page === 20 }" to="/emptyRoomList">預設空房頁面</RouterLink> -->
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 1 }" to="/">總覽</RouterLink>
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 4 }" to="/roomlist">房間列表</RouterLink>
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 6 }" to="/ContractList">租約管理列表</RouterLink>
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 11 }" to="/lookupBill">帳單管理</RouterLink>
     <!-- </nav> -->
-    </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -71,6 +53,7 @@ export default {
   height: 5%;
   background-color: #f6b47d;
 }
+
 .headerArea {
   height: 100dvh;
   width: 16%;
@@ -99,15 +82,18 @@ export default {
       border-radius: 11% 0px 0px 11%;
     }
   }
+
   .accordion-body {
     padding: 0;
     background-color: #ffc89a;
     // padding-left: 33px;
   }
+
   .accordion-item {
     border: 0px;
     background-color: #ffc89a;
   }
+
   .dropdownBtn {
     color: black;
     background-color: #ffc89a;
@@ -117,6 +103,7 @@ export default {
     letter-spacing: 8px;
     justify-content: center;
     padding: 5%;
+
     &:hover {
       cursor: pointer;
       background-color: #ff9d60;
@@ -126,13 +113,17 @@ export default {
       padding-left: 10px;
       padding-bottom: 10px;
     }
+
     &:checked {
       background-color: #ff9d60;
     }
   }
+
   .dropdownBtn[aria-expanded="true"] {
-    background-color: #f6b47d; /* 展開時的背景顏色 */
+    background-color: #f6b47d;
+    /* 展開時的背景顏色 */
   }
+
   .dropdownItem {
     background-color: #f2dcca;
     font-size: 18px;
@@ -147,6 +138,7 @@ export default {
     border-radius: 11% 0px 0px 11%;
     align-items: center;
     padding: 5%;
+
     &:hover {
       cursor: pointer;
       background-color: #ff9d60;
@@ -156,6 +148,7 @@ export default {
       border-radius: 11% 0px 0px 11%;
     }
   }
+
   .selectedPage {
     background-color: #faf0e9;
     border-radius: 11% 0px 0px 11%;
@@ -169,10 +162,12 @@ export default {
       font-weight: 500;
     }
   }
+
   button {
     display: block; // 設置按鈕為區塊元素
     margin: 10px; // 設置按鈕外邊距
   }
+
   label {
     position: absolute;
     top: 10px;
@@ -195,7 +190,7 @@ export default {
     opacity: 95%;
     z-index: 2;
     background-color: #ffc89a;
-    
+
     &.active {
       left: 0;
     }
@@ -218,5 +213,5 @@ export default {
     }
   }
 }
-// =============
-</style>
+
+// =============</style>

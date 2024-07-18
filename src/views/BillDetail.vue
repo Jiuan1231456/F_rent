@@ -20,6 +20,7 @@ export default {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include',
         body: JSON.stringify(empty),
       })
         .then((res) => res.json())
@@ -39,6 +40,7 @@ export default {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include',
         body: JSON.stringify(empty),
       })
         .then((res) => res.json())
