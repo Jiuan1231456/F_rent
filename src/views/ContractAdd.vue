@@ -106,6 +106,7 @@ export default {
             headers: {
             "Content-Type": "application/json"
             },
+            credentials:'include',
             body: JSON.stringify(testObj)
         })
         .then(res => res.json())

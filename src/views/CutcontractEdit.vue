@@ -12,6 +12,7 @@ export default {
             cut_reason: "",
             cut_date: "",
             ai:"",
+            isSending: false // 追蹤送出狀態
    
             
         }
@@ -40,26 +41,37 @@ export default {
             return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
         },
         sendCutContractToDB(){
+            this.isSending = true; // 禁用按鈕
             let cutObj={
-          
-            ai:this.oneContractObj.ai,
-            address:this.oneContractObj.address,
-            cutReason: this.cut_reason,
-            cutDate: this.cut_date,
-           
+                ai:this.oneContractObj.ai,
+                address:this.oneContractObj.address,
+                cutReason: this.cut_reason,
+                cutDate: this.cut_date,
             };
             fetch("http://localhost:8080/contract/updateContract", {
             method: "POST",
             headers: {
             "Content-Type": "application/json"
             },
+            credentials:'include',
             body: JSON.stringify(cutObj)
         })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-        });
-        }
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            })
+            .finally(() => {
+                    this.isSending = false; // 根據需求決定是否要重新啟用按鈕
+                });
+        },
+
+        //警示框確認送出
+        confirmAndSend() {
+            // 彈出確認框
+            if (confirm("您確定要送出嗎？")) {
+                this.sendCutContractToDB();
+            }
+        },
     
     }
 }
@@ -91,17 +103,17 @@ export default {
             <br>
             押金: {{ oneContractObj.deposit }}
             <br>
-            管理費/月: {{roomObj[0].manageP}}
+            管理費/月: {{oneContractObj.manageP}}
             <br>
-            電費/度: {{roomObj[0].eletricP}}
+            電費/度: {{oneContractObj.eletricP}}
             <br>
-            水費/月: {{ roomObj[0].waterP}}
+            水費/月: {{ oneContractObj.waterP}}
             <br>
-            面積: {{roomObj[0].acreage}}
+            面積: {{oneContractObj.acreage}}
             <br>
             設備:{{ roomObj[0].equip }}
             <br>
-            物件備註:{{ roomObj[0].rCondition }}
+            物件備註:{{ oneContractObj.rCondition }}
             <div class="input-wrapper">
         
             </div>
@@ -155,7 +167,7 @@ export default {
     
     
         <div class="btn"> 
-            <send_btn class="space-between" @click="sendCutContractToDB()"/> 
+            <send_btn class="space-between":disabled="isSending" @click="confirmAndSend"/> 
         </div>
     </div>
 </template>
