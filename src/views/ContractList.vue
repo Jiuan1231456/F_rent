@@ -15,7 +15,7 @@ export default {
                 startDate: "",
                 endDate: ""
             },
-            filteredContractList: [],//儲存篩選快到期的契約列表
+            // filteredContractList: [],//儲存篩選快到期的契約列表
             selectedContracts: [], // 新增選中(checkbox)的契約狀態,用於存儲選中的契約。
             statusFilter: "" ,// 新增狀態過濾器
             
@@ -53,6 +53,7 @@ export default {
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials:'include',
                 body: JSON.stringify(searchObj)
             })
                 .then(res => res.json())//將回應轉換為 JSON
@@ -62,8 +63,8 @@ export default {
                     // 第二層:篩選出當前身份證字號的契約問卷，即顯示特定房東的所有房間資訊
                     this.contractList = data.contractList.filter(item => item.ownerIdentity === this.loginObj.ownerIdentity);
                     console.log("只有當前房東的(篩選特定房東):", this.contractList);
-                    // 計算總頁數
-                    this.calculateTotalPages(this.contractList.length)
+                    // // 計算總頁數
+                    // this.calculateTotalPages(this.contractList.length)
                 })
                 .catch(error => {
                 console.error("Error fetching data:", error); //處理錯誤
@@ -78,6 +79,7 @@ export default {
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials:'include',
                 body: JSON.stringify(this.obj)
             })
                 .then(res => res.json())
@@ -117,7 +119,7 @@ calculateTotalPages(totalItems) {
         //在這個方法中，當 statusFilter 為空時應該返回完整的 contractList，但要注意返回的是原始的 contractList，而不是已篩選後的 this.contractList。因為在 showAllContracts() 方法中，我們只是將 statusFilter 設置為空，而不是修改 this.contractList。
         getFilteredContracts() {
             if (this.statusFilter === "") {
-                return this.filteredContractList;
+                return this.contractList;
             } else if (this.statusFilter === "快到期") {
                 return this.filteredContractList.filter(item => {
                     const today = new Date();
@@ -127,7 +129,7 @@ calculateTotalPages(totalItems) {
                     return timeDiff > 0 && timeDiff <= 31 * oneDay;
                 });
             }
-            return this.filteredContractList.filter(contract => {
+            return this.contractList.filter(contract => {
                 const contractStatus = this.getContractStatus(contract);
                 return contractStatus === this.statusFilter;
             });
@@ -158,6 +160,7 @@ calculateTotalPages(totalItems) {
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials:'include',
                 body: JSON.stringify(searchCriteria),
             })
             .then(res => res.json())

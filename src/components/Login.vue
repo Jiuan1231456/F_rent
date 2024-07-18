@@ -1,5 +1,4 @@
-<script >
-
+<script>
 import { defineComponent } from 'vue';
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
@@ -16,7 +15,8 @@ export default defineComponent({
             owner_name: "",
             owner_email: "",
             owner_phone: "",
-            account_bank: "",
+            owner_role: "", // 用戶角色：房東或房客
+            verificationCode:"",//驗證碼
             loggedIn: false // 增加登入狀態的判斷
         };
     },
@@ -30,29 +30,34 @@ export default defineComponent({
                 owner_account: this.owner_account,
                 owner_pwd: this.owner_pwd
             };
+
+            const url = this.owner_role === 'landlord' 
+                        ? "http://localhost:8080/rent/login" 
+                        : "http://localhost:8080/bill/tenantList";
+
             // 發送登入請求
-            fetch("http://localhost:8080/rent/login", {
+            fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials:'include',
                 body: JSON.stringify(loginObj1)
             })
             .then(res => res.json())
             .then(data => {
                 console.log(data);
                 this.setLoginObj(data);
-                console.log('pinia裡的', this.loginObj);
-                if(data.code === 200){
+                if (data.code === 200) {
                     Swal.fire({
-                        title:"登入成功!",
-                        text:"您現在已成功登入帳號",
-                        icon:"success"
+                        title: "登入成功!",
+                        text: "您現在已成功登入帳號",
+                        icon: "success"
                     });
                     this.showPopup = false; // 登入成功後關閉彈窗
                     this.loggedIn = true; // 設置登入狀態為已登入
-                    sessionStorage.setItem("當前帳號", this.loginObj.ownerAccount);//將帳號放入session
-                } else if(data.code === 400){   
+                    sessionStorage.setItem("當前帳號", this.loginObj.ownerAccount); // 將帳號放入session
+                } else if (data.code === 400) {   
                     Swal.fire({
                         icon: "error",
                         title: "登入失敗",
@@ -73,29 +78,22 @@ export default defineComponent({
             fetch("http://localhost:8080/rent/logout", {
                 method: "POST",
                 headers: {
-                "Content-Type": "application/json"
+                    "Content-Type": "application/json"
                 },
             })
             .then(response => {
                 if (!response.ok) {
-                throw new Error("Logout failed");
+                    throw new Error("Logout failed");
                 }
-                // 清除本地存储的用户信息等操作（如需要）
                 sessionStorage.removeItem("當前帳號"); // 清除当前账号信息
                 this.loggedIn = false; // 重置登录状态
-                // 成功登出处理
                 console.log("Logout successful");
-                // 可以重定向到登出后的页面或其他操作
             })
             .catch(error => {
                 console.error("Logout request failed:", error);
-                // 处理登出失败情况
             });
-              // 執行登出相關的邏輯，例如清除用戶資訊、重置登入狀態等
-              this.loggedIn = false;
-            // 這裡可以加入其他登出相關的邏輯
-            sessionStorage.removeItem("當前帳號");
-    },
+        },
+        //註冊方法
         register() {
             let registerObj1 = {
                 owner_account: this.owner_account,
@@ -104,11 +102,12 @@ export default defineComponent({
                 owner_phone: this.owner_phone,
                 owner_identity: this.owner_identity,
                 owner_name: this.owner_name,
-                account_bank: this.account_bank
+                owner_role: this.owner_role//判定房東或房客
             };
+
             // 檢查所有字段是否都有值
             if (!this.owner_account || !this.owner_pwd || !this.owner_email || 
-                !this.owner_phone || !this.owner_identity || !this.owner_name || !this.account_bank) {
+                !this.owner_phone || !this.owner_identity || !this.owner_name ) {
                 Swal.fire({
                     icon: "error",
                     title: "註冊失敗",
@@ -116,19 +115,20 @@ export default defineComponent({
                 });
                 return;
             }
-            console.log('看送出的資料有沒有吃到:', registerObj1); // 印出來看有沒有吃到輸入資料
 
-            // 發送註冊請求
-            fetch("http://localhost:8080/rent/account", {
+            console.log('看送出的資料有沒有吃到:', registerObj1); // 印出來看有沒有吃到輸入資料
+ // 發送註冊請求
+ fetch("http://localhost:8080/rent/account", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials:'include',
                 body: JSON.stringify(registerObj1),
             })
             .then(res => {
                 if (!res.ok) {
-                    console.error('Response status:', res.status); // 增加這一行查看問題
+                    console.error('Response status:', res.status);
                     throw new Error('Network response was not ok');
                 }
                 return res.json();
@@ -136,15 +136,16 @@ export default defineComponent({
             .then(data => {
                 console.log(data);
                 this.setRegisterObj(data);
-                console.log('pinia裡的', this.registerObj);
                 if (data.code === 200) {
+                    // 註冊成功後顯示驗證碼輸入視窗
+                    // 註冊成功後顯示驗證碼輸入視窗
+                    this.showPopup = false; // 先關閉註冊彈窗
+                    this.showVerificationPopup(); // 顯示驗證碼輸入視窗
                     Swal.fire({
                         title: "註冊成功!",
-                        text: "您的帳號已成功註冊",
+                        text: "請輸入您收到的驗證碼進行驗證。",
                         icon: "success"
                     });
-                    this.showPopup = false; // 註冊成功後關閉彈窗
-                    this.loggedIn = true; // 設置登入狀態為已登入
                 } else if (data.code === 400) {
                     Swal.fire({
                         icon: "error",
@@ -154,7 +155,7 @@ export default defineComponent({
                 }
             })
             .catch(error => {
-                console.error('fetch有問題:', error);
+                console.error('註冊請求發生錯誤:', error);
                 Swal.fire({
                     icon: "error",
                     title: "註冊失敗",
@@ -162,14 +163,56 @@ export default defineComponent({
                 });
             });
         },
+        // 顯示驗證碼輸入表單
+        showVerificationPopup() {
+            this.showPopup = true;
+            this.isLoginForm = false; // 顯示驗證碼輸入表單
+        },
+        //驗證碼驗證方法
+        verifyCode() {
 
-        // logout() {
-        //     // 執行登出相關的邏輯，例如清除用戶資訊、重置登入狀態等
-        //     this.loggedIn = false;
-        //     // 這裡可以加入其他登出相關的邏輯
-        //     sessionStorage.removeItem("當前帳號");
-        // },
-
+            let testObj={
+                ownerAccount: this.owner_account,
+                verificationCode:this.verificationCode
+            }
+            console.log("送進的驗證資料",testObj)
+            fetch("http://localhost:8080/rent/verifyEmail", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                
+                body: JSON.stringify(testObj)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.code === 200) {
+                    Swal.fire({
+                        title: "驗證成功!",
+                        text: "您的帳號已成功註冊。",
+                        icon: "success"
+                    });
+                    console.log("送出的驗證資料",data)
+                    this.showPopup = false; // 註冊成功後關閉彈窗
+                    this.loggedIn = true; // 設置登入狀態為已登入
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "驗證失敗",
+                        text: "驗證碼錯誤或已過期，請重新嘗試"
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("驗證碼驗證請求發生錯誤", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "驗證失敗",
+                    text: "系統發生錯誤，請稍後再試"
+                });
+            });
+        },
+        // 彈出視窗事件
         customizeWindowEvent() {
             this.showPopup = true;
         },
@@ -179,25 +222,16 @@ export default defineComponent({
                 this.showPopup = false;
             }
         },
-       
         toggleForm() {
             this.isLoginForm = !this.isLoginForm;
         }
     },
-
     mounted() {
         this.setPage(1);
-        this.loggedIn = sessionStorage.getItem("當前帳號")? true:false;
-        console.log("Hii");
-        console.log(sessionStorage.getItem("當前帳號"));
-        console.log(this.loggedIn);
+        this.loggedIn = sessionStorage.getItem("當前帳號") ? true : false;
         window.addEventListener('click', this.closePopup);
     },
     beforeUnmount() {
-        console.log("BBBB");
-        console.log(sessionStorage.getItem("當前帳號"));
-        console.log(this.loggedIn);
-        // 移除全局點擊事件監聽器
         window.removeEventListener('click', this.closePopup);
     }
 });
@@ -208,15 +242,12 @@ export default defineComponent({
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
 
     <div id="window-container" v-if="showPopup">
-        <!-- 房頂 -->
-        <!-- <div class="triangle"></div> -->
-        <!-- 表單 -->
-      
+       
         <div class="form">
-          <!-- close按鈕，點擊時會觸發closePopup方法 -->
-          <button @click="closePopup" type="button" class="close" aria-label="Close"></button>
-           
-
+        <!-- close按鈕，點擊時會觸發closePopup方法 -->
+        <button @click="closePopup" type="button" class="close" aria-label="Close"></button>
+        
+<!-- 註冊表單 -->
             <form v-if="!isLoginForm" class="register-form">
                 <h5>註冊會員</h5>
                 <label>帳號</label>
@@ -231,36 +262,78 @@ export default defineComponent({
                 <input v-model="owner_phone" type="tel" placeholder="09xx-xxx-xxx" />
                 <label>密碼</label>
                 <input v-model="owner_pwd" type="text" placeholder="6-10位英數密碼" />
-                <!-- <label>銀行帳戶</label>
-                <input v-model="account_bank" type="text"  placeholder="(行號)10碼數字，要加()" /> -->
-                <button type="button" @click="register">註冊確認</button>
+                <button type="button" @click="register">送出註冊資料</button>
                 <p class="message"><a href="#" @click.prevent="toggleForm">登入</a></p>
             </form>
+
+              <!-- //驗證碼輸入  -->
+            <div v-if="!loggedIn && !isLoginForm">
+                <h2>驗證您的郵箱</h2>
+                <form @submit.prevent="verifyCode()">
+                    <div class="form-group">
+                        <label for="verification_code">輸入帳號</label>
+                        <input type="text" id="owner_account" v-model="this.owner_account" required>
+                        <label for="verification_code">輸入驗證碼</label>
+                        <input type="text" id="verification_code" v-model="this.verificationCode" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" @click="verifyCode()">驗證</button>
+                </form>
+            </div>
+
             <form v-else class="login-form">
                 <h5>會員登入</h5>
+                <div class="form-group">
+                    <label for="owner_role">身份</label>
+                    <select id="owner_role" v-model="owner_role" required>
+                        <option value="landlord">房東</option>
+                        <option value="tenant">房客</option>
+                    </select>
+                </div>
                 <input v-model="owner_account" type="text" placeholder="帳號/電話" />
                 <input v-model="owner_pwd" type="password" placeholder="密碼" />
                 <button @click.prevent="login">登入</button>
                 <p class="message">尚未加入會員? <a href="#" @click.prevent="toggleForm">註冊</a></p>
             </form>
         </div>
+    </div> 
 
-      
-    </div>
     <!-- 表單結束 -->
-     <!-- v-if不能綁button，只能綁在div上 -->
+    <!-- v-if不能綁button，只能綁在div上 -->
     <div v-if="!this.loggedIn"  class="loginregister">
         <button class="login" @click="customizeWindowEvent" key="login">登入/註冊</button>
     </div>
-  <!-- 登入後顯示的按鈕區域 -->
-     <div v-else class="loggedin-buttons" key="button">
+    <!-- 登入後顯示的按鈕區域 -->
+    <div v-else class="loggedin-buttons" key="button">
             <p >親愛的房東&nbsp&nbsp{{loginObj.ownerAccount}}&nbsp&nbsp&nbsp 已登入~</p>
             <RouterLink to="AdjustAccount" class="editaccount">修改帳戶資訊</RouterLink>
-            <button   class="logout" @click="logout">登出</button>
+            <button  class="logout" @click="logout">登出</button>
         </div>
 </template>
 
 <style scoped>
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 100%;
+    position: relative;
+}
+
 #window-container {
     position: fixed;
     left: 0;
@@ -403,7 +476,6 @@ label {
     }
 }
 
-
 .loggedin-buttons{
     position: absolute;
     right: 5%;
@@ -432,3 +504,5 @@ label {
 
 }
 </style>
+
+
