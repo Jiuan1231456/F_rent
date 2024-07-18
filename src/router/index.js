@@ -47,9 +47,9 @@ const router = createRouter({
       component: () => import('../views/BillDetail.vue')
     },
     {
-      path: '/benefit',
-      name: 'benefit',
-      component: () => import('../views/Benefit.vue')
+      path: '/Overview',
+      name: 'Overview',
+      component: () => import('../views/Overview.vue')
     },
     //租約列表管理
     {
@@ -138,6 +138,13 @@ const router = createRouter({
       name: 'Cutcontract_Edit',
       component: () => import('../views/Cutcontract_Edit.vue'),
       props: true // 允許通過路由傳參
+    },
+    {
+      path: '/TenantBillFirst',
+      name: 'TenantBillFirst',
+      component: () => import('../views/TenantBillFirst.vue'),
+      meta: { noHeader: true },
+
     },
   ]
 

@@ -12,6 +12,7 @@ router.afterEach((to, from, next) => {
 });
 
 app.use(router);
-app.use(pinia)
+app.use(pinia);
+
 
 app.mount('#app')

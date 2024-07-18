@@ -35,14 +35,34 @@ export default {
         <span>X</span>
       </label>
     </div> -->
-    <!-- ============== -->
+      <!-- ============== -->
+      <RouterLink
+        class="routerItem"
+        :class="{ selectedPage: this.page === 13 }"
+        to="/Overview"
+        >總覽</RouterLink
+      >
 
+      <RouterLink
+        class="routerItem"
+        :class="{ selectedPage: this.page === 4 }"
+        to="/roomlist"
+        >房間列表
+      </RouterLink>
 
-    <!-- <RouterLink class="routerItem" :class="{ selectedPage: this.page === 20 }" to="/emptyRoomList">預設空房頁面</RouterLink> -->
-    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 1 }" to="/">總覽</RouterLink>
-    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 4 }" to="/roomlist">房間列表</RouterLink>
-    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 6 }" to="/ContractList">租約管理列表</RouterLink>
-    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 11 }" to="/lookupBill">帳單管理</RouterLink>
+      <RouterLink
+        class="routerItem"
+        :class="{ selectedPage: this.page === 6 }"
+        to="/ContractList"
+        >租約管理列表</RouterLink
+      >
+      <RouterLink
+        class="routerItem"
+        :class="{ selectedPage: this.page === 11 }"
+        to="/lookupBill"
+        >帳單管理</RouterLink
+      >
+
     <!-- </nav> -->
   </div>
 </template>

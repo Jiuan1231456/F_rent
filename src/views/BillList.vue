@@ -79,6 +79,7 @@ export default {
           "Content-Type": "application/json",
         },
         credentials: 'include',
+        credentials: 'include',
         body: JSON.stringify(searchObj),
       })
         .then((res) => res.json())
@@ -98,7 +99,7 @@ export default {
     },
     bringToDetail(index) { // 偵測到選的帳單並存到pinia
       this.setBillObj(this.newnewBillSearch[index]);
-      console.log('選的帳單', this.newBillSearch[index]);
+      console.log('選的帳單',this.newBillSearch[index]);
       index = "";
     },
     generateBill() { // 帳單生成
@@ -122,6 +123,7 @@ export default {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include',
         credentials: 'include',
         body: JSON.stringify(generateBillObj),
       })
@@ -445,7 +447,6 @@ export default {
     text-align: center;
     height: 50px;
   }
-
   //   tr{
   //     display: block;
   //     float: left;
@@ -453,9 +454,7 @@ export default {
   td {
     background-color: #f9ddc6;
     padding: 5px;
-    // display: block;
   }
-
   //   th{
   //     display: block;
   //   }
