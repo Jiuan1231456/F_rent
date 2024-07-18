@@ -7,6 +7,7 @@ export default defineStore("dataStore", {
     loginObj: {}, // 存放房東登入資訊
     roomObj: {},
     oneContractObj: {}, //存放單一筆房間契約的資訊
+    cutContractObj:{},
     registerObj: {}, //存放註冊資訊
     billObj: {},  // 存放歷史帳單的單筆帳單(之後要顯示明細)
     monthBill:{}, // 存放當期帳單  
@@ -15,26 +16,30 @@ export default defineStore("dataStore", {
     billToContract:{}, // 找出該帳單的契約
     tenantData:{}, // 房客登入(房客的電話和身分證字號)
     contractListObj: {},
-
     tenantContract:{} // 房客的契約
-  }),
-  getters: {
-    // 返回變數或數據
-    getPage: (state) => state.page,
-    getLoginObj: (state) => state.loginObj,
-    getRoomObj: (state) => state.roomObj,
-    getoneContractObj: (state) => state.oneContractObj,
-    getRegisrerObj: (state) => state.registerObj,
-    getPerRegisterObj:(state)=>state.perRegisterObj,   
-    getBillObj: (state) => state.billObj,
-    getMonthBill:(state) => state.monthBill,
-    getPerBill:(state) => state.perBill,
-    getFinalBill:(state) => state.finalBill,
-    getBillToContract:(state) => state.billToContract,
-    getTenantData:(state) => state.tenantData,
-    getcontractListObj: (state) => state.contractListObj,
+
+    }),
+    getters:{  // 返回變數或數據
+        getPage:(state) => state.page,
+        getLoginObj:(state) => state.loginObj,
+        getRoomObj:(state)=>state.roomObj,
+        getCutContractObj:(state)=>state.cutContractObj,
+        getoneContractObj:(state)=>state.oneContractObj,
+        getRegisterObj:(state)=>state.registerObj,
+        getPerRegisterObj:(state)=>state.perRegisterObj,   
+        getBillObj: (state) => state.billObj,
+        getMonthBill:(state) => state.monthBill,
+        getPerBill:(state) => state.perBill,
+        getFinalBill:(state) => state.finalBill,
+        getBillToContract:(state) => state.billToContract,
+        getTenantData:(state) => state.tenantData,
+        getcontractListObj: (state) => state.contractListObj,
     getTenantContract:(state) => state.tenantContract,
+    
+
+    
   },
+
   actions: {
     // 處理數據
     setPage(params) {
@@ -49,6 +54,9 @@ export default defineStore("dataStore", {
     setOneContractObj(obj) {
       this.oneContractObj = obj;
     },
+    setCutContractObj(obj){
+      this.cutContractObj=obj;
+  },
     setRegisterObj(obj) {
       this.registerObj = obj;
     },
@@ -69,7 +77,6 @@ export default defineStore("dataStore", {
       this.billToContract = obj;
     },
     setTenantData(obj){
-      console.log("有進行修改!!");
       this.tenantData = obj
     },
     setContractListObj(obj) {
@@ -79,5 +86,5 @@ export default defineStore("dataStore", {
       this.tenantContract = obj
     }
   },
-});
 
+})

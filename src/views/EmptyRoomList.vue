@@ -1,7 +1,8 @@
 <script>
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import Login from "@/components/Login.vue";
 export default {
     data() {
         return {
@@ -16,6 +17,9 @@ export default {
             roomList: [],//儲存篩選完的房間列表(要顯示的空房)
             
         }
+    },
+    components:{
+        Login
     },
     computed: {
         ...mapState(dataStore, ['page', 'loginObj', 'roomObj', 'contractListObj','registerObj'])
@@ -159,11 +163,12 @@ export default {
 </template>
 
 <style scoped lang="scss">
+
 .bigArea {
     width: 100%;
     height: auto;
     padding: 1.5%;
-    margin: 2% auto;
+    margin: 2% -353px;
     position: relative;
 }
 

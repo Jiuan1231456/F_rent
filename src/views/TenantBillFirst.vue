@@ -55,8 +55,8 @@ export default {
           v-model="this.changeShow"
           value="A"
           name="questionaire"
-          style="right: -41%;
-    top: -35px;"
+          style="right: -21%;
+    top: -30px;width: 19%;"
         />
         <span class="contspan span" style="left: 48%;position: fixed;">租約資訊</span>
       </label>
@@ -68,9 +68,9 @@ export default {
           v-model="this.changeShow"
           value="B"
           name="preview"
-          style="left: 64%;
+          style="left: 64.5%;
     top: 9%;
-    width: 11%;
+    width: 10%;
     position: fixed;"
         />
         <span class="billspan span" style="left:65.5%;position: fixed;">帳單資訊</span>
@@ -95,7 +95,7 @@ export default {
     width: 100%;
     height: 19dvh;
     background-color: #ffdec2;
-    margin-left: -245px;
+    margin-left: -514px;
     z-index: 0;
   }
   .title {
@@ -105,7 +105,7 @@ export default {
     position: absolute;
     background: transparent;
     left: 4%;
-    top: 6%;
+    top: 7%;
   }
   .titleBox {
     width: 76%;

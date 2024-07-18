@@ -2,20 +2,41 @@
 import { RouterLink, RouterView } from "vue-router";
 import dataStore from "../stores/dataStore";
 import { mapState } from "pinia";
+import Login from "../components/Login.vue";
+
 export default {
   // 在 template 當標籤使用的方法或是元件，import進來後要宣告在components:{}裡面
   data() {
     return {
       isNavVisible: false,
+      showHeaderArea: true,
     };
+  },
+  watch: {
+    $route(to, from) {
+      // 當路由變化時，更新 headerArea 的顯示狀態
+      this.updateHeaderVisibility(to);
+    },
+  },
+  created() {
+    this.updateHeaderVisibility(this.$route);
   },
   components: {
     RouterLink,
+    Login
   },
   computed: {
     ...mapState(dataStore, ["page"]),
   },
-  methods: {},
+  methods: {
+     // 更新 headerArea 顯示狀態的方法
+    updateHeaderVisibility(route) {
+      // 隱藏 headerArea 的路由列表
+      const hideHeaderRoutes = ['/TenantBillFirst', '/emptyRoomList','/EmptyRoomDetail'];
+      // 如果當前路由在隱藏列表中，設置 showHeaderArea 為 false，否則為 true
+      this.showHeaderArea = !hideHeaderRoutes.includes(route.path);
+    },
+  },
 };
 </script>
 
@@ -24,7 +45,10 @@ export default {
   </div> -->
 
 
-  <div class="headerArea">
+  <div class="topArea">
+    <Login />
+  </div>
+  <div class="headerArea" v-if="showHeaderArea">
     <!-- <input type="checkbox" id="leftBar" v-model="isNavVisible" />
   <label for="leftBar" class="bars myMouse">
     <i class="fa-solid fa-bars fa-xl"></i>
@@ -61,6 +85,12 @@ export default {
         :class="{ selectedPage: this.page === 11 }"
         to="/lookupBill"
         >帳單管理</RouterLink
+      >
+      <RouterLink
+        class="routerItem"
+        :class="{ selectedPage: this.page === 12 }"
+        to="/TenantBillFirst"
+        >房客</RouterLink
       >
 
     <!-- </nav> -->

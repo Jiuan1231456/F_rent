@@ -267,7 +267,7 @@ export default {
   height: 100%;
   margin-bottom: 53px;
   position: relative;
-  margin-left: 339px;
+  // margin-left: 339px;
   margin-top: 1%;
   .back {
     position: absolute;

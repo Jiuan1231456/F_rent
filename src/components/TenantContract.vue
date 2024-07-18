@@ -55,7 +55,7 @@ export default {
 <template>
   <!-- <div class="middleArea"> -->
   <div class="contractArea" v-if="!showNextPage">
-    <span class="title">您的所有租約：</span>
+    <span class="title">您的所有租約</span>
     <div class="line"></div>
     <div class="btnArea" v-for="(item, index) in this.contractList">
       <button
@@ -231,9 +231,9 @@ span {
   flex-wrap: wrap;
   margin: 0 auto;
   margin-top: 102px;
-  width: 90%;
+  width: 100%;
   justify-content: space-around;
-  margin-left: -39px;
+  margin-left: -31%;
 }
 .btn-primary {
   background-color: #ffc89a;

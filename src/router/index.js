@@ -8,6 +8,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
+      redirect:'/emptyRoomList',
       component: () => import('../views/Home.vue')
     },
 
@@ -100,7 +101,7 @@ const router = createRouter({
     {
       path: '/Cutcontract_Edit',
       name: 'Cutcontract_Edit',
-      component: () => import('../views/Cutcontract_Edit.vue'),
+      component: () => import('../views/CutcontractEdit.vue'),
       props: true // 允許通過路由傳參
 
     },
@@ -133,10 +134,18 @@ const router = createRouter({
       props: true // 允許通過路由傳參
 
     },
+    //契約中止編輯
     {
-      path: '/Cutcontract_Edit',
-      name: 'Cutcontract_Edit',
-      component: () => import('../views/Cutcontract_Edit.vue'),
+      path: '/CutcontractEdit',
+      name: 'CutcontractEdit',
+      component: () => import('../views/CutcontractEdit.vue'),
+      props: true // 允許通過路由傳參
+
+    },//修改帳戶資訊
+    {
+      path: '/AdjustAccount',
+      name: 'AdjustAccount',
+      component: () => import('../views/AdjustAccount.vue'),
       props: true // 允許通過路由傳參
     },
     {

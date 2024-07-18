@@ -221,7 +221,7 @@ export default {
       <br />
       <label for="start" class="start">契約起日&emsp;<input type="date" id="start"
           v-model="this.billFilters.periodStart" /></label>
-      <span style="position: absolute; top: 95px; left: 450px">到</span>
+      <span style="position: absolute; top: 95px; left: 374px">到</span>
       <label for="end" class="end">契約迄日&emsp;<input type="date" id="start"
           v-model="this.billFilters.periodEnd" /></label>
       <br />
@@ -229,10 +229,10 @@ export default {
       <button class="typeBtn" @click="filterAll()" style="position: absolute; bottom: 6%; left: 16%">
         全部
       </button>
-      <button class="typeBtn" @click="filterTenanting()" style="position: absolute; bottom: 6%; left: 32%">
+      <button class="typeBtn" @click="filterTenanting()" style="position: absolute; bottom: 6%; left: 39%">
         承租中
       </button>
-      <button class="typeBtn" @click="filterEnded()" style="position: absolute; bottom: 6%; left: 48%">
+      <button class="typeBtn" @click="filterEnded()" style="position: absolute; bottom: 6%; left: 62%">
         契約已結束
       </button>
       <RouterLink to="/generatebill" style="
@@ -240,7 +240,7 @@ export default {
             text-decoration: none;
             color: white;
           ">
-      <button class="generate" style="position: absolute; bottom: 15%; right: 11%; width: 14%;"
+      <button class="generate" style="position: absolute; bottom: 15%; right: -8%; width: 14%;"
         @click="this.generateBill(new Date())">
         當期帳單
       </button></RouterLink>
@@ -313,6 +313,7 @@ export default {
   background: transparent;
   margin-bottom: 0%;
   position: relative;
+  margin-left: -16%;
 
   .fa-solid {
     &:hover {
@@ -323,13 +324,13 @@ export default {
   .start {
     position: absolute;
     top: 42%;
-    left: 15.5%;
+    left: 9.5%;
   }
 
   .end {
     position: absolute;
     top: 42%;
-    right: 31%;
+    right: 22%;
   }
 
   .searchTitle {
@@ -380,7 +381,7 @@ export default {
   .typeBtn {
     margin-bottom: 26px;
     margin-left: 54px;
-    width: 12%;
+    width: 15%;
     height: 14%;
     color: rgb(255 99 1);
     border: 0px;
@@ -397,7 +398,7 @@ export default {
     background-color: transparent;
     position: absolute;
     top: 67px;
-    right: 250px;
+    right: 33px;
   }
 
   .generate {
@@ -420,9 +421,9 @@ export default {
 }
 
 .listArea {
-  width: 94%;
+  width: 110%;
   height: 100dvh;
-
+margin-left: -20%;
   .contract {
     width: 100%;
     // height: 100%;

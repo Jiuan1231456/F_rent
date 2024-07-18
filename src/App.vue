@@ -1,21 +1,18 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import Header from"./components/Header.vue"
-import topHeader from"./components/topHeader.vue"
+
 
 </script>
 
 <template>
-  <!-- <div class="header"> -->
+  <div class="header">
 
-    <Header v-if="!$route.meta.noHeader" />
-  <!-- </div> -->
+    <Header  />
+  </div>
 <div class="top">
-  <topHeader />
 
-
-  <!-- <button class="login">登入/註冊</button> -->
-</div>
+</div> 
 
 
   <RouterView />
@@ -31,9 +28,10 @@ import topHeader from"./components/topHeader.vue"
 }
 
 //這邊可以讓topheader浮出來
-.top{
-  position: fixed;
-  z-index: 1
+.Apptop{
+  width: 100dvw;
+  height: 5%;
+  background-color: rgb(231, 195, 161);
 }
 
 .login{

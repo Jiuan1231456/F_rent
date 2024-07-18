@@ -23,9 +23,11 @@ export default {
             }
             console.log(this.ownerInfo);
         }
+
     },
     created() {
         this.getOwnerInfo()
+
     },
     mounted() {
         this.setPage(21)
@@ -69,9 +71,11 @@ export default {
 </template>
 
 <style scoped lang="scss">
+
+
 .bigArea {
     width: 70%;
-    margin: 4% auto;
+    margin: 4% -105px;
 }
 
 .headerArea {

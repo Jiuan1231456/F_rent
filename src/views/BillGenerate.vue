@@ -267,7 +267,7 @@ export default {
   width: 122dvw;
   height: 94dvh;
   background-color: #faf0e9;
-  margin-left: 17%;
+  // margin-left: 17%;
     margin-top: 30px;
   .billTitle {
     font-size: 2.3em;

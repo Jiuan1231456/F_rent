@@ -28,7 +28,8 @@ export default {
             sign_date: "",
             cut_reason: "",
             cut_date: "",
-            ai: "",
+            ai:"",
+            r_condtion:"",        
             // 房間資訊抓
             address: "",
             floor: "",
@@ -45,8 +46,9 @@ export default {
             r_other: "",
 
 
-        }
-    },
+        
+    }
+},
     computed: {
         //使用pinia中房間站存資訊
         ...mapState(dataStore, ['roomObj', 'loginObj'])
@@ -61,53 +63,55 @@ export default {
     methods: {
         ...mapActions(dataStore, ['setPage']),
         addContractToDB() {
-            let testObj = {
-                tenantIdentity: this.tenant_identity,
-                tenantName: this.tenant_name,
-                tenantHomeAddress: this.tenant_home_address,
-                tenantContactAddress: this.tenant_contact_address,
-                tenantPhone: this.tenant_phone,
-                tenantEmail: this.tenant_email,
-                ownerName: this.loginObj.ownerName, //從註冊資訊抓
-                ownerIdentity: this.loginObj.ownerIdentity, //從註冊資訊抓
-                ownerHomeAddress: this.owner_home_address, //從註冊資訊抓
-                ownerContactAddress: this.owner_contact_address, //從註冊資訊抓
-                ownerPhone: this.loginObj.ownerPhone, //從註冊資訊抓
-                startDate: this.start_date,
-                endDate: this.end_date,
-                cOther: this.c_other,
-                signDate: this.sign_date,
-                cutReason: this.cut_reason,
-                cutDate: this.cut_date,
-                ai: this.ai,
-                //從房間抓
-                address: this.roomObj.address,
-                floor: this.roomObj.floor,
-                roomId: this.roomObj.roomId,
-                rentP: this.roomObj.rentP,
-                deposit: this.roomObj.deposit,
-                cutP: this.roomObj.cutP,
-                eletricP: this.roomObj.eletricP,
-                waterP: this.roomObj.waterP,
-                manageP: this.roomObj.manageP,
-                acreage: this.roomObj.acreage,
-                parking: this.roomObj.parking,
-                equip: this.roomObj.equip,
-                rOther: this.roomObj.rOther,
-
-            };
-            fetch("http://localhost:8080/contract/createContract", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: 'include',
-                body: JSON.stringify(testObj)
-            })
-                .then(res => res.json())
-                .then(data => {
-                    console.log(data);
-                });
+        let testObj = {
+            tenantIdentity: this.tenant_identity,  
+            tenantName: this.tenant_name,
+            tenantHomeAddress: this.tenant_home_address,
+            tenantContactAddress: this.tenant_contact_address,
+            tenantPhone: this.tenant_phone,
+            tenantEmail: this.tenant_email,
+            ownerName: this.loginObj.ownerName, //從登入資訊抓
+            ownerIdentity: this.loginObj.ownerIdentity, //從登入資訊抓
+            ownerHomeAddress: this.owner_home_address, 
+            ownerContactAddress: this.owner_contact_address, 
+            ownerPhone: this.loginObj.ownerPhone, //契約的表沒有這個欄位，要從登入抓，但我建議再SQL新增這個欄位，因為房東可能想註冊的電話跟連絡他的電話不一樣
+            startDate: this.start_date,
+            endDate: this.end_date,
+            cOther: this.c_other,
+            signDate: this.sign_date,
+            cutReason: this.cut_reason,
+            cutDate: this.cut_date,
+            ai:this.ai,
+            owner_account:this.loginObj.ownerAccount,//從登入資訊抓
+            rCondition:this.r_condtion, 
+            //從房間抓
+            address: this.roomObj.address,
+            floor: this.roomObj.floor,
+            roomId: this.roomObj.roomId,
+            rentP: this.roomObj.rentP,
+            deposit: this.roomObj.deposit,
+            cutP: this.roomObj.cutP,
+            eletricP: this.roomObj.eletricP,
+            waterP: this.roomObj.waterP,
+            manageP: this.roomObj.manageP,
+            acreage: this.roomObj.acreage,
+            parking: this.roomObj.parking,
+            equip: this.roomObj.equip,
+            rOther: this.roomObj.rOther,
+        
+        };
+        fetch("http://localhost:8080/contract/createContract", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json"
+            },
+            credentials:'include',
+            body: JSON.stringify(testObj)
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+        });
         },
     },
 
@@ -201,7 +205,7 @@ export default {
                     連絡電話: <input type="text" v-model="tenant_phone" class="input-box">
                 </div>
                 <br>
-                <h3>契約中止</h3>
+                <!-- <h3>契約中止</h3>
                 <div class="cut">
                     <br>
                     中止原因: <input type="text" v-model="cut_reason" class="input-box">
@@ -209,7 +213,7 @@ export default {
                     違約金: <input type="text" v-model="cut_p" class="input-box">
                     <br>
                     中止日期: <input type="text" v-model="cut_date" class="input-box">
-                </div>
+                </div> -->
                 <br>
                 <h3>其他備註(或個別磋商條款)</h3>
                 <div class="input-wrapper">
@@ -218,8 +222,7 @@ export default {
                     <span class="underline"></span>
                 </div>
                 <br>
-                <h3>立約日期: <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31"
-                        v-model="sign_date" /></h3>
+                <h3>立約日期:  <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="sign_date"/></h3>
 
 
                 <div class="btn">

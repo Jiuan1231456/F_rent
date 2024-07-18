@@ -15,6 +15,7 @@ export default {
                 startDate: "",
                 endDate: ""
             },
+            // filteredContractList: [],//儲存篩選快到期的契約列表
             selectedContracts: [], // 新增選中(checkbox)的契約狀態,用於存儲選中的契約。
             statusFilter: "" ,// 新增狀態過濾器
             
@@ -52,7 +53,7 @@ export default {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                credentials: 'include',
+                credentials:'include',
                 body: JSON.stringify(searchObj)
             })
                 .then(res => res.json())//將回應轉換為 JSON
@@ -62,8 +63,8 @@ export default {
                     // 第二層:篩選出當前身份證字號的契約問卷，即顯示特定房東的所有房間資訊
                     this.contractList = data.contractList.filter(item => item.ownerIdentity === this.loginObj.ownerIdentity);
                     console.log("只有當前房東的(篩選特定房東):", this.contractList);
-                    // 計算總頁數
-                    this.calculateTotalPages(this.contractList.length)
+                    // // 計算總頁數
+                    // this.calculateTotalPages(this.contractList.length)
                 })
                 .catch(error => {
                 console.error("Error fetching data:", error); //處理錯誤
@@ -78,7 +79,7 @@ export default {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                credentials: 'include',
+                credentials:'include',
                 body: JSON.stringify(this.obj)
             })
                 .then(res => res.json())
@@ -115,9 +116,18 @@ calculateTotalPages(totalItems) {
             this.statusFilter = status; // 更新狀態過濾器
         },
         // 根據狀態過濾契約
+        //在這個方法中，當 statusFilter 為空時應該返回完整的 contractList，但要注意返回的是原始的 contractList，而不是已篩選後的 this.contractList。因為在 showAllContracts() 方法中，我們只是將 statusFilter 設置為空，而不是修改 this.contractList。
         getFilteredContracts() {
             if (this.statusFilter === "") {
                 return this.contractList;
+            } else if (this.statusFilter === "快到期") {
+                return this.filteredContractList.filter(item => {
+                    const today = new Date();
+                    const endDate = new Date(item.endDate);
+                    const timeDiff = endDate.getTime() - today.getTime();
+                    const oneDay = 24 * 60 * 60 * 1000;
+                    return timeDiff > 0 && timeDiff <= 31 * oneDay;
+                });
             }
             return this.contractList.filter(contract => {
                 const contractStatus = this.getContractStatus(contract);
@@ -127,6 +137,7 @@ calculateTotalPages(totalItems) {
         // 顯示所有契約
         showAllContracts() {
             this.statusFilter = ""; // 清空狀態過濾器以顯示所有契約
+            this.filteredContractList = [...this.contractList];//增加這行
         },
 
         //第三層:篩選特定房東的特定房間資訊
@@ -149,7 +160,7 @@ calculateTotalPages(totalItems) {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                credentials: 'include',
+                credentials:'include',
                 body: JSON.stringify(searchCriteria),
             })
             .then(res => res.json())
@@ -160,6 +171,28 @@ calculateTotalPages(totalItems) {
                 console.log("pinia裡的roomObj",this.roomObj)
             });
         },
+
+        //篩出快到期的契約(結束前31天)
+        filterEndingSoon() {
+            // 取得今天日期
+            const today = new Date();
+            // 設定篩選條件，結束日期在今天後31天以內
+            const filteredContracts = this.contractList.filter(item => {
+                const endDate = new Date(item.endDate);
+                // 計算結束日期與今天的時間差
+                const timeDiff = endDate.getTime() - today.getTime();
+                // 一天的毫秒數
+                const oneDay = 24 * 60 * 60 * 1000;
+                // 如果時間差大於0且小於31天
+                return timeDiff > 0 && timeDiff <= 31 * oneDay;
+            });
+            // 將篩選後的結果賦值給 filteredContractList 
+            this.filteredContractList = filteredContracts;
+           //filterEndingSoon 方法只是計算並返回新的篩選結果 filteredContracts，並不會直接修改 this.contractList。這樣其他地方使用的 this.contractList 將保持不變，不受 filterEndingSoon 方法影響。
+           // 更新狀態過濾器以觸發列表更新
+            this.statusFilter = "快到期";
+        },
+
         // 計算總頁數
         calculateTotalPages(totalItems) {
             const pageSize = 10; // 假設每頁顯示 10 筆資料
@@ -207,10 +240,9 @@ calculateTotalPages(totalItems) {
         <!-- 狀態選擇按鈕 -->
         <div class="statusButtons">
             <button class="renting" @click="filterByStatus('出租中')" :class="{ active: statusFilter === '出租中' }">出租中</button>
-            <button class="empty" @click="filterByStatus('空房')" :class="{ active: statusFilter === '空房' }">空房</button>
             <button class="goingtostart" @click="filterByStatus('待生效')" :class="{ active: statusFilter === '待生效' }">待生效</button>
             <button class="ended" @click="filterByStatus('已結束')" :class="{ active: statusFilter === '已結束' }">已結束</button>
-            <!-- 顯示名下所有契約 -->
+            <button class="ending-soon"  @click="filterEndingSoon()" :class="{ active: statusFilter === '快到期' }">快到期</button>
             <button class="all" @click="showAllContracts()" :class="{ active: statusFilter === '' }">顯示所有契約</button>
         </div>
 
@@ -245,7 +277,7 @@ calculateTotalPages(totalItems) {
                 <td>{{ item.startDate }}</td>
                 <td>{{ item.endDate }}</td>
                 <td>{{ item.rentP }}</td>
-                <td><RouterLink to="/Contract_Detail" @click="selectRoomInfo(index)"> 契約中止編輯</RouterLink></td>
+                <td><RouterLink to="/CutcontractEdit" @click="selectRoomInfo(index)"> 契約中止編輯</RouterLink></td>
                 <td><RouterLink to="/Contract_Detail" @click="selectRoomInfo(index); $nextTick(findRoomInfo)"> 查看詳情</RouterLink></td>
             </tr>
         </tbody>
@@ -261,7 +293,7 @@ calculateTotalPages(totalItems) {
         height: 100dvh;
         border: 1em solid #9a685200;
         //border-style:  inset;
-        margin-left: 22.5%;  // 移除 margin-left，並將 margin 設定為 auto
+        margin-left: -10px;  // 移除 margin-left，並將 margin 設定為 auto
         padding-top: 0;  // 確保 padding-top 為 0
         background-color: #FAF0E9;
     //搜尋欄文字背景顏色
@@ -271,16 +303,17 @@ calculateTotalPages(totalItems) {
     }
 //搜尋
     .searchPlace {
-        width: 90%;
-        height: 45%;
-        color: black;
-        font-size: 22px;
-        background-color: #FFC89A;
-        border: 1em solid #fae1cd;
-        text-align: left;
-        margin-top: 5%;
-        margin-left: 5%;
-        padding: 3% 3% 5% 3%;}
+        width: 81%;
+    height: 45%;
+    color: black;
+    font-size: 22px;
+    background-color: #FFC89A;
+    border: 1em solid #fae1cd;
+    text-align: left;
+    margin-top: 1%;
+    margin-left: 10%;
+    padding: 3% 3% 5% 3%;
+    }
     
 
     .inputPlace {
@@ -362,6 +395,7 @@ calculateTotalPages(totalItems) {
         overflow: hidden;
         border-radius: 0px 0px 0px 0px;
         box-shadow: 0 0 10px rgba(167, 147, 147, 0.541);
+        margin-bottom: 2%
     }
 
     table {
@@ -397,7 +431,7 @@ calculateTotalPages(totalItems) {
     }
 
 
-  
+
 
 
 //狀態按鈕
@@ -407,11 +441,11 @@ calculateTotalPages(totalItems) {
     color: #110f0f;
     font-size: 18px;
     margin-top: 0;
-    margin-left: -5%;
- :active{
+    margin-left: 2%;
+:active{
     font-size:20px;
     font-weight: 600;
- }
+}
 
     .renting{
         margin-bottom: 26px;
@@ -419,21 +453,21 @@ calculateTotalPages(totalItems) {
         width: 12%;
         height: 30px;
         border: 0px;
-        background-color: #f9ddc6;
+        background-color:#fcc395;
         border-radius: 20px;
         
         &:hover {
         background-color: #f0c49f;
         }
     }
-    .empty{
+    .ending-soon{
         margin-bottom: 26px;
         margin-left: 54px;
         width: 12%;
         height: 30px;
       
         border: 0px;
-        background-color: #fcc395;
+        background-color: #f9ddc6;
         border-radius: 20px;
         &:hover {
         background-color: #f0c49f;
@@ -444,7 +478,6 @@ calculateTotalPages(totalItems) {
         margin-left: 54px;
         width: 12%;
         height: 30px;
-       
         border: 0px;
         background-color: #f9ddc6;
         border-radius: 20px;
@@ -457,7 +490,7 @@ calculateTotalPages(totalItems) {
         margin-left: 54px;
         width: 12%;
         height: 30px;
-      
+    
         border: 0px;
         background-color: #fcc395;
         border-radius: 20px;
@@ -471,7 +504,7 @@ calculateTotalPages(totalItems) {
         margin-left: 54px;
         width: 12%;
         height: 30px;
-      
+    
         border: 0px;
         background-color: #ebcbcb;
         border-radius: 20px;
@@ -482,4 +515,3 @@ calculateTotalPages(totalItems) {
 }
 
 </style>
-  

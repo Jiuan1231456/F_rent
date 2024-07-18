@@ -14,7 +14,7 @@ export default {
             contractList: [],//儲存契約列表
             statusFilter: "",// 新增狀態過濾器
             addressList: [],//放篩選完狀態的地址
-            allList:[],//儲存房間列表(固定搜尋全部)
+            allList: [],//儲存房間列表(固定搜尋全部)
         }
     },
     computed: {
@@ -22,7 +22,6 @@ export default {
     },
     methods: {
         ...mapActions(dataStore, ['setPage', 'setRoomObj', 'setLoginObj']),
-
         search() { //搜尋房間
             console.log("input輸入的地址和房號", this.obj);
             fetch("http://localhost:8080/room/roomSearch", {
@@ -47,13 +46,16 @@ export default {
             console.log("選特定房東的特定房間資訊", this.roomList[index]);//印出來供看console
             this.setRoomObj(this.roomList[index]);
 
+
         },
+
 
         deleteSelectedRoom() { //從DB中刪除勾選的房間
             let deleteObj = {
                 addressList: this.deleteCheckbox,
             };
             console.log("所有勾選的房間", deleteObj)
+
             if (this.deleteCheckbox.length > 0) {
                 this.roomList = this.roomList.filter(
                     (item) => !this.deleteCheckbox.includes(item.id)
@@ -235,6 +237,15 @@ export default {
             <input type="text" class="searchInput2" title="依房號模糊搜尋" v-model="this.obj.roomId">
             &nbsp;&nbsp;&nbsp;&nbsp;
             <button class="searchButton bt" @click="search()">搜尋</button>
+            <button class="searchButton bt">空房</button>
+            <button class="searchButton bt" @click="searchContractList()">出租中</button>
+
+        </div>
+        <div class="aAndD">
+            <button class="deleteButton bt" @click="deleteSelectedRoom()">刪除</button>
+            <RouterLink to="/addRoom" class="rLStyle">
+                <button class="addButton bt">新增</button>
+            </RouterLink>
         </div>
         <div class="aAndD">
             <button class="deleteButton bt" @click="deleteSelectedRoom()">不開放</button>
@@ -269,6 +280,7 @@ export default {
                 <td style="width: 36%; text-align: left; padding-left: 1%;">
                     <RouterLink to="/roomDetail" @click="this.browse(index)"> {{ item.address }} </RouterLink>
                 </td>
+
                 <td style="width: 7%;">{{ item.floor }}</td>
                 <td style="width: 7%;">{{ item.roomId }}</td>
                 <td style="width: 12%;">{{ item.rentP }}</td>
@@ -276,6 +288,7 @@ export default {
                     <RouterLink to="/editRoom" class="edit" @click="this.browse(index)">編輯</RouterLink> <br>
                     <br>
                     <RouterLink to="/contractAdd" class="contractAdd" @click="getRoomInfo(index)">新增契約</RouterLink>
+
                 </td>
             </tr>
         </table>
@@ -347,6 +360,7 @@ export default {
         border: none;
         cursor: pointer;
         margin-left: 30px;
+
         .rLStyle {
             text-decoration: none;
         }
