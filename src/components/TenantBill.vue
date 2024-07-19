@@ -87,6 +87,7 @@ export default {
         }}</span
       >
     </div>
+    <div class="" v-if="this.billList">
     <table class="contract">
       <thead>
         <th scope="col" class="thead">編號</th>
@@ -191,6 +192,10 @@ export default {
         </template>
       </tbody>
     </table>
+  </div>
+  <div class="" v-else>
+    <h1>目前尚無帳單</h1>
+  </div>
   </div>
 
   <!-- <button @click="$emit('goToNextPage',false)">返回前頁</button> -->
