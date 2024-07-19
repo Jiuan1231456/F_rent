@@ -83,12 +83,12 @@ export default {
         <h4>坪數 : <input class="acreage inp" type="text" v-model="this.roomObj.acreage"> 坪</h4>
         <h4>車位 : <input class="parking inp" type="checkbox" v-model="this.roomObj.parking"></h4>
         <div class="equipDiv">
-            <span>物件備註&nbsp;:&nbsp;&nbsp;</span>
-            <textarea class="equip inp" style="resize: none; width: 80%; height: 40%;" v-model="this.roomObj.equip"></textarea>
+            <h4 style="margin-bottom: -15px;">物件備註&nbsp;:</h4><br>
+            <textarea class="equip inp" style="resize: none; width: 80%; height: 100px;" v-model="this.roomObj.equip"></textarea>
         </div>
         <div class="rOtherDiv">
-            <span>特色描述&nbsp;:&nbsp;&nbsp;</span>
-            <textarea class="rOther inp" style="resize: none; width: 80%; height: 40%;" v-model="this.roomObj.rOther"></textarea>
+            <h4 style="margin-top: -15px;">特色描述&nbsp;:</h4><br>
+            <textarea class="rOther inp" style="resize: none; width: 80%; height: 100px;" v-model="this.roomObj.rOther"></textarea>
         </div>
         
         <div id="app">
@@ -102,23 +102,47 @@ export default {
             </div>
         </div>
 
-        <button @click="update()">儲存更新</button>
+        <button class="save" @click="update()">儲存更新</button>
     </div>
 </template>
 
 <style scoped lang="scss">
 .bigArea {
     width: 80%;
-    margin: 0 auto;
+    margin: 3% auto;
+    margin-left: 19%;
+}
+
+h4{
+    margin: 2%;
+}
+
+.equip{
+    margin: 2%;
+    margin-top: 0;
+}
+
+.rOther{
+    margin: 2%;
+    margin-top: -38px;
+
 }
 
 .inp {
     padding-left: 5px;
-    width: 18%;
+    width: 16%;
 }
 
 .parking{
     width: 2%;
+}
+
+#imageUploadForm{
+    margin: 2%;
+}
+
+.save{
+    margin: 2%;
 }
 
 </style>

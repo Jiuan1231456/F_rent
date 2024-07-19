@@ -27,6 +27,7 @@ export default {
             "Content-Type": "application/json",
         },
         credentials: 'include',
+        credentials: 'include',
         body: JSON.stringify(loginObj1),
     })
     .then((res) => res.json())
@@ -89,6 +90,6 @@ export default {
 
 <style scoped lang="scss">
 .middleArea{
-  margin-left: 30%;
+  margin-left: 20%;
 }
 </style>

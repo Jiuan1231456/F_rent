@@ -9,11 +9,12 @@ export default {
                 address: "",
                 roomId: "",
             },
-            roomList: [],//儲存房間列表
+            roomList: [],//儲存篩選完的房間列表
             deleteCheckbox: [],//刪除用
             contractList: [],//儲存契約列表
             statusFilter: "",// 新增狀態過濾器
             addressList: [],//放篩選完狀態的地址
+            allList: [],//儲存房間列表(固定搜尋全部)
         }
     },
     computed: {
@@ -21,7 +22,6 @@ export default {
     },
     methods: {
         ...mapActions(dataStore, ['setPage', 'setRoomObj', 'setLoginObj']),
-
         search() { //搜尋房間
             console.log("input輸入的地址和房號", this.obj);
             fetch("http://localhost:8080/room/roomSearch", {
@@ -38,6 +38,7 @@ export default {
                     // 篩選出當前account的問卷
                     this.roomList = data.roomList.filter(item => item.account === this.loginObj.ownerAccount);
                     console.log("篩選出當前登入者的所有房間", this.roomList)
+                    this.allList = data.roomList.filter(item => item.account === this.loginObj.ownerAccount);
                 })
         },
 
@@ -45,13 +46,16 @@ export default {
             console.log("選特定房東的特定房間資訊", this.roomList[index]);//印出來供看console
             this.setRoomObj(this.roomList[index]);
 
+
         },
+
 
         deleteSelectedRoom() { //從DB中刪除勾選的房間
             let deleteObj = {
                 addressList: this.deleteCheckbox,
             };
             console.log("所有勾選的房間", deleteObj)
+
             if (this.deleteCheckbox.length > 0) {
                 this.roomList = this.roomList.filter(
                     (item) => !this.deleteCheckbox.includes(item.id)
@@ -113,21 +117,17 @@ export default {
                     console.log("只有當前房東的(篩選特定房東):", this.contractList);
                     this.addInAddressList();
 
-                    let newRoomList = []; 
-                    for (let i = 0; i < this.roomList.length; i++) {
+                    let newRoomList = [];
+                    for (let i = 0; i < this.allList.length; i++) {
                         for (let j = 0; j < this.addressList.length; j++) {
-                            if (this.roomList[i].address === this.addressList[j].address) {
-                                newRoomList.push(this.roomList[i]);
+                            if (this.allList[i].address === this.addressList[j].address) {
+                                newRoomList.push(this.allList[i]);
                             }
                             continue; // 一旦找到匹配的地址就跳出內層迴圈
                         }
                     }
                     console.log(newRoomList)
                     this.roomList = newRoomList;
-
-
-
-
                     // 計算總頁數
                     // this.calculateTotalPages(this.contractList.length)
                 })
@@ -135,7 +135,6 @@ export default {
                     console.error("Error fetching data:", error); //處理錯誤
                 });
         },
-
         addInAddressList() {// searchContractList()中 用來判斷租約狀態
             let today = new Date();
             let month = today.getMonth() + 1;
@@ -150,6 +149,59 @@ export default {
             console.log("契約列表撈出 狀態出租中", this.addressList);
         },
 
+        searchContractList2() { //從契約列表抓出空房的地址
+            let empty = {};
+            fetch("http://localhost:8080/contract/contratSearch", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'include',
+                body: JSON.stringify(empty)
+            })
+                .then(res => res.json())//將回應轉換為 JSON
+                .then(data => {
+                    console.log("所有契約(不分房東):", data);// 第一層:顯示所有契約(沒有包含特定房東)
+
+                    // 第二層:篩選出當前身份證字號的契約問卷，即顯示特定房東的所有房間資訊
+                    this.contractList = data.contractList.filter(item => item.ownerIdentity === this.loginObj.ownerIdentity);
+                    console.log("只有當前房東的(篩選特定房東):", this.contractList);
+                    this.addInAddressList2();
+                    let newRoomList = [];
+                    for (let i = 0; i < this.allList.length; i++) {
+                        let foundMatch = false;
+                        for (let j = 0; j < this.addressList.length; j++) {
+                            if (this.allList[i].address === this.addressList[j].address) {
+                                foundMatch = true;
+                                break; // 一旦找到匹配的地址就跳出內層迴圈
+                            }
+                        }
+                        if (!foundMatch) {
+                            newRoomList.push(this.allList[i]);
+                        }
+                    }
+                    console.log(newRoomList)
+                    this.roomList = newRoomList;
+                    // 計算總頁數
+                    // this.calculateTotalPages(this.contractList.length)
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error); //處理錯誤
+                });
+        },
+        addInAddressList2() {// searchContractList()中 用來判斷租約狀態
+            let today = new Date();
+            let month = today.getMonth() + 1;
+            let day = today.getDate();
+            // 確保日期格式符合 2024-06-05，否則會變成 2024-6-5
+            month = month < 10 ? "0" + month : month;
+            day = day < 10 ? "0" + day : day;
+
+            let todayStr = today.getFullYear() + "-" + month + "-" + day;
+            console.log(todayStr);
+            this.addressList = this.contractList.filter(item => (todayStr < item.startDate && todayStr >= item.signDate) || (todayStr >= item.startDate && todayStr <= item.endDate));
+            console.log("契約列表撈出 狀態出租中", this.addressList);
+        },
 
         // calculateTotalPages(totalItems) { // 計算總頁數
         //     const pageSize = 10; // 假設每頁顯示 10 筆資料
@@ -164,6 +216,9 @@ export default {
     },
     mounted() {
         this.setPage(2)
+    },
+    beforeUpdate() {
+
     }
 }
 </script>
@@ -192,6 +247,14 @@ export default {
                 <button class="addButton bt">新增</button>
             </RouterLink>
         </div>
+        <div class="aAndD">
+            <button class="deleteButton bt" @click="deleteSelectedRoom()">不開放</button>
+            <RouterLink to="/addRoom" class="rLStyle">
+                <button class="addButton bt">新增房間</button>
+            </RouterLink>
+            <button class="emptyButton bt" @click="searchContractList2()">僅顯示空房</button>
+            <button class="rentingButton bt" @click="searchContractList()">出租中物件</button>
+        </div>
 
         <table class="roomList">
             <tr>
@@ -217,6 +280,7 @@ export default {
                 <td style="width: 36%; text-align: left; padding-left: 1%;">
                     <RouterLink to="/roomDetail" @click="this.browse(index)"> {{ item.address }} </RouterLink>
                 </td>
+
                 <td style="width: 7%;">{{ item.floor }}</td>
                 <td style="width: 7%;">{{ item.roomId }}</td>
                 <td style="width: 12%;">{{ item.rentP }}</td>
@@ -224,6 +288,7 @@ export default {
                     <RouterLink to="/editRoom" class="edit" @click="this.browse(index)">編輯</RouterLink> <br>
                     <br>
                     <RouterLink to="/contractAdd" class="contractAdd" @click="getRoomInfo(index)">新增契約</RouterLink>
+
                 </td>
             </tr>
         </table>
@@ -235,7 +300,8 @@ export default {
 .bigArea {
     width: 80%;
     padding: 1%;
-    margin: 0 auto;
+    margin: 4% auto;
+    margin-left: 18%;
     position: relative;
 }
 
@@ -246,35 +312,34 @@ export default {
     font-size: 20px;
     width: 100%;
     margin: 15px 0;
+}
 
-    .searchInput1 {
-        width: 40%;
-        border-radius: 5px; //四個角的弧度
-    }
+.searchInput1 {
+    width: 40%;
+    border-radius: 5px; //四個角的弧度
+}
 
-    .searchInput2 {
-        width: 20%;
-        border-radius: 5px; //四個角的弧度
-    }
+.searchInput2 {
+    width: 20%;
+    border-radius: 5px; //四個角的弧度
+}
 
-    .searchButton {
-        width: 65px;
-        height: 30px;
-        background-color: rgb(255 141 61);
-        color: white;
-        border-radius: 5px; //四個角的弧度
-        border: none;
-        cursor: pointer;
-    }
+.searchButton {
+    width: 65px;
+    height: 30px;
+    background-color: rgb(255 141 61);
+    color: white;
+    border-radius: 5px; //四個角的弧度
+    border: none;
+    cursor: pointer;
 }
 
 .aAndD {
-    width: 15%;
+    width: 100%;
     height: 30px;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
-    margin: 1%;
+    margin: 1% 0;
 
     .deleteButton {
         width: 65px;
@@ -287,17 +352,40 @@ export default {
     }
 
     .addButton {
-        width: 65px;
+        width: 85px;
         height: 30px;
         background-color: rgb(255 141 61);
         color: white;
         border-radius: 5px; //四個角的弧度
         border: none;
         cursor: pointer;
+        margin-left: 30px;
 
         .rLStyle {
             text-decoration: none;
         }
+    }
+
+    .emptyButton {
+        width: 100px;
+        height: 30px;
+        background-color: rgb(255 141 61);
+        color: white;
+        border-radius: 5px; //四個角的弧度
+        border: none;
+        cursor: pointer;
+        margin-left: 775px;
+    }
+
+    .rentingButton {
+        width: 100px;
+        height: 30px;
+        background-color: rgb(255 141 61);
+        color: white;
+        border-radius: 5px; //四個角的弧度
+        border: none;
+        cursor: pointer;
+        margin-left: 15px;
     }
 }
 

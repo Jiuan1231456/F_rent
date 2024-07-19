@@ -8,10 +8,31 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/Login.vue')
+      redirect:'/emptyRoomList',
+      component: () => import('../views/Home.vue')
     },
-   
-     {//房間列表
+
+    {//預設空房頁面
+      path: '/emptyRoomList',
+      name: 'emptyRoomList',
+      component: () => import('../views/EmptyRoomList.vue'),
+      meta: { noHeader: true } 
+    },
+
+    {//空房的詳細資訊
+      path: '/EmptyRoomDetail',
+      name: 'EmptyRoomDetail',
+      component: () => import('../views/EmptyRoomDetail.vue'),
+      meta: { noHeader: true } 
+    },
+    
+    {//房客登入
+      path: '/tenantLogin',
+      name: 'tenantLogin',
+      component: () => import('../views/TenantLogin.vue')
+    },
+    
+    {//房間列表
       path: '/roomList',
       name: 'roomList',
       component: () => import('../views/RoomList.vue')
@@ -80,7 +101,7 @@ const router = createRouter({
     {
       path: '/Cutcontract_Edit',
       name: 'Cutcontract_Edit',
-      component: () => import('../views/Cutcontract_Edit.vue'),
+      component: () => import('../views/CutcontractEdit.vue'),
       props: true // 允許通過路由傳參
 
     },
@@ -101,7 +122,7 @@ const router = createRouter({
       component: () => import('../views/Contract_Detail.vue'),
       props: true // 允許通過路由傳參
     },
-     {//當期帳單計算(輸入用電量的頁面)
+    {//當期帳單計算(輸入用電量的頁面)
       path: '/billFinalDetail',
       name: 'billFinalDetail',
       component: () => import('../views/BillFinalDetail.vue')
@@ -113,10 +134,18 @@ const router = createRouter({
       props: true // 允許通過路由傳參
 
     },
+    //契約中止編輯
     {
-      path: '/Cutcontract_Edit',
-      name: 'Cutcontract_Edit',
-      component: () => import('../views/Cutcontract_Edit.vue'),
+      path: '/CutcontractEdit',
+      name: 'CutcontractEdit',
+      component: () => import('../views/CutcontractEdit.vue'),
+      props: true // 允許通過路由傳參
+
+    },//修改帳戶資訊
+    {
+      path: '/AdjustAccount',
+      name: 'AdjustAccount',
+      component: () => import('../views/AdjustAccount.vue'),
       props: true // 允許通過路由傳參
     },
     {

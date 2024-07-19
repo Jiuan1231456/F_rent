@@ -199,7 +199,7 @@ export default {
     <h1 style="margin-bottom: 30px">{{this.loginObj.ownerName}}房東，您好</h1>
     <div class="deadlineBox mainBox">
       <div class="areabox"></div>
-      <span class="title" style="right: 442px;">即將到期</span>
+      <span class="title" style="right: 474px;">即將到期</span>
       <button
         class="box1 box"
         @click="this.showModal('contract')"
@@ -267,7 +267,7 @@ export default {
     <div class="electricBox mainBox">
       <div class="areabox" style="top: -142px;"></div>
       <span class="title" style="top: -136px;
-    right: 442px;">營收金額</span>
+    right: 474px;">營收金額</span>
       <button class="box1 box" style="
     right: -186px;
     top: -115px;"
@@ -420,7 +420,7 @@ export default {
 
 <style scoped lang="scss">
 .middleArea {
-  margin-left: 20%;
+  // margin-left: 20%;
   margin-top: 3%;
   width: 100%;
   height: 100dvh;

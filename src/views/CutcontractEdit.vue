@@ -7,7 +7,13 @@ import send_btn from '../components/send_btn.vue';
 export default {
     data() {
         return {
-         
+          
+            sign_date: "",
+            cut_reason: "",
+            cut_date: "",
+            ai:"",
+            isSending: false // 追蹤送出狀態
+   
             
         }
     },
@@ -34,6 +40,39 @@ export default {
             const date = new Date(dateString);
             return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
         },
+        sendCutContractToDB(){
+            this.isSending = true; // 禁用按鈕
+            let cutObj={
+                ai:this.oneContractObj.ai,
+                address:this.oneContractObj.address,
+                cutReason: this.cut_reason,
+                cutDate: this.cut_date,
+            };
+            fetch("http://localhost:8080/contract/updateContract", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json"
+            },
+            credentials:'include',
+            body: JSON.stringify(cutObj)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            })
+            .finally(() => {
+                    this.isSending = false; // 根據需求決定是否要重新啟用按鈕
+                });
+        },
+
+        //警示框確認送出
+        confirmAndSend() {
+            // 彈出確認框
+            if (confirm("您確定要送出嗎？")) {
+                this.sendCutContractToDB();
+            }
+        },
+    
     }
 }
 </script>
@@ -58,11 +97,9 @@ export default {
             <br>
             樓層: {{ oneContractObj.floor }}
             <br>
-            房號: {{ oneContractObj.roomId }}
+            房號: {{oneContractObj.roomId }}
             <br>
-            租金/月: {{ oneContractObj.rentP}}
-            <br>
-            車位:{{oneContractObj.parking}}
+            租金/月: {{oneContractObj.rentP}}
             <br>
             押金: {{ oneContractObj.deposit }}
             <br>
@@ -74,9 +111,9 @@ export default {
             <br>
             面積: {{oneContractObj.acreage}}
             <br>
-            設備:{{ oneContractObj.equip }}
+            設備:{{ roomObj[0].equip }}
             <br>
-            物件備註:{{ roomObj[0].rCondition }}
+            物件備註:{{ oneContractObj.rCondition }}
             <div class="input-wrapper">
         
             </div>
@@ -112,11 +149,11 @@ export default {
         <h3>契約中止</h3>
         <div class="cut">
             <br>
-            中止原因: {{oneContractObj.cutReason}}
+            中止原因: <textarea type="text" v-model="cut_reason" class="input-box"></textarea>
             <br>
-            違約金:  {{ oneContractObj.cutP }}
+            違約金:  {{ roomObj[0].cutP }}
             <br>
-            中止日期: {{ oneContractObj.cutDate }}
+            中止日期:  <input type="date" id="end" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="cut_date" />
         </div>
         <br>
         <h3 class="other">其他備註(或個別磋商條款)</h3>
@@ -129,9 +166,9 @@ export default {
         契約編號:{{oneContractObj.ai}}
     
     
-        <!-- <div class="btn"> 
-            <send_btn class="space-between" @click="sendCutContractToDB()"/> 
-        </div> -->
+        <div class="btn"> 
+            <send_btn class="space-between":disabled="isSending" @click="confirmAndSend"/> 
+        </div>
     </div>
 </template>
 
@@ -139,13 +176,15 @@ export default {
 
 
 <style scoped lang="scss">
-
+*{
+margin-right: 0% ;
+}
 .bigArea{
 
     margin-top: 3%;
     padding: 3%;
     margin-bottom: 3%;
-    margin-left: 30%;
+    margin-left: 10%;
     width: 55%;
     background-color: white;
     border: 1px solid rgba(12, 12, 12, 0.096);
@@ -174,7 +213,7 @@ h3{
     background-color: white;
     background-color: white;
     background-color: rgb(247, 203, 150);
-    width: 23%;
+    width: 25%;
 
     padding: 2%;
     // text-align: center;
@@ -183,10 +222,10 @@ h3{
 }
 .other{
         
-width: 55%;
+width: 43%;
     }
 .signdate{
-    width: 70%;
+    width: 43%;
     background-color: white;
     box-shadow: none;
 }
@@ -199,7 +238,7 @@ h4{
 h2{
     background-color: white;
     background-color: rgb(247, 203, 150);
-    width: 35%;
+    width: 25%;
     padding: 1%;
     text-align: center;
     box-shadow: rgba(0, 0, 0, 0.15) 2.95px 2.95px 3.6px;
@@ -223,3 +262,4 @@ h1{
     color: rgb(0, 0, 0);
 }
 </style>
+

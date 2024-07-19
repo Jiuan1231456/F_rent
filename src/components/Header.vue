@@ -2,20 +2,41 @@
 import { RouterLink, RouterView } from "vue-router";
 import dataStore from "../stores/dataStore";
 import { mapState } from "pinia";
+import Login from "../components/Login.vue";
+
 export default {
   // 在 template 當標籤使用的方法或是元件，import進來後要宣告在components:{}裡面
   data() {
     return {
       isNavVisible: false,
+      showHeaderArea: true,
     };
+  },
+  watch: {
+    $route(to, from) {
+      // 當路由變化時，更新 headerArea 的顯示狀態
+      this.updateHeaderVisibility(to);
+    },
+  },
+  created() {
+    this.updateHeaderVisibility(this.$route);
   },
   components: {
     RouterLink,
+    Login
   },
   computed: {
     ...mapState(dataStore, ["page"]),
   },
-  methods: {},
+  methods: {
+     // 更新 headerArea 顯示狀態的方法
+    updateHeaderVisibility(route) {
+      // 隱藏 headerArea 的路由列表
+      const hideHeaderRoutes = ['/TenantBillFirst', '/emptyRoomList','/EmptyRoomDetail'];
+      // 如果當前路由在隱藏列表中，設置 showHeaderArea 為 false，否則為 true
+      this.showHeaderArea = !hideHeaderRoutes.includes(route.path);
+    },
+  },
 };
 </script>
 
@@ -24,8 +45,11 @@ export default {
   </div> -->
 
 
-    <div class="headerArea">
-      <!-- <input type="checkbox" id="leftBar" v-model="isNavVisible" />
+  <div class="topArea">
+    <Login />
+  </div>
+  <div class="headerArea" v-if="showHeaderArea">
+    <!-- <input type="checkbox" id="leftBar" v-model="isNavVisible" />
   <label for="leftBar" class="bars myMouse">
     <i class="fa-solid fa-bars fa-xl"></i>
   </label>
@@ -38,10 +62,11 @@ export default {
       <!-- ============== -->
       <RouterLink
         class="routerItem"
-        :class="{ selectedPage: this.page === 1 }"
-        to="/"
-        >登入
-      </RouterLink>
+        :class="{ selectedPage: this.page === 13 }"
+        to="/Overview"
+        >總覽</RouterLink
+      >
+
       <RouterLink
         class="routerItem"
         :class="{ selectedPage: this.page === 4 }"
@@ -65,16 +90,11 @@ export default {
         class="routerItem"
         :class="{ selectedPage: this.page === 12 }"
         to="/TenantBillFirst"
-        >房客帳單</RouterLink
+        >房客</RouterLink
       >
-      <RouterLink
-        class="routerItem"
-        :class="{ selectedPage: this.page === 13 }"
-        to="/Overview"
-        >總覽</RouterLink
-      >
+
     <!-- </nav> -->
-    </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -83,6 +103,7 @@ export default {
   height: 5%;
   background-color: #f6b47d;
 }
+
 .headerArea {
   height: 100dvh;
   width: 16%;
@@ -111,15 +132,18 @@ export default {
       border-radius: 11% 0px 0px 11%;
     }
   }
+
   .accordion-body {
     padding: 0;
     background-color: #ffc89a;
     // padding-left: 33px;
   }
+
   .accordion-item {
     border: 0px;
     background-color: #ffc89a;
   }
+
   .dropdownBtn {
     color: black;
     background-color: #ffc89a;
@@ -129,6 +153,7 @@ export default {
     letter-spacing: 8px;
     justify-content: center;
     padding: 5%;
+
     &:hover {
       cursor: pointer;
       background-color: #ff9d60;
@@ -138,13 +163,17 @@ export default {
       padding-left: 10px;
       padding-bottom: 10px;
     }
+
     &:checked {
       background-color: #ff9d60;
     }
   }
+
   .dropdownBtn[aria-expanded="true"] {
-    background-color: #f6b47d; /* 展開時的背景顏色 */
+    background-color: #f6b47d;
+    /* 展開時的背景顏色 */
   }
+
   .dropdownItem {
     background-color: #f2dcca;
     font-size: 18px;
@@ -159,6 +188,7 @@ export default {
     border-radius: 11% 0px 0px 11%;
     align-items: center;
     padding: 5%;
+
     &:hover {
       cursor: pointer;
       background-color: #ff9d60;
@@ -168,6 +198,7 @@ export default {
       border-radius: 11% 0px 0px 11%;
     }
   }
+
   .selectedPage {
     background-color: #faf0e9;
     border-radius: 11% 0px 0px 11%;
@@ -181,10 +212,12 @@ export default {
       font-weight: 500;
     }
   }
+
   button {
     display: block; // 設置按鈕為區塊元素
     margin: 10px; // 設置按鈕外邊距
   }
+
   label {
     position: absolute;
     top: 10px;
@@ -207,7 +240,7 @@ export default {
     opacity: 95%;
     z-index: 2;
     background-color: #ffc89a;
-    
+
     &.active {
       left: 0;
     }
@@ -230,5 +263,5 @@ export default {
     }
   }
 }
-// =============
-</style>
+
+// =============</style>
