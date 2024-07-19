@@ -68,8 +68,7 @@ export default {
           this.newBillSearch = data.billList.filter(
             (item) => item.ownerName === this.loginObj.ownerName
           );
-          console.log("只有現在房東的(截止未截止都有)", this.newBillSearch);
-
+          console.log("只有現在房東的", this.newBillSearch);
           this.newnewBillSearch = this.newBillSearch.filter(
             (item) => item.paymentDate > todayStr
           );
@@ -147,7 +146,6 @@ export default {
   mounted() {
     this.setPage(10);
     this.search();
-    console.log(this.newnewBillSearch)
   },
 };
 </script>
@@ -202,7 +200,7 @@ export default {
               <i class="fa-solid fa-pen"></i>
               </button>
             </td>
-            <td v-if="!this.finalBill.eletricV"><i class="fa-solid fa-circle-exclamation" style="color:red;"></i></td>
+            <td v-if="!this.newnewBillSearch[index].eletricV"><i class="fa-solid fa-circle-exclamation" style="color:red;"></i></td>
             <td v-else><i class="fa-solid fa-circle-check" style="color: green;"></i></td>
           </tr>
         </tbody>
@@ -267,7 +265,7 @@ export default {
   width: 122dvw;
   height: 94dvh;
   background-color: #faf0e9;
-  // margin-left: 17%;
+  margin-left: 17%;
     margin-top: 30px;
   .billTitle {
     font-size: 2.3em;
