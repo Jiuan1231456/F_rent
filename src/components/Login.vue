@@ -16,7 +16,7 @@ export default defineComponent({
             owner_email: "",
             owner_phone: "",
             owner_role: "", // 用戶角色：房東或房客
-            verificationCode:"",//驗證碼
+            verificationCode: "", // 驗證碼
             showVerificationForm: false, // 控制驗證表單顯示
             loggedIn: false, // 增加登入狀態的判斷
         };
@@ -25,64 +25,108 @@ export default defineComponent({
         ...mapState(dataStore, ['page', 'loginObj', 'registerObj'])
     },
     methods: {
-        ...mapActions(dataStore, ['setPage', 'setLoginObj', 'setRegisterObj','setTenantData']),
-        login() {
-            const loginObj1 = {
-                owner_account: this.owner_account,
-                owner_pwd: this.owner_pwd
-            };
-            const loginObj2 = {
-                tenantPhone: this.owner_account,
-                tenantIdentity: this.owner_pwd,
-            };
-            const url = this.owner_role === 'landlord' 
-                        ? "http://localhost:8080/rent/login" 
-                        : "http://localhost:8080/bill/tenantList";
+        ...mapActions(dataStore, ['setPage', 'setLoginObj', 'setRegisterObj', 'setTenantData']),
+       // 登入方法
+       // 登入方法
+login() {
+    const loginObj1 = {
+        owner_account: this.owner_account,
+        owner_pwd: this.owner_pwd
+    };
+    const loginObj2 = {
+        tenantPhone: this.owner_account,
+        tenantIdentity: this.owner_pwd,
+    };
+    const url = this.owner_role === 'landlord' 
+                ? "http://localhost:8080/rent/login" 
+                : "http://localhost:8080/bill/tenantList";
 
-            // 發送登入請求
-            fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials:'include',
-                body: JSON.stringify(url === "http://localhost:8080/rent/login"?loginObj1:loginObj2)
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                url === "http://localhost:8080/rent/login"?this.setLoginObj(data):this.setTenantData(data);
-                // this.setLoginObj(data);
-                if (data.code === 200) {
-                    Swal.fire({
-                        title: "登入成功!",
-                        text: "您現在已成功登入帳號",
-                        icon: "success",
-                        didClose: () => {
-                            this.$router.push(url === "http://localhost:8080/rent/login"?'/Overview':'/TenantBillFirst')
-                            }
-                    });
-                    
-                    this.showPopup = false; // 登入成功後關閉彈窗
-                    this.loggedIn = true; // 設置登入狀態為已登入
-                    sessionStorage.setItem("當前帳號", this.loginObj.ownerAccount); // 將帳號放入session
-                } else if (data.code === 400) {   
-                    Swal.fire({
-                        icon: "error",
-                        title: "登入失敗",
-                        text: "帳號或密碼有問題，請重新輸入"
-                    });
-                }
-            })
-            .catch(error => {
-                console.error("登入請求發生錯誤", error);
+    // 發送登入請求
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: 'include',
+        body: JSON.stringify(url === "http://localhost:8080/rent/login" ? loginObj1 : loginObj2)
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+
+        // 根據角色設置登入狀態
+        if (url === "http://localhost:8080/rent/login") {
+            this.setLoginObj(data);
+        } else {
+            this.setTenantData(data);
+        }
+
+        // 根據返回的 code 處理不同情況
+        switch (data.code) {
+            case 200: // 登入成功
+                Swal.fire({
+                    title: "登入成功!",
+                    text: "您現在已成功登入帳號",
+                    icon: "success",
+                    didClose: () => {
+                        this.$router.push(url === "http://localhost:8080/rent/login" ? '/Overview' : '/TenantBillFirst');
+                    }
+                });
+                this.showPopup = false; // 登入成功後關閉彈窗
+                this.loggedIn = true; // 設置登入狀態為已登入
+                sessionStorage.setItem("當前帳號", this.loginObj.ownerAccount); // 將帳號放入 session
+                break;
+
+            case 401: // 帳號不存在
                 Swal.fire({
                     icon: "error",
                     title: "登入失敗",
-                    text: "系統發生錯誤，請稍後再試"
+                    text: "帳號不存在，請檢查您的帳號或註冊新帳號"
                 });
-            });
-        },
+                break;
+
+            case 402: // 帳號未驗證
+                Swal.fire({
+                    title: "帳號未驗證",
+                    text: "您的帳號尚未驗證。請前往驗證。",
+                    icon: "warning",
+                    confirmButtonText: "前往驗證",
+                    preConfirm: () => {
+                        this.showPopup = true; // 顯示彈窗
+                        this.showVerificationForm = true; // 顯示驗證碼輸入表單
+                        this.isLoginForm = false; // 隱藏登入表單
+                    }
+                });
+                break;
+
+            case 400: // 帳號/密碼錯誤
+                Swal.fire({
+                    icon: "error",
+                    title: "登入失敗",
+                    text: "帳號/密碼有問題或尚未選擇身分，請重新輸入"
+                });
+                break;
+
+            default: // 其他錯誤
+                Swal.fire({
+                    icon: "error",
+                    title: "登入失敗",
+                    text: "系統返回錯誤代碼：" + data.code
+                });
+                break;
+        }
+    })
+    .catch(error => {
+        console.error("登入請求發生錯誤", error);
+        Swal.fire({
+            icon: "error",
+            title: "登入失敗",
+            text: "系統發生錯誤，請稍後再試"
+        });
+    });
+},
+
+        // 登出方法
         logout() {
             fetch("http://localhost:8080/rent/logout", {
                 method: "POST",
@@ -103,7 +147,7 @@ export default defineComponent({
                 console.error("Logout request failed:", error);
             });
         },
-        //註冊方法
+        // 註冊方法
         register() {
             let registerObj1 = {
                 owner_account: this.owner_account,
@@ -112,7 +156,7 @@ export default defineComponent({
                 owner_phone: this.owner_phone,
                 owner_identity: this.owner_identity,
                 owner_name: this.owner_name,
-                owner_role: this.owner_role//判定房東或房客
+                owner_role: this.owner_role // 判定房東或房客
             };
 
             // 檢查所有字段是否都有值
@@ -127,13 +171,14 @@ export default defineComponent({
             }
 
             console.log('看送出的資料有沒有吃到:', registerObj1); // 印出來看有沒有吃到輸入資料
- // 發送註冊請求
- fetch("http://localhost:8080/rent/account", {
+            
+            // 發送註冊請求
+            fetch("http://localhost:8080/rent/account", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                credentials:'include',
+                credentials: 'include',
                 body: JSON.stringify(registerObj1),
             })
             .then(res => {
@@ -147,7 +192,6 @@ export default defineComponent({
                 console.log(data);
                 this.setRegisterObj(data);
                 if (data.code === 200) {
-                    // 註冊成功後顯示驗證碼輸入視窗
                     // 註冊成功後顯示驗證碼輸入視窗
                     this.showPopup = false; // 先關閉註冊彈窗
                     this.showVerificationPopup(); // 顯示驗證碼輸入視窗
@@ -175,24 +219,22 @@ export default defineComponent({
         },
         // 顯示驗證碼輸入表單
         showVerificationPopup() {
-            this.showPopup = true;// 顯示彈窗
-            this.showVerificationForm = true;// 顯示驗證碼輸入表單
-            this.isLoginForm = false; //顯示登入或註冊表單
+            this.showPopup = true; // 顯示彈窗
+            this.showVerificationForm = true; // 顯示驗證碼輸入表單
+            this.isLoginForm = false; // 隱藏登入表單
         },
-        //驗證碼驗證方法
+        // 驗證碼驗證方法
         verifyCode() {
-
-            let testObj={
+            let testObj = {
                 ownerAccount: this.owner_account,
-                verificationCode:this.verificationCode
-            }
-            console.log("送進的驗證資料",testObj)
+                verificationCode: this.verificationCode
+            };
+            console.log("送進的驗證資料", testObj);
             fetch("http://localhost:8080/rent/verifyEmail", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                
                 body: JSON.stringify(testObj)
             })
             .then(res => res.json())
@@ -203,11 +245,11 @@ export default defineComponent({
                         text: "您的帳號已成功註冊。",
                         icon: "success",
                         didClose: () => {
-                            this.$router.push('/emptyRoomList')
-                            }
+                            this.$router.push('/emptyRoomList');
+                        }
                     });
-                    console.log("送出的驗證資料",data)
-                    this.showPopup = false; // 註冊成功後關閉彈窗
+                    console.log("送出的驗證資料", data);
+                    this.showPopup = false; // 驗證成功後關閉彈窗
                     this.loggedIn = false; // 設置登入狀態為已登入
                 } else {
                     Swal.fire({
@@ -231,10 +273,10 @@ export default defineComponent({
             this.owner_account = "";
             this.owner_pwd = "";
             this.showPopup = true;
-            this.isLoginForm=true;
+            this.isLoginForm = true;
             this.showVerificationForm = false; // 重置驗證表單顯示狀態
-            
         },
+        // 關閉彈窗事件
         closePopup(e) {
             // 只檢查點擊的目標是否包含 'close' 類別
             if (e.target.classList.contains('close')) {
@@ -242,6 +284,7 @@ export default defineComponent({
                 this.showVerificationForm = false; // 重置驗證表單顯示狀態
             }
         },
+        // 切換表單方法
         toggleForm() {
             this.isLoginForm = !this.isLoginForm;
         }
@@ -256,17 +299,18 @@ export default defineComponent({
     }
 });
 </script>
-
 <template>
+    <!-- 引入 Bootstrap 的 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
 
+    <!-- 彈窗容器 -->
     <div id="window-container" v-if="showPopup">
-       
         <div class="form">
-        <!-- close按鈕，點擊時會觸發closePopup方法 -->
-        <button @click="closePopup" type="button" class="close" aria-label="Close"></button>
-        
-<!-- 註冊表單 -->
+            <!-- 關閉按鈕，點擊時會觸發 closePopup 方法 -->
+            <button @click="closePopup" type="button" class="close" aria-label="Close"></button>
+            
+            <!-- 註冊表單 -->
+            <!-- 當 isLoginForm 為 false 且 showVerificationForm 為 false 時顯示 -->
             <form v-if="!isLoginForm && !showVerificationForm" class="register-form">
                 <h5>註冊會員</h5>
                 <label>帳號</label>
@@ -285,20 +329,23 @@ export default defineComponent({
                 <p class="message"><a href="#" @click.prevent="toggleForm">登入</a></p>
             </form>
 
-              <!-- //驗證碼輸入  -->
+            <!-- 驗證碼輸入表單 -->
+            <!-- 當 showVerificationForm 為 true 時顯示 -->
             <div v-if="showVerificationForm" class="verify">
                 <h2>驗證您的郵箱</h2>
-                <form @submit.prevent="verifyCode()">
+                <form @submit.prevent="verifyCode">
                     <div class="form-group">
                         <label for="verification_code">輸入帳號</label>
-                        <input type="text" id="owner_account" v-model="this.owner_account" required>
-                        驗證碼<label for="verification_code">輸入驗證碼</label>
-                        <input type="text" id="verification_code" v-model="this.verificationCode" required>
+                        <input type="text" id="owner_account" v-model="owner_account" required>
+                        <label for="verification_code">輸入驗證碼</label>
+                        <input type="text" id="verification_code" v-model="verificationCode" required>
                     </div>
-                    <button type="submit" class="btn btn-primary" @click="verifyCode()">驗證</button>
+                    <button type="submit" class="btn btn-primary">驗證</button>
                 </form>
             </div>
-<!-- 登入表單 -->
+
+            <!-- 登入表單 -->
+            <!-- 當 isLoginForm 為 true 且 showVerificationForm 為 false 時顯示 -->
             <form v-if="isLoginForm && !showVerificationForm" class="login-form">
                 <h5>會員登入</h5>
                 <div class="form-group">
@@ -312,27 +359,30 @@ export default defineComponent({
                 帳號<input v-model="owner_account" type="text" placeholder="帳號" />
                 密碼<input v-model="owner_pwd" type="password" placeholder="密碼" />
                 <button @click.prevent="login">登入</button>
-                <p class="message" >尚未加入會員? <a href="#" @click.prevent="toggleForm">註冊</a></p>
+                <p class="message">尚未加入會員? <a href="#" @click.prevent="toggleForm">註冊</a></p>
             </form>
         </div>
-    </div> 
+    </div>
 
-    <div class="aa" v-bind="isLoginForm">
-        <!-- 表單結束 -->
-        <!-- v-if不能綁button，只能綁在div上 -->
-        <div v-if="!this.loggedIn "  class="loginregister">
-            <button class="login" @click="customizeWindowEvent" key="login">登入/註冊</button>
+    <!-- 主頁面內容 -->
+    <div class="aa">
+        <!-- 顯示登入/註冊按鈕 -->
+        <!-- 當 loggedIn 為 false 時顯示 -->
+        <div v-if="!loggedIn" class="loginregister">
+            <button class="login" @click="customizeWindowEvent">登入/註冊</button>
         </div>
+        
         <!-- 登入後顯示的按鈕區域 -->
-        <div v-else class="loggedin-buttons" key="button">
-            <p v-if="this.owner_role==='landlord'">親愛的房東&nbsp;&nbsp;{{loginObj.ownerAccount}}&nbsp;&nbsp;&nbsp; 已登入~</p>
+        <!-- 當 loggedIn 為 true 時顯示 -->
+        <div v-else class="loggedin-buttons">
+            <p v-if="owner_role === 'landlord'">親愛的房東&nbsp;&nbsp;{{ loginObj.ownerAccount }}&nbsp;&nbsp;&nbsp; 已登入~</p>
             <p v-else>親愛的房客&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 已登入~</p>
             <RouterLink to="AdjustAccount" class="editaccount">修改帳戶資訊</RouterLink>
-            <button  class="logout" @click="logout">登出</button>
+            <button class="logout" @click="logout">登出</button>
         </div>
     </div>
-    
 </template>
+
 
 <style scoped>
 

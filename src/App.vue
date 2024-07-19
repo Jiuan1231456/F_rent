@@ -41,8 +41,4 @@ import Header from"./components/Header.vue"
     margin-left: 60%;
     z-index: 1;
 }
-<<<<<<< HEAD
 </style>
-=======
-</style>
->>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e

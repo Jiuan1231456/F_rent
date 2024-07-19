@@ -160,8 +160,4 @@ const router = createRouter({
 })
 
 
-<<<<<<< HEAD
 export default router
-=======
-export default router
->>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
