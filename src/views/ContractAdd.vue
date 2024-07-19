@@ -243,7 +243,7 @@ export default {
 // }
 .areaMom {
     width: 75%;
-    margin-left: 18%;
+    // margin-left: 18%;
     margin-top: 3%;
 
     .area {
@@ -269,7 +269,7 @@ export default {
             border-left: 2px dashed rgb(223, 189, 140);
             height: 220%;
             margin-top: 8%;
-            left: 56%;
+            left: 58%;
             position: absolute;
         }
 

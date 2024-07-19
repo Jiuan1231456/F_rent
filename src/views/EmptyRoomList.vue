@@ -165,10 +165,11 @@ export default {
 <style scoped lang="scss">
 
 .bigArea {
-    width: 100%;
+    width: 76%;
     height: auto;
     padding: 1.5%;
-    margin: 2% -353px;
+    margin: 2%;
+    margin-left: -145px;
     position: relative;
 }
 

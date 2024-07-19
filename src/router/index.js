@@ -9,7 +9,8 @@ const router = createRouter({
       path: '/',
       name: 'home',
       redirect:'/emptyRoomList',
-      component: () => import('../views/Home.vue')
+      component: () => import('../views/Home.vue'),
+      meta: { noHeader: true } 
     },
 
     {//預設空房頁面

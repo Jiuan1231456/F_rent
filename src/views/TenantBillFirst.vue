@@ -45,7 +45,7 @@ export default {
 <template>
   <div class="bigArea">
     <div class="topArea"></div>
-    <span class="title" style="position: fixed;">XXX&nbsp;承租人，您好</span>
+    <span class="title" style="position: fixed;">親愛的承租人，您好</span>
     <div class="titleBox">
       <label for="contract" class="cont label">
         <input
@@ -99,7 +99,7 @@ export default {
     z-index: 0;
   }
   .title {
-    font-size: 2.5em;
+    font-size: 35px;
     margin-left: 35px;
     z-index: 1;
     position: absolute;

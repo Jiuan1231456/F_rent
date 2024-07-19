@@ -145,7 +145,7 @@ export default {
     margin-top: 3%;
     padding: 3%;
     margin-bottom: 3%;
-    margin-left: 30%;
+    // margin-left: 30%;
     width: 55%;
     background-color: white;
     border: 1px solid rgba(12, 12, 12, 0.096);

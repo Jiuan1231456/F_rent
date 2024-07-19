@@ -225,8 +225,6 @@ export default {
     // border-radius: 50%;
     position: absolute;
     left: 15%;
-    
-    
 }
 .house{
     position: relative;
@@ -247,7 +245,6 @@ export default {
     background-color: #e0c192;
     border-radius: 50%;
     top:-170%;
-   
     text-align: center;
     justify-content: center;
     align-items: center;
@@ -262,8 +259,8 @@ export default {
     display: flex;
     color: #110f0f;
     font-size: 18px;
-    margin-top: 5%;
-    left:-20%;
+    margin-top: 15%;
+    left: -64%;
     :active{
     font-size:20px;
     font-weight: 600;}

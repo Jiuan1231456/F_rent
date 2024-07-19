@@ -110,7 +110,6 @@ export default {
 .bigArea {
     width: 80%;
     margin: 3% auto;
-    margin-left: 19%;
 }
 
 h4{

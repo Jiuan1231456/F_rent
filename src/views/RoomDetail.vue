@@ -45,7 +45,6 @@ export default {
 .bigArea {
     width: 80%;
     margin: 4% auto;
-    margin-left: 20%;
 }
 
 img {

@@ -22,8 +22,8 @@ export default {
   methods: {
     ...mapActions(dataStore, ["setTenantContract"]),
     test() {
-      console.log("租約頁面上的tenantData",this.tenantData);
-      console.log("租約頁面上的tenantData",this.tenantData.billList[0].address);
+      console.log("租約頁面上的tenantData", this.tenantData);
+      console.log("租約頁面上的tenantData", this.tenantData.billList[0].address);
       this.contractList = this.tenantData.contractList;
       this.billList = this.tenantData.billList;
     },
@@ -58,36 +58,23 @@ export default {
     <span class="title">您的所有租約</span>
     <div class="line"></div>
     <div class="btnArea" v-for="(item, index) in this.contractList">
-      <button
-        class="btn btn-primary"
-        type="button"
-        data-bs-toggle="collapse"
-        :data-bs-target="'#collapseExample' + index"
-        aria-expanded="false"
-        :aria-controls="'collapseExample' + index"
-      >
-        <span>出租人：{{ item.ownerName }}</span
-        ><br />
-        <span>承租物件地址：<br />{{ item.address }}</span
-        ><br />
+      <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+        :data-bs-target="'#collapseExample' + index" aria-expanded="false" :aria-controls="'collapseExample' + index">
+        <span>出租人：{{ item.ownerName }}</span><br />
+        <span>承租物件地址：<br />{{ item.address }}</span><br />
       </button>
 
       <div class="collapse" :id="'collapseExample' + index">
         <div class="card card-body">
-          <span
-            >契約期間：{{ item.startDate }} &emsp;至 &emsp;{{
-              item.endDate
-            }}</span
-          >
+          <span>契約期間：{{ item.startDate }} &emsp;至 &emsp;{{
+            item.endDate
+          }}</span>
           <span>租金：{{ item.rentP }}</span>
-          <button
-            class="detail"
-            @click="
-              // showContract();
-              this.bringToDetail(index);
-              $emit('goToNextPage', true);
-            "
-          >
+          <button class="detail" @click="
+            // showContract();
+            this.bringToDetail(index);
+          $emit('goToNextPage', true);
+          ">
             查看詳情
           </button>
         </div>
@@ -95,14 +82,12 @@ export default {
     </div>
   </div>
   <div class="contractDetail" v-else>
-    <h1>與{{ this.tenantContract.tenantName }}的租賃契約書</h1>
+    <h1>與{{ this.tenantContract.ownerName }}的租賃契約書</h1>
     <div class="roomInfo">
       <h2>租賃物件資訊</h2>
       <br />
       <div class="rent_time">
-        <label for="start_time"
-          >租賃期間 自：{{ this.tenantContract.startDate }}</label
-        >
+        <label for="start_time">租賃期間 自：{{ this.tenantContract.startDate }}</label>
 
         <label for="end_time">到：{{ this.tenantContract.endDate }}</label>
       </div>
@@ -184,7 +169,7 @@ export default {
         <span style="font-size: 0.8em; margin-left: 20px">與{{ this.tenantContract.ownerName}}契約書</span>
       </div>
     </template>
-    <template v-slot:content>
+<template v-slot:content>
       <div class="contentArea">
       <div class="roomInfo">
         <span>地址：{{this.tenantContract.address}}</span><br>
@@ -204,14 +189,15 @@ export default {
       </div>
     </div>
     </template>
-    <template v-slot:footer></template>
-  </contractModal> -->
+<template v-slot:footer></template>
+</contractModal> -->
 </template>
 
 <style scoped lang="scss">
 span {
   background-color: transparent;
 }
+
 .box {
   width: 30%;
   height: 20%;
@@ -219,6 +205,7 @@ span {
   background-color: bisque;
   // margin-top: 51px;
 }
+
 .title {
   background-color: transparent;
   font-size: 2em;
@@ -226,6 +213,7 @@ span {
   top: 23%;
   left: 10%;
 }
+
 .contractArea {
   display: flex;
   flex-wrap: wrap;
@@ -235,6 +223,7 @@ span {
   justify-content: space-around;
   margin-left: -31%;
 }
+
 .btn-primary {
   background-color: #ffc89a;
   width: 337px;
@@ -243,17 +232,20 @@ span {
   border: none;
   color: #743216;
   text-align-last: start;
+
   &:hover,
   &:focus {
     background-color: #ff9d60;
     color: white;
   }
 }
+
 .card-body {
   background-color: #ffebda;
   position: relative;
   height: 95px;
 }
+
 .detail {
   border: none;
   width: 85px;
@@ -264,10 +256,12 @@ span {
   position: absolute;
   right: 10px;
   bottom: 10px;
+
   &:hover {
     background: rgb(230, 210, 184);
   }
 }
+
 .line {
   width: 90%;
   border-top: 1px solid black;
@@ -275,25 +269,29 @@ span {
   top: 234px;
   left: 73px;
 }
+
 .headerArea {
   width: 100%;
   height: 50px;
   background-color: #ffb67b;
 }
+
 .roomInfo {
   width: 50%;
-  font-size: 0.7em;
-  margin-left: 49px;
+  font-size: 16px;
+  margin-left: 0px;
   margin-top: 23px;
   letter-spacing: 1px;
   align-items: center;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
   span {
     margin-bottom: -28px;
   }
 }
+
 .line1 {
   height: 400px;
   border-left: 1px solid black;

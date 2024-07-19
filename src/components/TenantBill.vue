@@ -201,10 +201,10 @@ export default {
   // width: 93%;
   // height: 112dvh;
   // background-color: white;
-  z-index: -99;
+  // z-index: -99;
   position: relative;
   top: 31px;
-  left: 31px;
+  // left: 31px;
   .totalBox {
     width: 90%;
     height: 26%;
@@ -232,7 +232,7 @@ export default {
     position: absolute;
     top: 49px;
     justify-content: space-evenly;
-    left: -92px;
+    left: -300px;
     letter-spacing: 1px;
     font-size: 1.2em;
     background: #dadadab3;
@@ -325,18 +325,18 @@ export default {
   .atm {
     margin-right: 112px;
     margin-left: 48px;
-    background-color: #ee9b82;
+    background-color: #f7b280;
     &:hover {
-      background-color: #ed704a;
+      background-color: #ff9e4a;
     }
     &:active {
       transform: scale(0.95);
     }
   }
   .cash {
-    background-color: #ee9b82;
+    background-color: #f7b280;
     &:hover {
-      background-color: #ed704a;
+      background-color: #ff9e4a;
     }
     &:active {
       transform: scale(0.95);

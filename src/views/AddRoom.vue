@@ -216,7 +216,7 @@ export default {
 .bigArea {
     width: 80%;
     padding: 1%;
-    margin-left: 17%;
+    margin-left: -6%;
     margin-top: 2%;
 }
 

@@ -4,29 +4,36 @@ import { mapState, mapActions } from "pinia";
 export default {
     data() {
         return {
-            ownerInfo:[],//儲存屋主資訊
+            ownerInfo: [],//儲存屋主資訊
         }
     },
     computed: {
-        ...mapState(dataStore, ['page', 'loginObj', 'roomObj','registerObj'])
+        ...mapState(dataStore, ['page', 'loginObj', 'roomObj', 'registerObj']),
     },
     methods: {
         ...mapActions(dataStore, ['setPage']),
         getOwnerInfo() {
-            console.log("房東資料總筆數",this.registerObj.length)
-            console.log("此房間擁有者的帳號",this.roomObj.account)
+            console.log("房東資料總筆數", this.registerObj.length)
+            console.log("此房間擁有者的帳號", this.roomObj.account)
             for (let i = 0; i < this.registerObj.length; i++) {
                 console.log(this.registerObj[i].ownerAccount)
-                if(this.registerObj[i].ownerAccount === this.roomObj.account) {
+                if (this.registerObj[i].ownerAccount === this.roomObj.account) {
                     this.ownerInfo.push(this.registerObj[i]);
                 }
             }
             console.log(this.ownerInfo);
+        },
+        
+        googleMapLink(address) {
+            return `https://www.google.com/maps/embed/v1/place?key=AIzaSyDfjf8ZGHYP8eUFuI-64hjKxj2kJ-HWVy8&q=${encodeURIComponent(address)}`;
         }
+
+
 
     },
     created() {
         this.getOwnerInfo()
+        console.log(this.ownerInfo[0].ownerName)
 
     },
     mounted() {
@@ -43,7 +50,8 @@ export default {
                 <img :src="'data:image/jpeg;base64,' + this.roomObj.photo" alt="Image">
             </div>
             <div class="map">
-                地圖
+                <iframe :src="googleMapLink(this.roomObj.address)" width="600" height="450" style="border:0;"
+                    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </div>
 
@@ -71,8 +79,6 @@ export default {
 </template>
 
 <style scoped lang="scss">
-
-
 .bigArea {
     width: 70%;
     margin: 4% -105px;

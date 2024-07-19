@@ -44,7 +44,7 @@ export default {};
   .block {
     // 彈出視窗
     width: 800px;
-    height: 400px;
+    height: 430px;
     background-color: #faf0e9;
     position: absolute;
     top: 10%;

@@ -237,15 +237,7 @@ export default {
             <input type="text" class="searchInput2" title="依房號模糊搜尋" v-model="this.obj.roomId">
             &nbsp;&nbsp;&nbsp;&nbsp;
             <button class="searchButton bt" @click="search()">搜尋</button>
-            <button class="searchButton bt">空房</button>
-            <button class="searchButton bt" @click="searchContractList()">出租中</button>
 
-        </div>
-        <div class="aAndD">
-            <button class="deleteButton bt" @click="deleteSelectedRoom()">刪除</button>
-            <RouterLink to="/addRoom" class="rLStyle">
-                <button class="addButton bt">新增</button>
-            </RouterLink>
         </div>
         <div class="aAndD">
             <button class="deleteButton bt" @click="deleteSelectedRoom()">不開放</button>
@@ -300,8 +292,7 @@ export default {
 .bigArea {
     width: 80%;
     padding: 1%;
-    margin: 4% auto;
-    margin-left: 18%;
+    margin: 3%;
     position: relative;
 }
 
