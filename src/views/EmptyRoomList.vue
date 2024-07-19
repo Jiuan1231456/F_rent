@@ -3,6 +3,7 @@ import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
 import Swal from 'sweetalert2';
 import Login from "@/components/Login.vue";
+import { Loader } from "@googlemaps/js-api-loader"
 export default {
     data() {
         return {

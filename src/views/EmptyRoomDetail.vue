@@ -1,6 +1,7 @@
 <script>
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
+import { Loader } from "@googlemaps/js-api-loader"
 export default {
     data() {
         return {
@@ -24,6 +25,8 @@ export default {
             console.log(this.ownerInfo);
         },
         
+
+
         googleMapLink(address) {
             return `https://www.google.com/maps/embed/v1/place?key=AIzaSyDfjf8ZGHYP8eUFuI-64hjKxj2kJ-HWVy8&q=${encodeURIComponent(address)}`;
         }
@@ -37,7 +40,29 @@ export default {
 
     },
     mounted() {
-        this.setPage(21)
+        this.setPage(21),
+
+            (g => {
+                var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window;
+                b = b[c] || (b[c] = {});
+                var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => {
+                    await (a = m.createElement("script"));
+                    e.set("libraries", [...r] + "");
+                    for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                    e.set("callback", c + ".maps." + q);
+                    a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                    d[q] = f;
+                    a.onerror = () => h = n(Error(p + " could not load."));
+                    a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                    m.head.append(a);
+                }));
+                d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
+            })({
+                key: "AIzaSyDfjf8ZGHYP8eUFuI-64hjKxj2kJ-HWVy8",
+                v: "weekly",
+                // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
+                // Add other bootstrap parameters as needed, using camel case.
+            });
     }
 }
 </script>
@@ -50,7 +75,7 @@ export default {
                 <img :src="'data:image/jpeg;base64,' + this.roomObj.photo" alt="Image">
             </div>
             <div class="map">
-                <iframe :src="googleMapLink(this.roomObj.address)" width="600" height="450" style="border:0;"
+                <iframe :src="googleMapLink(this.roomObj.address)" width="480" height="450" style="border: solid 1px black;"
                     allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </div>
@@ -99,8 +124,8 @@ export default {
 
     .map {
         width: 480px;
-        height: 450px;
-        border: solid 1px black;
+        height: 451px;
+        // border: solid 1px black;
         margin: 3%;
     }
 }

@@ -10,15 +10,18 @@ export default {
       contractList: [], // 全部契約
       roomList: [], // 全部房間
       deadlineContract: [], // 快到期的契約
-      deadlineBill:[],
-      addressList: [], // 出租中的房間
-      emptyRoom: [], // 空房
+      deadlineBill: [],
+      addressList: [], // 從契約中抓出的出租中地址
       contractLength: "",
       elecModal: false,
-      lastMonth:[],
-      lastSum:0,
-      thisMonth:[],
-      thisSum:0,
+      lastMonth: [],
+      lastSum: 0,
+      thisMonth: [],
+      thisSum: 0,
+      contractList2: [],
+      addressList2: [],
+      emptyRoomList: [],
+      rentingRoomList:[],
     };
   },
   components: {
@@ -51,9 +54,11 @@ export default {
           console.log("全部的", data);
           this.billList = data.billList;
           this.contractList = data.contractList;
+          this.contractList2 = data.contractList;
           this.roomList = data.roomList;
+          this.searchContractList();
+          this.searchContractList2();
           this.findContract();
-          this.findTenanting();
           this.findBill();
           this.findSum();
         });
@@ -89,59 +94,82 @@ export default {
       });
       console.log("剩不到5天的帳單", this.deadlineBill);
     },
-    findTenanting() { // 篩出正在出租中和空房
+
+    searchContractList2() { //從契約列表抓出空房的地址
+      this.addInAddressList2();
+      let newRoomList = [];
+      for (let i = 0; i < this.roomList.length; i++) {
+        let foundMatch = false;
+        for (let j = 0; j < this.addressList2.length; j++) {
+          if (this.roomList[i].address === this.addressList2[j].address) {
+            foundMatch = true;
+            break; // 一旦找到匹配的地址就跳出內層迴圈
+          }
+        }
+        if (!foundMatch) {
+          newRoomList.push(this.roomList[i]);
+        }
+      }
+      this.emptyRoomList = newRoomList;
+      console.log("空房列表", this.emptyRoomList);
+    },
+    addInAddressList2() {// searchContractList()中 用來判斷租約狀態
       let today = new Date();
       let month = today.getMonth() + 1;
       let day = today.getDate();
       // 確保日期格式符合 2024-06-05，否則會變成 2024-6-5
       month = month < 10 ? "0" + month : month;
       day = day < 10 ? "0" + day : day;
-
       let todayStr = today.getFullYear() + "-" + month + "-" + day;
       console.log(todayStr);
-      this.addressList = this.contractList.filter(
-        (item) =>
-          (todayStr < item.startDate && todayStr >= item.signDate) ||
-          (todayStr >= item.startDate && todayStr <= item.endDate)
-      );
-      console.log("契約列表撈出 狀態出租中", this.addressList);
+      this.addressList2 = this.contractList2.filter(item => (todayStr < item.startDate && todayStr >= item.signDate) || (todayStr >= item.startDate && todayStr <= item.endDate));
+      console.log("契約列表撈出 狀態出租中", this.addressList2);
+    },
 
-      
+
+
+    searchContractList() { //從契約列表抓出出租中的地址
+      this.addInAddressList2();
+      let newRoomList = [];
       for (let i = 0; i < this.roomList.length; i++) {
-        let foundMatch = false;
-        for (let j = 0; j < this.addressList.length; j++) {
-          if (this.roomList[i].address === this.addressList[j].address) {
-            foundMatch = true;
-            break; // 一旦找到匹配的地址就跳出內層迴圈
+        for (let j = 0; j < this.addressList2.length; j++) {
+          if (this.roomList[i].address === this.addressList2[j].address) {
+            newRoomList.push(this.roomList[i]);
           }
-        }
-        if (!foundMatch) {
-          this.emptyRoom.push(this.roomList[i]);
+          continue; // 一旦找到匹配的地址就跳出內層迴圈
         }
       }
-      console.log('空房',this.emptyRoom);
-      // this.emptyRoom = this.contractList.filter((item) => (todayStr < item.signDate)
-      // || (item.endDate < todayStr) || ((todayStr < item.startDate) && (item.startDate === item.signDate)))
-      // console.log("契約列表撈出 空房", this.emptyRoom);
+      console.log(newRoomList)
+      this.rentingRoomList = newRoomList;
+      console.log("出租中房間列表",this.rentingRoomList)
+
     },
-    findSum(){  // 算出營收加總
+
+
+
+
+
+
+
+
+    findSum() {  // 算出營收加總
       // ======= 上月份營收 ==========
       const today = new Date();
       this.lastMonth = this.billList.filter((item) => {
         const periodEnd = new Date(item.periodEnd);
         return periodEnd.getMonth() === today.getMonth() - 1;
       });
-      console.log("上月帳單",this.lastMonth);
-      this.lastSum = this.lastMonth.reduce((sum,item) => sum + item.totalOneP,0);
-      console.log("上月帳單加總",this.lastSum);
+      console.log("上月帳單", this.lastMonth);
+      this.lastSum = this.lastMonth.reduce((sum, item) => sum + item.totalOneP, 0);
+      console.log("上月帳單加總", this.lastSum);
       // ====== 本月份營收 ==========
       this.thisMonth = this.billList.filter((item) => {
         const periodEnd = new Date(item.periodEnd);
-        return periodEnd.getMonth() === today.getMonth() ;
+        return periodEnd.getMonth() === today.getMonth();
       });
-      console.log("本月帳單",this.thisMonth);
-      this.thisSum = this.thisMonth.reduce((sum,item) => sum + item.totalOneP,0);
-      console.log("本月帳單加總",this.thisSum);
+      console.log("本月帳單", this.thisMonth);
+      this.thisSum = this.thisMonth.reduce((sum, item) => sum + item.totalOneP, 0);
+      console.log("本月帳單加總", this.thisSum);
     },
     showModal(type) {  // 彈跳視窗動態變化
       if (type === "contract") {
@@ -160,13 +188,13 @@ export default {
         this.buttonText = "前往房間列表";
         this.goToPage = "/roomList";
       } else if (type === "tenanting") {
-        this.modalTitle = "出租中商辦";
-        this.modalContentList = this.addressList;
+        this.modalTitle = "出租中";
+        this.modalContentList = this.rentingRoomList;
         this.buttonText = "前往房間列表";
         this.goToPage = "/roomList";
       } else if (type === "emptyRoom") {
         this.modalTitle = "全部空房";
-        this.modalContentList = this.emptyRoom;
+        this.modalContentList = this.emptyRoomList;
         this.buttonText = "前往房間列表";
         this.goToPage = "/roomList";
       } else if (type === "sumLast") {
@@ -186,44 +214,33 @@ export default {
   },
   mounted() {
     this.setPage(13);
+
   },
   created() {
     this.fetch();
   },
-  updated() {},
+  updated() { },
 };
 </script>
 
 <template>
   <div class="middleArea">
-    <h1 style="margin-bottom: 30px">{{this.loginObj.ownerName}}房東，您好</h1>
+    <h1 style="margin-bottom: 30px">{{ this.loginObj.ownerName }}房東，您好</h1>
     <div class="deadlineBox mainBox">
       <div class="areabox"></div>
       <span class="title" style="right: 474px;">即將到期</span>
-      <button
-        class="box1 box"
-        @click="this.showModal('contract')"
-        style="right: 128px;"
-      >
-        <span
-          class="deadlineText"
-          style="position: absolute; left: 28px; top: 7px; margin-left: 0"
-          >租約</span
-        >
+      <button class="box1 box" @click="this.showModal('contract')" style="right: 128px;">
+        <span class="deadlineText" style="position: absolute; left: 28px; top: 7px; margin-left: 0">租約</span>
         <span class="deadlineContent">{{ this.contractLength }}</span>
         <span class="deadlineText per">筆</span>
       </button>
-      <button
-        class="box1 box"
-        style="right: -186px;"
-        @click="this.showModal('bill')"
-      >
+      <button class="box1 box" style="right: -186px;" @click="this.showModal('bill')">
         <span class="deadlineText">帳單</span>
         <span class="deadlineContent">{{ this.deadlineBill.length }}</span>
         <span class="deadlineText per">筆</span>
       </button>
     </div>
-  
+
     <div class="roomBox mainBox">
       <div class="areabox" style="left: 2%;
     width: 35%;
@@ -232,34 +249,22 @@ export default {
       <span class="title" style="top: -165px;
     left: 36px;">房間狀態</span>
 
-      <button 
-        class="box2 box"
-        style="left: 138px;
-    top: -152px;"
-        @click="this.showModal('allRoom')"
-      >
+      <button class="box2 box" style="left: 138px;
+    top: -152px;" @click="this.showModal('allRoom')">
         <span class="roomText">總數</span>
         <span class="roomContent">{{ this.roomList.length }}</span>
         <span class="deadlineText per" style="top: 64px;
     left: 132px;">間</span>
       </button>
-      <button
-        class="box2 box"
-        style="left: 138px"
-        @click="this.showModal('tenanting')"
-      >
+      <button class="box2 box" style="left: 138px" @click="this.showModal('tenanting')">
         <span class="roomText">出租中</span>
-        <span class="roomContent">{{ this.addressList.length }}</span>
+        <span class="roomContent">{{ this.roomList.length - this.emptyRoomList.length }}</span>
         <span class="deadlineText per" style="top: 64px;
     left: 132px;">間</span>
       </button>
-      <button
-        class="box2 box"
-        style="left: 138px;top: 206px;"
-        @click="this.showModal('emptyRoom')"
-      >
+      <button class="box2 box" style="left: 138px;top: 206px;" @click="this.showModal('emptyRoom')">
         <span class="roomText">空房</span>
-        <span class="roomContent">{{ this.emptyRoom.length }}</span>
+        <span class="roomContent">{{ this.emptyRoomList.length }}</span>
         <span class="deadlineText per" style="top: 64px;
     left: 132px;">間</span>
       </button>
@@ -270,17 +275,17 @@ export default {
     right: 474px;">營收金額</span>
       <button class="box1 box" style="
     right: -186px;
-    top: -115px;"
-      @click="this.showModal('sumLast')">
+    top: -115px;" @click="this.showModal('sumLast')">
         <span class="roomText" style="top: 16px;left: 28px;">上月營收總計</span>
-        <span class="roomContent" style="font-size: 1.5em;font-weight: 500;top: 61px;left: 136px;">{{ this.lastSum }}元</span>
+        <span class="roomContent" style="font-size: 1.5em;font-weight: 500;top: 61px; left: 64px;">{{ this.lastSum
+          }}元</span>
       </button>
       <button class="box1 box" style="
     right: 128px;
-    top: -115px;"
-      @click="this.showModal('sumThis')">
+    top: -115px;" @click="this.showModal('sumThis')">
         <span class="roomText" style="top: 16px;left: 28px;">本月目前營收</span>
-        <span class="roomContent" style="font-size: 1.5em;font-weight: 500;top: 61px;left: 136px;">{{ this.thisSum }}元</span>
+        <span class="roomContent" style="font-size: 1.5em;font-weight: 500;top: 61px;left: 64px;">{{ this.thisSum
+          }}元</span>
       </button>
     </div>
   </div>
@@ -411,9 +416,7 @@ export default {
       </div>
     </template>
     <template v-slot:footer>
-      <RouterLink :to="goToPage"
-        ><button class="goToBtn">{{ buttonText }}</button></RouterLink
-      >
+      <RouterLink :to="goToPage"><button class="goToBtn">{{ buttonText }}</button></RouterLink>
     </template>
   </electricModal>
 </template>
@@ -425,6 +428,7 @@ export default {
   width: 100%;
   height: 100dvh;
 }
+
 .title {
   font-size: 2em;
   font-weight: 500;
@@ -434,6 +438,7 @@ export default {
   left: 40px;
   background-color: transparent;
 }
+
 .mainBox {
   margin-top: 30px;
   display: flex;
@@ -443,15 +448,17 @@ export default {
   position: relative;
   background-color: transparent;
 }
-.areabox{
+
+.areabox {
   width: 80%;
-    height: 119%;
-    background-color: rgb(214 201 184 / 57%);
-    position: absolute;
-    left: 43%;
-    top: -7px;
-    border-radius: 10px;
+  height: 119%;
+  background-color: rgb(214 201 184 / 57%);
+  position: absolute;
+  left: 43%;
+  top: -7px;
+  border-radius: 10px;
 }
+
 .box {
   border: none;
   border-radius: 10px;
@@ -459,30 +466,36 @@ export default {
   position: absolute;
   border-bottom: 3px solid salmon;
   border-right: 3px solid rgb(219, 114, 102);
+
   &:hover {
     background-color: #ffdec3;
+
     &:active {
       border: none;
       transform: scale(0.95);
     }
   }
 }
+
 .box1 {
   width: 28%;
   height: 81%;
   top: 17px;
   padding-top: 5px;
 }
+
 .box2 {
   width: 19%;
   height: 74%;
   top: 27px;
   z-index: 99;
 }
+
 .box3 {
   top: 22px;
   height: 63%;
 }
+
 .deadlineText {
   background: transparent;
   font-size: 1.8em;
@@ -491,12 +504,14 @@ export default {
   left: 28px;
   top: 7px;
 }
+
 .per {
   position: absolute;
   font-size: 1.3em;
   top: 72px;
   left: 217px;
 }
+
 .deadlineContent {
   position: absolute;
   top: 57px;
@@ -505,12 +520,15 @@ export default {
   font-weight: 600;
   background: transparent;
 }
+
 .moreBtn {
   border: none;
+
   &:hover {
     color: rgb(220, 138, 38);
   }
 }
+
 .roomText {
   position: absolute;
   background: transparent;
@@ -519,6 +537,7 @@ export default {
   top: 7px;
   left: 42px;
 }
+
 .roomContent {
   background: transparent;
   position: absolute;
@@ -527,11 +546,13 @@ export default {
   left: 54px;
   top: 41px;
 }
+
 .headerArea {
   background-color: #ffc89a;
   width: 100%;
   height: 50px;
   position: relative;
+
   .slotTitle {
     margin: auto 0;
     font-size: 0.6em;
@@ -542,6 +563,7 @@ export default {
     font-weight: 500;
   }
 }
+
 .contentArea {
   margin: 31px auto;
   height: 40dvh;
@@ -549,6 +571,7 @@ export default {
   margin-left: 43px;
   overflow: auto;
 }
+
 .contract {
   width: 98%;
   // height: 100%;
@@ -556,10 +579,12 @@ export default {
   background-color: #cdc6a5;
   text-align: center;
 }
+
 .tenantName {
   background-color: transparent;
   text-decoration: none;
 }
+
 .thead {
   background-color: #ff9b5cc2;
   border: white;
@@ -567,38 +592,45 @@ export default {
   height: 47px;
   font-size: 0.5em;
 }
+
 .content {
   text-align: center;
   height: 50px;
 }
+
 td {
   background-color: #f9ddc6;
   padding: 5px;
   font-size: 0.5em;
 }
+
 tr:nth-of-type(odd) td {
   background-color: #ebebeb9e;
 }
+
 //捲軸底色
 #style-3::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: #f9ddc6;
   border-radius: 20px;
 }
+
 //捲軸寬度
 #style-3::-webkit-scrollbar {
   width: 8px;
   background-color: transparent;
 }
+
 //捲軸本體顏色
 #style-3::-webkit-scrollbar-thumb {
   background-color: #ff9b5cc2;
   border-radius: 20px;
 }
+
 .goToBtn {
   font-size: 0.6em;
   border: none;
-  background: #e6987bcf;
+  background: #ffa455b0;
   color: white;
   width: 156px;
   height: 45px;
@@ -606,9 +638,11 @@ tr:nth-of-type(odd) td {
   position: absolute;
   right: 46px;
   bottom: 14px;
+
   &:hover {
-    background: #ae6347cf;
+    background: #ff8b26e7;
   }
+
   &:active {
     transform: scale(0.96);
   }

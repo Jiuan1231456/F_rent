@@ -282,7 +282,7 @@ export default defineComponent({
             </form>
 
               <!-- //驗證碼輸入  -->
-            <div v-if="!loggedIn && !isLoginForm">
+            <!-- <div v-if="!loggedIn && !isLoginForm">
                 <h2>驗證您的郵箱</h2>
                 <form @submit.prevent="verifyCode()">
                     <div class="form-group">
@@ -293,7 +293,7 @@ export default defineComponent({
                     </div>
                     <button type="submit" class="btn btn-primary" @click="verifyCode()">驗證</button>
                 </form>
-            </div>
+            </div> -->
 
             <form v-else class="login-form">
                 <h5>會員登入</h5>
