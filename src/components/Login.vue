@@ -204,7 +204,7 @@ login() {
                     Swal.fire({
                         icon: "error",
                         title: "註冊失敗",
-                        text: "發生錯誤，請稍後再試"
+                        text: "請檢查格式有無錯誤"
                     });
                 }
             })
