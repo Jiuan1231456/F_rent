@@ -190,7 +190,7 @@ calculateTotalPages(totalItems) {
             this.filteredContractList = filteredContracts;
            //filterEndingSoon 方法只是計算並返回新的篩選結果 filteredContracts，並不會直接修改 this.contractList。這樣其他地方使用的 this.contractList 將保持不變，不受 filterEndingSoon 方法影響。
            // 更新狀態過濾器以觸發列表更新
-           this.statusFilter = "快到期";
+            this.statusFilter = "快到期";
         },
 
         // 計算總頁數
@@ -216,15 +216,15 @@ calculateTotalPages(totalItems) {
     <div class="searchPlace">
         <div class="inputPlace">
             <span class="label">承租地址　：</span>
-            <div class="InputContainer">
+            <!-- <div class="InputContainer"> -->
                 <input placeholder="Search.." id="input" class="input" name="text" type="text" v-model="contractFilters.address">
-            </div>
+            <!-- </div> -->
         </div>
         <div class="inputPlace">
             <span class="label">承租人姓名：</span>
-            <div class="InputContainer">
+            <!-- <div class="InputContainer"> -->
                 <input placeholder="Search.." id="input" class="input" name="text" type="text" v-model="contractFilters.tenantName">
-            </div>
+            <!-- </div> -->
         </div>
         <!-- 選擇日期 -->
         <p class="datetime">
@@ -289,11 +289,11 @@ calculateTotalPages(totalItems) {
     <style scoped lang="scss">
     *{margin-top: 3%;}
     .manageArea {
-        width: 100dvw;
+        width: 70dvw;
         height: 100dvh;
         border: 1em solid #9a685200;
         //border-style:  inset;
-        margin-left: 25%;  // 移除 margin-left，並將 margin 設定為 auto
+        margin-left: -10px;  // 移除 margin-left，並將 margin 設定為 auto
         padding-top: 0;  // 確保 padding-top 為 0
         background-color: #FAF0E9;
     //搜尋欄文字背景顏色
@@ -303,16 +303,17 @@ calculateTotalPages(totalItems) {
     }
 //搜尋
     .searchPlace {
-        width: 70%;
-        height: 45%;
-        color: black;
-        font-size: 22px;
-        background-color: #FFC89A;
-        border: 1em solid #fae1cd;
-        text-align: left;
-        margin-top: 5%;
-        margin-left: 5%;
-        padding: 3% 3% 5% 3%;}
+        width: 81%;
+    height: 45%;
+    color: black;
+    font-size: 22px;
+    background-color: #FFC89A;
+    border: 1em solid #fae1cd;
+    text-align: left;
+    margin-top: 1%;
+    margin-left: 10%;
+    padding: 3% 3% 5% 3%;
+    }
     
 
     .inputPlace {
@@ -331,10 +332,10 @@ calculateTotalPages(totalItems) {
         justify-content: center;
         // background: linear-gradient(to bottom, #FF9D60, rgb(255, 231, 231));
         border-radius: 30px;
-        overflow: hidden;
+        // overflow: hidden;
         cursor: pointer;
         box-shadow: 2px 2px 2px rgba(163, 162, 162, 0.075);
-        display: inline-block;
+        // display: inline-block;
         vertical-align: middle; /* Optional: Align vertically */
         // flex: 1; /* 彈性增長，使 input 容器占據剩餘空間 */
     }
@@ -394,6 +395,7 @@ calculateTotalPages(totalItems) {
         overflow: hidden;
         border-radius: 0px 0px 0px 0px;
         box-shadow: 0 0 10px rgba(167, 147, 147, 0.541);
+        margin-bottom: 2%
     }
 
     table {
@@ -434,12 +436,12 @@ calculateTotalPages(totalItems) {
 
 //狀態按鈕
 .statusButtons{
-    width: 80dvw;
+    width: 74dvw;
     display: flexbox;
     color: #110f0f;
     font-size: 18px;
     margin-top: 0;
-    margin-left: -5%;
+    margin-left: 2%;
 :active{
     font-size:20px;
     font-weight: 600;

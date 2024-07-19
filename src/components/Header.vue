@@ -6,6 +6,21 @@ import Login from "../components/Login.vue";
 
 export default {
   // 在 template 當標籤使用的方法或是元件，import進來後要宣告在components:{}裡面
+  data() {
+    return {
+      isNavVisible: false,
+      showHeaderArea: true,
+    };
+  },
+  watch: {
+    $route(to, from) {
+      // 當路由變化時，更新 headerArea 的顯示狀態
+      this.updateHeaderVisibility(to);
+    },
+  },
+  created() {
+    this.updateHeaderVisibility(this.$route);
+  },
   components: {
     RouterLink,
     Login
@@ -13,20 +28,37 @@ export default {
   computed: {
     ...mapState(dataStore, ["page"]),
   },
-  methods: {},
+  methods: {
+     // 更新 headerArea 顯示狀態的方法
+    updateHeaderVisibility(route) {
+      // 隱藏 headerArea 的路由列表
+      const hideHeaderRoutes = ['/TenantBillFirst', '/emptyRoomList','/EmptyRoomDetail'];
+      // 如果當前路由在隱藏列表中，設置 showHeaderArea 為 false，否則為 true
+      this.showHeaderArea = !hideHeaderRoutes.includes(route.path);
+    },
+  },
 };
 </script>
 
 <template>
 
   <div class="topArea">
-    <Login />
   </div>
-  <div class="headerArea">
+  <div class="headerArea" >
+
+
+      <RouterLink
+        class="routerItem"
+        :class="{ selectedPage: this.page === 13 }"
+        to="/Overview"
+        >總覽</RouterLink
+      >
+
+
     <RouterLink
       class="routerItem"
       :class="{ selectedPage: this.page === 1 }"
-      to="/"
+      to="/Login"
       >登入</RouterLink
     >
     <RouterLink 
@@ -56,12 +88,7 @@ export default {
       to="/contractAdd"
       >新增租約</RouterLink
     >
-    <!-- <RouterLink
-      class="routerItem"
-      :class="{ selectedPage: this.page === 8 }"
-      to="/ContractPreview"
-      >預覽租約</RouterLink
-    > -->
+
     <RouterLink
       class="routerItem"
       

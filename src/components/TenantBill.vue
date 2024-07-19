@@ -433,4 +433,8 @@ tr:nth-of-type(odd) td {
   letter-spacing: 1px;
   font-size: 1.3em;
 }
+<<<<<<< HEAD
 </style>
+=======
+</style>
+>>>>>>> fa87cc191b01f891c2b04070d6e2b6319890cdca

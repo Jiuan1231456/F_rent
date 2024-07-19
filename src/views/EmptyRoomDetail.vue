@@ -1,4 +1,3 @@
-
 <script>
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";

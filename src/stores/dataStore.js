@@ -33,58 +33,48 @@ export default defineStore("dataStore", {
         getFinalBill:(state) => state.finalBill,
         getBillToContract:(state) => state.billToContract,
         getTenantData:(state) => state.tenantData,
-        getcontractListObj: (state) => state.contractListObj,
-    getTenantContract:(state) => state.tenantContract,
     
 
+
+    },
+    actions:{   // 處理數據
+        setPage(params){
+        this.page = params
+        },
+        setLoginObj(obj){
+        this.loginObj = obj
+        },
+        setRoomObj(obj) {
+            this.roomObj = obj;
+        },
+        setCutContractObj(obj){
+            this.cutContractObj=obj;
+        },
+        setOneContractObj(obj){
+        this.oneContractObj=obj
+        },
+        setRegisterObj(obj){
+            this.registerObj=obj
+        },
+        setBillObj(obj) {
+            this.billObj = obj;
+        },
+        setMonthBill(obj){
+        this.monthBill = obj;
+        },
+        setPerBill(obj){
+        this.perBill = obj;
+        },
+        setFinalBill(obj){
+        this.finalBill = obj;
+        },
+        setBillToContract(obj){
+        this.billToContract = obj;
+        },
+        setTenantData(obj){
+        this.tenantData = obj
+        },        
+        },
+    },
     
-  },
-
-  actions: {
-    // 處理數據
-    setPage(params) {
-      this.page = params;
-    },
-    setLoginObj(obj) {
-      this.loginObj = obj;
-    },
-    setRoomObj(obj) {
-      this.roomObj = obj;
-    },
-    setOneContractObj(obj) {
-      this.oneContractObj = obj;
-    },
-    setCutContractObj(obj){
-      this.cutContractObj=obj;
-  },
-    setRegisterObj(obj) {
-      this.registerObj = obj;
-    },
-
-    setBillObj(obj) {
-      this.billObj = obj;
-    },
-    setMonthBill(obj){
-      this.monthBill = obj;
-    },
-    setPerBill(obj){
-      this.perBill = obj;
-    },
-    setFinalBill(obj){
-      this.finalBill = obj;
-    },
-    setBillToContract(obj){
-      this.billToContract = obj;
-    },
-    setTenantData(obj){
-      this.tenantData = obj
-    },
-    setContractListObj(obj) {
-      this.contractListObj = obj;
-    },
-    setTenantContract(obj){
-      this.tenantContract = obj
-    }
-  },
-
-})
+)
