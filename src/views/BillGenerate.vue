@@ -68,8 +68,12 @@ export default {
           this.newBillSearch = data.billList.filter(
             (item) => item.ownerName === this.loginObj.ownerName
           );
+<<<<<<< HEAD
           console.log("只有現在房東的(截止未截止都有)", this.newBillSearch);
 
+=======
+          console.log("只有現在房東的", this.newBillSearch);
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
           this.newnewBillSearch = this.newBillSearch.filter(
             (item) => item.paymentDate > todayStr
           );
@@ -147,7 +151,10 @@ export default {
   mounted() {
     this.setPage(10);
     this.search();
+<<<<<<< HEAD
     console.log(this.newnewBillSearch)
+=======
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
   },
 };
 </script>
@@ -202,7 +209,11 @@ export default {
               <i class="fa-solid fa-pen"></i>
               </button>
             </td>
+<<<<<<< HEAD
             <td v-if="!this.finalBill.eletricV"><i class="fa-solid fa-circle-exclamation" style="color:red;"></i></td>
+=======
+            <td v-if="!this.newnewBillSearch[index].eletricV"><i class="fa-solid fa-circle-exclamation" style="color:red;"></i></td>
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
             <td v-else><i class="fa-solid fa-circle-check" style="color: green;"></i></td>
           </tr>
         </tbody>
@@ -267,7 +278,11 @@ export default {
   width: 122dvw;
   height: 94dvh;
   background-color: #faf0e9;
+<<<<<<< HEAD
   // margin-left: 17%;
+=======
+  margin-left: 17%;
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
     margin-top: 30px;
   .billTitle {
     font-size: 2.3em;

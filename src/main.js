@@ -15,4 +15,8 @@ app.use(router);
 app.use(pinia);
 
 
+<<<<<<< HEAD
 app.mount('#app')
+=======
+app.mount('#app')
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e

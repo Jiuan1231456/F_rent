@@ -3,6 +3,11 @@ import dataStore from "@/stores/dataStore";
 import { mapState } from "pinia";
 import { RouterLink } from 'vue-router';
 import send_btn from '../components/send_btn.vue';
+<<<<<<< HEAD
+=======
+import ConfirmationModal from '../components/ConfirmationModal.vue'; // 引入模態框組件
+
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
 
 export default {
     data() {
@@ -12,7 +17,12 @@ export default {
             cut_reason: "",
             cut_date: "",
             ai:"",
+<<<<<<< HEAD
             isSending: false // 追蹤送出狀態
+=======
+            isSending: false, // 追蹤送出狀態
+            showModal: false // 控制模態框顯示狀態
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
    
             
         }
@@ -26,6 +36,10 @@ export default {
     components: {
         RouterLink,
         send_btn,
+<<<<<<< HEAD
+=======
+        ConfirmationModal
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
     },
     created(){
         console.log(this.roomObj);
@@ -64,6 +78,21 @@ export default {
                     this.isSending = false; // 根據需求決定是否要重新啟用按鈕
                 });
         },
+<<<<<<< HEAD
+=======
+        //顯示確認彈跳窗
+        confirmAndSend() {
+            this.showModal = true;
+        },
+
+        onConfirm() {
+            this.showModal = false;
+            this.sendCutContractToDB();
+        },
+        onCancel() {
+            this.showModal = false;
+        },
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
 
         //警示框確認送出
         confirmAndSend() {
@@ -95,6 +124,11 @@ export default {
             <br>
             租賃物件地址: {{oneContractObj.address}}
             <br>
+<<<<<<< HEAD
+=======
+            車位:{{oneContractObj.parking}}
+            <br>
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
             樓層: {{ oneContractObj.floor }}
             <br>
             房號: {{oneContractObj.roomId }}
@@ -151,7 +185,11 @@ export default {
             <br>
             中止原因: <textarea type="text" v-model="cut_reason" class="input-box"></textarea>
             <br>
+<<<<<<< HEAD
             違約金:  {{ roomObj[0].cutP }}
+=======
+            違約金:  {{ oneContractObj.cutP }}
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
             <br>
             中止日期:  <input type="date" id="end" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="cut_date" />
         </div>
@@ -169,6 +207,16 @@ export default {
         <div class="btn"> 
             <send_btn class="space-between":disabled="isSending" @click="confirmAndSend"/> 
         </div>
+<<<<<<< HEAD
+=======
+        <ConfirmationModal 
+    :visible="showModal" 
+    message="您確定要送出嗎？" 
+    @confirm="onConfirm" 
+    @cancel="onCancel" 
+/>
+
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
     </div>
 </template>
 
@@ -261,5 +309,9 @@ h1{
     // background-color: rgb(158, 112, 57);
     color: rgb(0, 0, 0);
 }
+<<<<<<< HEAD
 </style>
 
+=======
+</style>
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e

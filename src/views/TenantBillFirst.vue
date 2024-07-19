@@ -45,7 +45,11 @@ export default {
 <template>
   <div class="bigArea">
     <div class="topArea"></div>
+<<<<<<< HEAD
     <span class="title" style="position: fixed;">XXX&nbsp;承租人，您好</span>
+=======
+    <span class="title" style="position: fixed;">親愛的承租人，您好</span>
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
     <div class="titleBox">
       <label for="contract" class="cont label">
         <input

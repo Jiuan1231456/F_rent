@@ -41,6 +41,7 @@ export default {
 </script>
 
 <template>
+<<<<<<< HEAD
   <!-- <div class="topArea">
   </div> -->
 
@@ -60,6 +61,14 @@ export default {
       </label>
     </div> -->
       <!-- ============== -->
+=======
+
+  <div class="topArea">
+  </div>
+  <div class="headerArea" >
+
+
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
       <RouterLink
         class="routerItem"
         :class="{ selectedPage: this.page === 13 }"
@@ -67,6 +76,7 @@ export default {
         >總覽</RouterLink
       >
 
+<<<<<<< HEAD
       <RouterLink
         class="routerItem"
         :class="{ selectedPage: this.page === 4 }"
@@ -94,10 +104,90 @@ export default {
       >
 
     <!-- </nav> -->
+=======
+
+    <RouterLink
+      class="routerItem"
+      :class="{ selectedPage: this.page === 1 }"
+      to="/Login"
+      >登入</RouterLink
+    >
+    <RouterLink 
+    class="routerItem" 
+    :class="{ selectedPage: this.page === 100 }" 
+    to="/Register"
+    >註冊
+  </RouterLink>
+
+    <RouterLink 
+    class="routerItem" 
+    :class="{ selectedPage: this.page === 2 }" 
+    to="/roomlist"
+    >房間列表
+  </RouterLink>
+  
+    <RouterLink
+      class="routerItem"
+      :class="{ selectedPage: this.page === 6 }"
+      to="/ContractList"
+      >租約管理列表</RouterLink
+    >
+
+    <RouterLink
+      class="routerItem"
+      :class="{ selectedPage: this.page === 7 }"
+      to="/contractAdd"
+      >新增租約</RouterLink
+    >
+
+    <RouterLink
+      class="routerItem"
+      
+      to="/Contract_Detail"
+      >租約詳情</RouterLink
+    >
+    <RouterLink
+      class="routerItem"
+      
+      to="/CutcontractEdit"
+      >租約中止編輯</RouterLink
+    >
+    <RouterLink
+      class="routerItem"
+      
+      to="/AdjustAccount"
+      >修改帳戶資訊</RouterLink
+    >
+    <RouterLink
+      class="routerItem"
+      :class="{ selectedPage: this.page === 10 }"
+      to="/bill"
+      >帳單管理</RouterLink
+    >
+    <RouterLink
+      class="routerItem"
+      :class="{ selectedPage: this.page === 11 }"
+      to="/benefit"
+      >觀看收益</RouterLink
+    >
+    <RouterLink
+      class="routerItem"
+      :class="{ selectedPage: this.page === 2 }"
+      to="/roomdetail"
+      >房間資訊</RouterLink
+    >
+    <RouterLink
+      class="routerItem"
+      :class="{ selectedPage: this.page === 3 }"
+      to="/addroom"
+      >新增房間</RouterLink
+    >
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
   </div>
 </template>
 
 <style scoped lang="scss">
+<<<<<<< HEAD
 .topArea {
   width: 100dvw;
   height: 5%;
@@ -113,6 +203,20 @@ export default {
   z-index: 2;
   transition: width 0.3s;
   left: 0;
+=======
+
+.topArea{
+  width:100dvw;
+  height: 5%;
+  background-color: #f6b47d;
+}
+.headerArea {
+  height: 100dvh;
+  width: 350px;
+  background-color: #ffc89a;
+  padding-top: 5%;
+  position: fixed;
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
 
   .routerItem {
     color: black;
@@ -123,7 +227,10 @@ export default {
     letter-spacing: 8px;
     justify-content: center;
     padding: 5%;
+<<<<<<< HEAD
 
+=======
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
     &:hover {
       cursor: pointer;
       background-color: #ff9d60;
@@ -132,18 +239,27 @@ export default {
       border-radius: 11% 0px 0px 11%;
     }
   }
+<<<<<<< HEAD
 
+=======
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
   .accordion-body {
     padding: 0;
     background-color: #ffc89a;
     // padding-left: 33px;
   }
+<<<<<<< HEAD
 
+=======
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
   .accordion-item {
     border: 0px;
     background-color: #ffc89a;
   }
+<<<<<<< HEAD
 
+=======
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
   .dropdownBtn {
     color: black;
     background-color: #ffc89a;
@@ -153,7 +269,10 @@ export default {
     letter-spacing: 8px;
     justify-content: center;
     padding: 5%;
+<<<<<<< HEAD
 
+=======
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
     &:hover {
       cursor: pointer;
       background-color: #ff9d60;
@@ -163,17 +282,26 @@ export default {
       padding-left: 10px;
       padding-bottom: 10px;
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
     &:checked {
       background-color: #ff9d60;
     }
   }
+<<<<<<< HEAD
 
   .dropdownBtn[aria-expanded="true"] {
     background-color: #f6b47d;
     /* 展開時的背景顏色 */
   }
 
+=======
+  .dropdownBtn[aria-expanded="true"] {
+    background-color: #f6b47d; /* 展開時的背景顏色 */
+  }
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
   .dropdownItem {
     background-color: #f2dcca;
     font-size: 18px;
@@ -188,7 +316,10 @@ export default {
     border-radius: 11% 0px 0px 11%;
     align-items: center;
     padding: 5%;
+<<<<<<< HEAD
 
+=======
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
     &:hover {
       cursor: pointer;
       background-color: #ff9d60;
@@ -198,20 +329,27 @@ export default {
       border-radius: 11% 0px 0px 11%;
     }
   }
+<<<<<<< HEAD
 
+=======
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
   .selectedPage {
     background-color: #faf0e9;
     border-radius: 11% 0px 0px 11%;
     border-left: 16px solid #ffc89a;
     // padding-left: 25px;
     font-weight: 500;
+<<<<<<< HEAD
 
+=======
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
     &:hover {
       cursor: default;
       background-color: #faf0e9;
       font-weight: 500;
     }
   }
+<<<<<<< HEAD
 
   button {
     display: block; // 設置按鈕為區塊元素
@@ -265,3 +403,7 @@ export default {
 }
 
 // =============</style>
+=======
+}
+</style>
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e

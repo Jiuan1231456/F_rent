@@ -87,6 +87,10 @@ export default {
         }}</span
       >
     </div>
+<<<<<<< HEAD
+=======
+    <div class="" v-if="this.billList">
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
     <table class="contract">
       <thead>
         <th scope="col" class="thead">編號</th>
@@ -192,6 +196,13 @@ export default {
       </tbody>
     </table>
   </div>
+<<<<<<< HEAD
+=======
+  <div class="" v-else>
+    <h1>目前尚無帳單</h1>
+  </div>
+  </div>
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
 
   <!-- <button @click="$emit('goToNextPage',false)">返回前頁</button> -->
 </template>
@@ -433,4 +444,12 @@ tr:nth-of-type(odd) td {
   letter-spacing: 1px;
   font-size: 1.3em;
 }
+<<<<<<< HEAD
 </style>
+=======
+<<<<<<< HEAD
+</style>
+=======
+</style>
+>>>>>>> fa87cc191b01f891c2b04070d6e2b6319890cdca
+>>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
