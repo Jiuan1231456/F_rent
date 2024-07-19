@@ -3,6 +3,8 @@ import dataStore from "@/stores/dataStore";
 import { mapState } from "pinia";
 import { RouterLink } from 'vue-router';
 import send_btn from '../components/send_btn.vue';
+import ConfirmationModal from '../components/ConfirmationModal.vue'; // 引入模態框組件
+
 
 export default {
     data() {
@@ -12,7 +14,8 @@ export default {
             cut_reason: "",
             cut_date: "",
             ai:"",
-            isSending: false // 追蹤送出狀態
+            isSending: false, // 追蹤送出狀態
+            showModal: false // 控制模態框顯示狀態
    
             
         }
@@ -26,6 +29,7 @@ export default {
     components: {
         RouterLink,
         send_btn,
+        ConfirmationModal
     },
     created(){
         console.log(this.roomObj);
@@ -64,6 +68,18 @@ export default {
                     this.isSending = false; // 根據需求決定是否要重新啟用按鈕
                 });
         },
+        //顯示確認彈跳窗
+        confirmAndSend() {
+            this.showModal = true;
+        },
+
+        onConfirm() {
+            this.showModal = false;
+            this.sendCutContractToDB();
+        },
+        onCancel() {
+            this.showModal = false;
+        },
 
         //警示框確認送出
         confirmAndSend() {
@@ -94,6 +110,8 @@ export default {
             </div>
             <br>
             租賃物件地址: {{oneContractObj.address}}
+            <br>
+            車位:{{oneContractObj.parking}}
             <br>
             樓層: {{ oneContractObj.floor }}
             <br>
@@ -151,7 +169,7 @@ export default {
             <br>
             中止原因: <textarea type="text" v-model="cut_reason" class="input-box"></textarea>
             <br>
-            違約金:  {{ roomObj[0].cutP }}
+            違約金:  {{ oneContractObj.cutP }}
             <br>
             中止日期:  <input type="date" id="end" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="cut_date" />
         </div>
@@ -169,6 +187,13 @@ export default {
         <div class="btn"> 
             <send_btn class="space-between":disabled="isSending" @click="confirmAndSend"/> 
         </div>
+        <ConfirmationModal 
+    :visible="showModal" 
+    message="您確定要送出嗎？" 
+    @confirm="onConfirm" 
+    @cancel="onCancel" 
+/>
+
     </div>
 </template>
 
@@ -262,4 +287,3 @@ h1{
     color: rgb(0, 0, 0);
 }
 </style>
-

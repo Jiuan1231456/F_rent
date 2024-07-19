@@ -1,5 +1,5 @@
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
 import Swal from 'sweetalert2';
@@ -17,20 +17,23 @@ export default defineComponent({
             owner_phone: "",
             owner_role: "", // 用戶角色：房東或房客
             verificationCode:"",//驗證碼
-            loggedIn: false // 增加登入狀態的判斷
+            loggedIn: false, // 增加登入狀態的判斷
         };
     },
     computed: {
         ...mapState(dataStore, ['page', 'loginObj', 'registerObj'])
     },
     methods: {
-        ...mapActions(dataStore, ['setPage', 'setLoginObj', 'setRegisterObj']),
+        ...mapActions(dataStore, ['setPage', 'setLoginObj', 'setRegisterObj','setTenantData']),
         login() {
             const loginObj1 = {
                 owner_account: this.owner_account,
                 owner_pwd: this.owner_pwd
             };
-
+            const loginObj2 = {
+                tenantPhone: this.owner_account,
+                tenantIdentity: this.owner_pwd,
+            };
             const url = this.owner_role === 'landlord' 
                         ? "http://localhost:8080/rent/login" 
                         : "http://localhost:8080/bill/tenantList";
@@ -42,18 +45,23 @@ export default defineComponent({
                     "Content-Type": "application/json"
                 },
                 credentials:'include',
-                body: JSON.stringify(loginObj1)
+                body: JSON.stringify(url === "http://localhost:8080/rent/login"?loginObj1:loginObj2)
             })
             .then(res => res.json())
             .then(data => {
                 console.log(data);
-                this.setLoginObj(data);
+                url === "http://localhost:8080/rent/login"?this.setLoginObj(data):this.setTenantData(data);
+                // this.setLoginObj(data);
                 if (data.code === 200) {
                     Swal.fire({
                         title: "登入成功!",
                         text: "您現在已成功登入帳號",
-                        icon: "success"
+                        icon: "success",
+                        didClose: () => {
+                            this.$router.push(url === "http://localhost:8080/rent/login"?'/Overview':'/TenantBillFirst')
+                            }
                     });
+                    
                     this.showPopup = false; // 登入成功後關閉彈窗
                     this.loggedIn = true; // 設置登入狀態為已登入
                     sessionStorage.setItem("當前帳號", this.loginObj.ownerAccount); // 將帳號放入session
@@ -88,6 +96,7 @@ export default defineComponent({
                 sessionStorage.removeItem("當前帳號"); // 清除当前账号信息
                 this.loggedIn = false; // 重置登录状态
                 console.log("Logout successful");
+                this.$router.push('/emptyRoomList')
             })
             .catch(error => {
                 console.error("Logout request failed:", error);
@@ -190,11 +199,14 @@ export default defineComponent({
                     Swal.fire({
                         title: "驗證成功!",
                         text: "您的帳號已成功註冊。",
-                        icon: "success"
+                        icon: "success",
+                        didClose: () => {
+                            this.$router.push('/emptyRoomList')
+                            }
                     });
                     console.log("送出的驗證資料",data)
                     this.showPopup = false; // 註冊成功後關閉彈窗
-                    this.loggedIn = true; // 設置登入狀態為已登入
+                    this.loggedIn = false; // 設置登入狀態為已登入
                 } else {
                     Swal.fire({
                         icon: "error",
@@ -214,7 +226,11 @@ export default defineComponent({
         },
         // 彈出視窗事件
         customizeWindowEvent() {
+            this.owner_account = "";
+            this.owner_pwd = "";
             this.showPopup = true;
+            this.isLoginForm=true;
+            
         },
         closePopup(e) {
             // 只檢查點擊的目標是否包含 'close' 類別
@@ -236,7 +252,6 @@ export default defineComponent({
     }
 });
 </script>
-
 
 <template>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
@@ -285,6 +300,7 @@ export default defineComponent({
                 <div class="form-group">
                     <label for="owner_role">身份</label>
                     <select id="owner_role" v-model="owner_role" required>
+                        <option value="">請選擇身分</option>
                         <option value="landlord">房東</option>
                         <option value="tenant">房客</option>
                     </select>
@@ -297,17 +313,21 @@ export default defineComponent({
         </div>
     </div> 
 
-    <!-- 表單結束 -->
-    <!-- v-if不能綁button，只能綁在div上 -->
-    <div v-if="!this.loggedIn"  class="loginregister">
-        <button class="login" @click="customizeWindowEvent" key="login">登入/註冊</button>
-    </div>
-    <!-- 登入後顯示的按鈕區域 -->
-    <div v-else class="loggedin-buttons" key="button">
-            <p >親愛的房東&nbsp&nbsp{{loginObj.ownerAccount}}&nbsp&nbsp&nbsp 已登入~</p>
+    <div class="aa" v-bind="isLoginForm">
+        <!-- 表單結束 -->
+        <!-- v-if不能綁button，只能綁在div上 -->
+        <div v-if="!this.loggedIn "  class="loginregister">
+            <button class="login" @click="customizeWindowEvent" key="login">登入/註冊</button>
+        </div>
+        <!-- 登入後顯示的按鈕區域 -->
+        <div v-else class="loggedin-buttons" key="button">
+            <p v-if="this.owner_role==='landlord'">親愛的房東&nbsp;&nbsp;{{loginObj.ownerAccount}}&nbsp;&nbsp;&nbsp; 已登入~</p>
+            <p v-else>親愛的房客&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 已登入~</p>
             <RouterLink to="AdjustAccount" class="editaccount">修改帳戶資訊</RouterLink>
             <button  class="logout" @click="logout">登出</button>
         </div>
+    </div>
+    
 </template>
 
 <style scoped>
@@ -332,6 +352,7 @@ export default defineComponent({
     width: 400px;
     max-width: 100%;
     position: relative;
+    z-index: 1000;
 }
 
 #window-container {
@@ -344,6 +365,7 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1000;
 }
 
 .triangle {
@@ -367,6 +389,7 @@ export default defineComponent({
     margin: 0 auto 0px;
     padding: 40px;
     text-align: center;
+    z-index: 1000;
     /* box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24); */
     .close{
         position: absolute;
@@ -407,27 +430,29 @@ export default defineComponent({
     padding: 15px;
     box-sizing: border-box;
     font-size: 14px;
+    z-index: 1000;
 }
 
 .form button {
-    font-family: 'Noto Serif TC', serif;
-    text-transform: uppercase;
-    outline: 0;
-    background: #4d4129;
-    width: 100%;
-    border: 0.3;
-    padding: 15px;
-    margin: 15px 0;
-    color: #FFFFFF;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    cursor: pointer;
+  font-family: "Noto Serif TC", serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #4d4129;
+  width: 100%;
+  border: 0.3;
+  padding: 15px;
+  margin: 15px 0;
+  color: #ffffff;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  z-index: 1000;
 }
 
 .form button:hover,
 .form button:active,
 .form button:focus {
-    background: #4D5139;
+  background: #4d5139;
 }
 
 .form .message a {
@@ -436,11 +461,12 @@ export default defineComponent({
     font-size: 16px;
 }
 
-label {
+    label {
     font-family: 'Noto Serif TC', serif;
     font-size: 16px;
     color: #887a53;
     font-weight: normal;
+    z-index: 1000;
 }
 
 .form h5 {
@@ -450,6 +476,7 @@ label {
     font-size: 20px;
     padding-top: 5%;
     font-weight: 800;
+    z-index: 1000;
 }
 
 .logout {
@@ -459,6 +486,7 @@ label {
     background-color: transparent;
     color: #433a2f;
     font-weight: 500;
+    z-index: 1000;
     &:hover {
         color: #a08b71;
     }
@@ -471,6 +499,7 @@ label {
     background-color: transparent;
     color: #433a2f;
     font-weight: 500;
+    z-index: 1000;
     &:hover {
         color: #a08b71;
     }
@@ -486,6 +515,7 @@ label {
     font-weight: 500;
     justify-content: space-around;
     display: flex;
+    z-index: 1000;
     &:hover {
         color: #a08b71;
     }
@@ -494,15 +524,17 @@ label {
     right: 150px;
     background-color: rgba(255, 166, 0, 0);
 }
+}
 .editaccount{
     position: fixed;
     position: relative;
     right: 60px;
     background-color: rgba(0, 0, 0, 0);
     color: #433a2f;
+    z-index: 1000;
 }
 
-}
+
+
+
 </style>
-
-

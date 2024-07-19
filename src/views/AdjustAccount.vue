@@ -25,7 +25,7 @@ export default {
         ...mapState(dataStore, ['loginObj'])
     },
     methods: {
-        ...mapActions(dataStore, ['setLoginObj']),
+        ...mapActions(dataStore, ['setLoginObj','']),
 
         updateAccountToDB() {
             // 構建更新資料的對象
@@ -53,6 +53,7 @@ export default {
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials:'include',
                 body: JSON.stringify(updatedInfo)
             })
             .then(res => res.json())
@@ -70,7 +71,7 @@ export default {
                     Swal.fire({
                         icon: "error",
                         title: "更新失敗",
-                        text: data.message || "發生錯誤，請稍後再試"
+                        text:  "發生錯誤，請稍後再試"
                     });
                 }
             })
@@ -107,6 +108,7 @@ export default {
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials:'include',
                 body: JSON.stringify(updatedPassword)
             })
             .then(res => res.json())

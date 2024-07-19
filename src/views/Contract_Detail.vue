@@ -43,7 +43,7 @@ export default {
         <!-- <h1>與{{oneContractObj.tenantName}}的租賃契約書</h1> -->
 
         <br>
-        <h1>與{{oneContractObj.tenantName}}的租賃契約書</h1>
+        <h1>租賃契約書</h1>
         <div class="roomInfo">
             <h2>租賃物件資訊</h2>
             <br>
@@ -74,9 +74,9 @@ export default {
             <br>
             面積: {{oneContractObj.acreage}}
             <br>
-            設備:{{ oneContractObj.equip }}
+            設備:{{ roomObj[0].equip }}
             <br>
-            物件備註:{{ roomObj[0].rCondition }}
+            物件備註:{{ oneContractObj.rCondition }}
             <div class="input-wrapper">
         
             </div>

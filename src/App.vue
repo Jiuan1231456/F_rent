@@ -7,20 +7,24 @@ import Header from"./components/Header.vue"
 
 <template>
   <div class="header">
-    <Header />
+
+    <Header  />
   </div>
-<!-- <div class="Apptop">
-  <topHeader />
-</div> -->
+<div class="top">
+
+</div> 
 
 
   <RouterView />
 </template>
 
 <style scoped lang="scss">
+
 .header {
-  width: 16dvw;
+  width: 23dvw;
   height: 100dvh;
+  z-index: 2;
+  background-color: transparent;
 }
 
 //這邊可以讓topheader浮出來
@@ -35,6 +39,6 @@ import Header from"./components/Header.vue"
     height: 3%;
     font-size: larger;
     margin-left: 60%;
-    
+    z-index: 1;
 }
 </style>

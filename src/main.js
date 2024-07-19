@@ -7,8 +7,12 @@ import { createPinia } from 'pinia';
 
 const app = createApp(App)
 const pinia = createPinia();
+router.afterEach((to, from, next) => {
+	window.scrollTo(0, 0);
+});
 
 app.use(router);
-app.use(pinia)
+app.use(pinia);
+
 
 app.mount('#app')
