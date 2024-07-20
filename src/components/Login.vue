@@ -200,11 +200,42 @@ login() {
                         text: "請輸入您收到的驗證碼進行驗證。",
                         icon: "success"
                     });
-                } else if (data.code === 400) {
+                } else if (data.message === "Email error!!") {
+                    Swal.fire({
+                        icon: "error",
+                        title: "信箱格式錯誤",
+                        text: "請檢查格式有無錯誤，需加@"
+                    });
+                } else if (data.message === "Phone error!!") {
+                    Swal.fire({
+                        icon: "error",
+                        title: "電話格式有問題",
+                        text: "請輸入10碼手機號"
+                    });
+                } else if (data.message ==='Account exists') {
+                    Swal.fire({
+                        icon: "error",
+                        title: "帳號已被使用",
+                        text: "已被使用，換個帳號試試"
+                    });
+                }  else if (data.message === "Phone duplocated fillin") {
+                    Swal.fire({
+                        icon: "error",
+                        title: "電話已被使用",
+                        text: "已被使用，換個電話號碼試試"
+                    });
+                }  else if (data.message === "Owneridentity error") {
+                    Swal.fire({
+                        icon: "error",
+                        title: "身分證格式有問題",
+                        text: "請重新檢查身分證格式"
+                    });
+                }else {
+                    // 處理其他狀態碼
                     Swal.fire({
                         icon: "error",
                         title: "註冊失敗",
-                        text: "請檢查格式有無錯誤"
+                        text: "發生其他未知錯誤，請稍後再試"
                     });
                 }
             })
