@@ -44,6 +44,8 @@ export default {
             parking: false,
             equip: "",
             r_other: "",
+            sameAsHomeAddress: false,//出租方同戶籍地使用
+            sameAsHomeAddress_2: false//承租方同戶籍地使用
 
 
         
@@ -113,6 +115,18 @@ export default {
             console.log(data);
         });
         },
+         //出租方複製地址方法
+    copyAddress() {
+        if (this.sameAsHomeAddress) {
+            this.owner_contact_address = this.owner_home_address;
+        }
+        },
+    //承租方複製地址方法
+    copyAddress2() {
+        if (this.sameAsHomeAddress_2) {
+            this.tenant_contact_address = this.tenant_home_address;
+        }
+      },
     },
 
     components: {
@@ -178,20 +192,28 @@ export default {
                 <h2>立契約書人</h2>
                 <div class="Info">
                     <br>
-                    <h4>出租人姓名:</h4>
-                    <p>{{ loginObj.ownerName }}</p>
+                    <h4>出租人</h4>
                     <br>
-                    身分證字號: <p> {{ loginObj.ownerIdentity }}</p>
+                    姓名: {{ loginObj.ownerName }}
                     <br>
-                    戶籍地址(營業登記地址): <input type="text" v-model="owner_home_address" class="input-box">
                     <br>
-                    通訊地址: <input type="text" v-model="owner_contact_address" class="input-box">
+                    身分證字號: {{ loginObj.ownerIdentity }}
+                    <br>
                     <br>
                     <!-- 這邊房東電話不建議寫死，因為註冊電話應該可以和連絡電話不一樣，，建議再器樂的SQL表另外新增owner_phone欄位而不是直接引用註冊的電話 -->
                     連絡電話:{{ loginObj.ownerPhone }}
                     <br>
                     <br>
-                    <h4>承租人姓名:</h4> <input type="text" v-model="tenant_name" class="input-box"
+                    戶籍地址(營業登記地址): <input type="text" v-model="owner_home_address" class="input-box">
+                    <br>
+                    通訊地址: <input type="text" v-model="owner_contact_address" class="input-box">
+                    <br>
+                    <input type="checkbox" v-model="sameAsHomeAddress" @change="copyAddress">同戶籍
+                    <br>
+                    <br>
+                    <br>
+                    <h4>承租人</h4> 
+                    姓名:<input type="text" v-model="tenant_name" class="input-box"
                         style="font-weight: bold; font-size: 20px;">
                     <br>
                     身分證字號: <input type="text" v-model="tenant_identity" class="input-box">
@@ -199,21 +221,13 @@ export default {
                     戶籍地址(營業登記地址): <input type="text" v-model="tenant_home_address" class="input-box">
                     <br>
                     通訊地址: <input type="text" v-model="tenant_contact_address" class="input-box">
+                    <input type="checkbox" v-model="sameAsHomeAddress_2" @change="copyAddress2">同戶籍
                     <br>
                     email: <input type="text" v-model="tenant_email" class="input-box">
                     <br>
                     連絡電話: <input type="text" v-model="tenant_phone" class="input-box">
                 </div>
                 <br>
-                <!-- <h3>契約中止</h3>
-                <div class="cut">
-                    <br>
-                    中止原因: <input type="text" v-model="cut_reason" class="input-box">
-                    <br>
-                    違約金: <input type="text" v-model="cut_p" class="input-box">
-                    <br>
-                    中止日期: <input type="text" v-model="cut_date" class="input-box">
-                </div> -->
                 <br>
                 <h3>其他備註(或個別磋商條款)</h3>
                 <div class="input-wrapper">
