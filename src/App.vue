@@ -7,12 +7,14 @@ import Header from"./components/Header.vue"
 
 <template>
   <div class="header">
-
-    <Header  />
+    <Header />
   </div>
 <div class="top">
+  <topHeader />
 
-</div> 
+
+  <button class="login">登入/註冊</button>
+</div>
 
 
   <RouterView />
@@ -28,10 +30,9 @@ import Header from"./components/Header.vue"
 }
 
 //這邊可以讓topheader浮出來
-.Apptop{
-  width: 100dvw;
-  height: 5%;
-  background-color: rgb(231, 195, 161);
+.top{
+  position: fixed;
+  z-index: -99;
 }
 
 .login{

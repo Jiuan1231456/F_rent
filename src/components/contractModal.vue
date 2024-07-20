@@ -16,7 +16,7 @@ export default {};
       <!-- 彈出視窗的框框 -->
       <slot name="header" >
       </slot>
-      <button type="button" class="close" @click="$emit('alertModal')">
+      <button type="button" class="close" @click="$emit('alertModal')" style="position: fixed;">
         <i class="fa-solid fa-xmark"></i>
       </button>
       <slot name="content"></slot>
@@ -42,14 +42,15 @@ export default {};
 
   .block {
     // 彈出視窗
-    width: 83%;
-    height: 530px;
+    width: 60%;
+    height: 450px;
     background-color: #faf0e9;
     position: absolute;
     top: 3%;
     left: 9%;
     font-size: 36px;
     z-index: 2;
+    // overflow: auto;
   }
 
   .bg {
@@ -66,8 +67,8 @@ export default {};
   position: absolute;
   border: none;
   position: absolute;
-  top: 1px;
-  right: 18px;
+  top: 7%;
+  right: 32%;
   font-size: 0.8em;
   background: transparent;
   

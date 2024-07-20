@@ -3,6 +3,7 @@ import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
 import electricModal from "@/components/electricModal.vue";
 import { RouterLink } from "vue-router";
+import Swal from "sweetalert2";
 export default {
   data() {
     return {
@@ -10,15 +11,15 @@ export default {
       contractList: [], // 全部契約
       roomList: [], // 全部房間
       deadlineContract: [], // 快到期的契約
-      deadlineBill:[],
+      deadlineBill: [],
       addressList: [], // 出租中的房間
       emptyRoom: [], // 空房
       contractLength: "",
       elecModal: false,
-      lastMonth:[],
-      lastSum:0,
-      thisMonth:[],
-      thisSum:0,
+      lastMonth: [],
+      lastSum: 0,
+      thisMonth: [],
+      thisSum: 0,
     };
   },
   components: {
@@ -34,7 +35,8 @@ export default {
       // 繳費方式彈跳視窗的開關
       this.elecModal = !this.elecModal;
     },
-    fetch() {// 抓全部資料
+    fetch() {
+      // 抓全部資料
       let obj = {
         ownerAccount: this.loginObj.ownerAccount,
       };
@@ -56,9 +58,11 @@ export default {
           this.findTenanting();
           this.findBill();
           this.findSum();
+          this.alertDeadline();
         });
     },
-    findContract() {//篩出快到期的契約(結束前31天)
+    findContract() {
+      //篩出快到期的契約(結束前31天)
       const today = new Date();
       // 設定篩選條件，結束日期在今天後31天以內
       const filteredContracts = this.contractList.filter((item) => {
@@ -75,7 +79,8 @@ export default {
       console.log("剩不到30天的租約", filteredContracts);
       this.contractLength = filteredContracts.length;
     },
-    findBill() {// 找出繳費期限即將截止的帳單
+    findBill() {
+      // 找出繳費期限即將截止的帳單
       const today = new Date();
       // 設定篩選條件，結束日期在今天後31天以內
       this.deadlineBill = this.billList.filter((item) => {
@@ -89,7 +94,8 @@ export default {
       });
       console.log("剩不到5天的帳單", this.deadlineBill);
     },
-    findTenanting() { // 篩出正在出租中和空房
+    findTenanting() {
+      // 篩出正在出租中和空房
       let today = new Date();
       let month = today.getMonth() + 1;
       let day = today.getDate();
@@ -106,7 +112,6 @@ export default {
       );
       console.log("契約列表撈出 狀態出租中", this.addressList);
 
-      
       for (let i = 0; i < this.roomList.length; i++) {
         let foundMatch = false;
         for (let j = 0; j < this.addressList.length; j++) {
@@ -119,31 +124,39 @@ export default {
           this.emptyRoom.push(this.roomList[i]);
         }
       }
-      console.log('空房',this.emptyRoom);
+      console.log("空房", this.emptyRoom);
       // this.emptyRoom = this.contractList.filter((item) => (todayStr < item.signDate)
       // || (item.endDate < todayStr) || ((todayStr < item.startDate) && (item.startDate === item.signDate)))
       // console.log("契約列表撈出 空房", this.emptyRoom);
     },
-    findSum(){  // 算出營收加總
+    findSum() {
+      // 算出營收加總
       // ======= 上月份營收 ==========
       const today = new Date();
       this.lastMonth = this.billList.filter((item) => {
         const periodEnd = new Date(item.periodEnd);
         return periodEnd.getMonth() === today.getMonth() - 1;
       });
-      console.log("上月帳單",this.lastMonth);
-      this.lastSum = this.lastMonth.reduce((sum,item) => sum + item.totalOneP,0);
-      console.log("上月帳單加總",this.lastSum);
+      console.log("上月帳單", this.lastMonth);
+      this.lastSum = this.lastMonth.reduce(
+        (sum, item) => sum + item.totalOneP,
+        0
+      );
+      console.log("上月帳單加總", this.lastSum);
       // ====== 本月份營收 ==========
       this.thisMonth = this.billList.filter((item) => {
         const periodEnd = new Date(item.periodEnd);
-        return periodEnd.getMonth() === today.getMonth() ;
+        return periodEnd.getMonth() === today.getMonth();
       });
-      console.log("本月帳單",this.thisMonth);
-      this.thisSum = this.thisMonth.reduce((sum,item) => sum + item.totalOneP,0);
-      console.log("本月帳單加總",this.thisSum);
+      console.log("本月帳單", this.thisMonth);
+      this.thisSum = this.thisMonth.reduce(
+        (sum, item) => sum + item.totalOneP,
+        0
+      );
+      console.log("本月帳單加總", this.thisSum);
     },
-    showModal(type) {  // 彈跳視窗動態變化
+    showModal(type) {
+      // 彈跳視窗動態變化
       if (type === "contract") {
         this.modalTitle = "即將到期之租約列表";
         this.modalContentList = this.contractList;
@@ -183,12 +196,35 @@ export default {
       this.modalType = type;
       this.elecModal = true;
     },
+    alertDeadline() {
+      if(this.deadlineBill.length != 0 && this.contractLength != 0){
+        Swal.fire({
+          title: "提醒",
+          html: "目前有<br>" + this.contractLength + "筆租約即將到期<br>" + this.deadlineBill.length + "筆帳單繳費期限即將截止",
+          icon: "warning",
+        });
+      } else if(this.contractLength != 0){
+        Swal.fire({
+          title: "提醒",
+          text: "目前有"+ this.contractLength + "筆租約即將到期",
+          icon: "warning",
+        });
+      } else if(this.deadlineBill.length != 0){
+        Swal.fire({
+          title: "提醒",
+          text: "目前有"+this.deadlineBill.length + "筆帳單繳費期限即將截止",
+          icon: "warning",
+        });
+      } else{
+      }
+    },
   },
   mounted() {
     this.setPage(13);
   },
   created() {
     this.fetch();
+    // this.alertDeadline();
   },
   updated() {},
 };
@@ -196,15 +232,19 @@ export default {
 
 <template>
   <div class="middleArea">
-    <h1 style="margin-bottom: 30px">{{this.loginObj.ownerName}}房東，您好</h1>
+    <h1 style="margin-bottom: 30px">{{ this.loginObj.ownerName }}房東，您好</h1>
     <div class="deadlineBox mainBox">
       <div class="areabox"></div>
-      <span class="title" style="right: 474px;">即將到期</span>
+      <span class="title" style="right: 474px">即將到期</span>
       <button
         class="box1 box"
         @click="this.showModal('contract')"
-        style="right: 128px;"
+        style="right: 128px"
       >
+        <div class="alert" v-if="this.contractLength" style="right: 210px">
+          !
+        </div>
+        <div class="" v-else="(this.contractLength = 0)"></div>
         <span
           class="deadlineText"
           style="position: absolute; left: 28px; top: 7px; margin-left: 0"
@@ -215,33 +255,34 @@ export default {
       </button>
       <button
         class="box1 box"
-        style="right: -186px;"
+        style="right: -186px"
         @click="this.showModal('bill')"
       >
+        <div class="alert" v-if="this.deadlineBill.length" style="right: 206px">
+          !
+        </div>
+        <div class="" v-else="(this.deadlineBill.length = 0)"></div>
         <span class="deadlineText">帳單</span>
         <span class="deadlineContent">{{ this.deadlineBill.length }}</span>
         <span class="deadlineText per">筆</span>
       </button>
     </div>
-  
-    <div class="roomBox mainBox">
-      <div class="areabox" style="left: 2%;
-    width: 35%;
-    height: 361%;
-    top: -126%;"></div>
-      <span class="title" style="top: -165px;
-    left: 36px;">房間狀態</span>
 
-      <button 
+    <div class="roomBox mainBox">
+      <div
+        class="areabox"
+        style="left: 2%; width: 35%; height: 361%; top: -126%"
+      ></div>
+      <span class="title" style="top: -165px; left: 36px">房間狀態</span>
+
+      <button
         class="box2 box"
-        style="left: 138px;
-    top: -152px;"
+        style="left: 138px; top: -152px"
         @click="this.showModal('allRoom')"
       >
         <span class="roomText">總數</span>
         <span class="roomContent">{{ this.roomList.length }}</span>
-        <span class="deadlineText per" style="top: 64px;
-    left: 132px;">間</span>
+        <span class="deadlineText per" style="top: 64px; left: 132px">間</span>
       </button>
       <button
         class="box2 box"
@@ -250,37 +291,44 @@ export default {
       >
         <span class="roomText">出租中</span>
         <span class="roomContent">{{ this.addressList.length }}</span>
-        <span class="deadlineText per" style="top: 64px;
-    left: 132px;">間</span>
+        <span class="deadlineText per" style="top: 64px; left: 132px">間</span>
       </button>
       <button
         class="box2 box"
-        style="left: 138px;top: 206px;"
+        style="left: 138px; top: 206px"
         @click="this.showModal('emptyRoom')"
       >
         <span class="roomText">空房</span>
         <span class="roomContent">{{ this.emptyRoom.length }}</span>
-        <span class="deadlineText per" style="top: 64px;
-    left: 132px;">間</span>
+        <span class="deadlineText per" style="top: 64px; left: 132px">間</span>
       </button>
     </div>
     <div class="electricBox mainBox">
-      <div class="areabox" style="top: -142px;"></div>
-      <span class="title" style="top: -136px;
-    right: 474px;">營收金額</span>
-      <button class="box1 box" style="
-    right: -186px;
-    top: -115px;"
-      @click="this.showModal('sumLast')">
-        <span class="roomText" style="top: 16px;left: 28px;">上月營收總計</span>
-        <span class="roomContent" style="font-size: 1.5em;font-weight: 500;top: 61px;left: 136px;">{{ this.lastSum }}元</span>
+      <div class="areabox" style="top: -142px"></div>
+      <span class="title" style="top: -136px; right: 474px">營收金額</span>
+      <button
+        class="box1 box"
+        style="right: -186px; top: -115px"
+        @click="this.showModal('sumLast')"
+      >
+        <span class="roomText" style="top: 16px; left: 28px">上月營收總計</span>
+        <span
+          class="roomContent"
+          style="font-size: 1.5em; font-weight: 500; top: 61px; left: 136px"
+          >{{ this.lastSum }}元</span
+        >
       </button>
-      <button class="box1 box" style="
-    right: 128px;
-    top: -115px;"
-      @click="this.showModal('sumThis')">
-        <span class="roomText" style="top: 16px;left: 28px;">本月目前營收</span>
-        <span class="roomContent" style="font-size: 1.5em;font-weight: 500;top: 61px;left: 136px;">{{ this.thisSum }}元</span>
+      <button
+        class="box1 box"
+        style="right: 128px; top: -115px"
+        @click="this.showModal('sumThis')"
+      >
+        <span class="roomText" style="top: 16px; left: 28px">本月目前營收</span>
+        <span
+          class="roomContent"
+          style="font-size: 1.5em; font-weight: 500; top: 61px; left: 136px"
+          >{{ this.thisSum }}元</span
+        >
       </button>
     </div>
   </div>
@@ -443,14 +491,14 @@ export default {
   position: relative;
   background-color: transparent;
 }
-.areabox{
+.areabox {
   width: 80%;
-    height: 119%;
-    background-color: rgb(214 201 184 / 57%);
-    position: absolute;
-    left: 43%;
-    top: -7px;
-    border-radius: 10px;
+  height: 119%;
+  background-color: rgb(214 201 184 / 57%);
+  position: absolute;
+  left: 43%;
+  top: -7px;
+  border-radius: 10px;
 }
 .box {
   border: none;
@@ -612,5 +660,18 @@ tr:nth-of-type(odd) td {
   &:active {
     transform: scale(0.96);
   }
+}
+.alert {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background-color: red;
+  position: absolute;
+  top: -13px;
+  border-radius: 50px;
+  padding-top: 3px;
+  padding-left: 12px;
+  color: white;
+  font-weight: 700;
 }
 </style>

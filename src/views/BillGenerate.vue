@@ -82,7 +82,7 @@ export default {
       // this.newnewBillSearch[index];
       this.setPerBill(this.newnewBillSearch[index]);
       console.log("選的帳單", this.perBill);
-      this.perBill.eletricV = "";
+      // this.perBill.eletricV = "";
     },
     updateElectricV() { // 更新用電量
       let electricObj = {
@@ -189,15 +189,17 @@ export default {
             <td>{{ item.periodStart }}~{{ item.periodEnd }}</td>
             <td>{{ item.paymentDate }}</td>
             <td>
-              <button
+              <button   
                 type="button"
+                class="updateBtn"
                 style="border: none;background-color: transparent;"
+                
                 @click="
                   this.showElectric();
                   this.bringToEdit(index);
                 "
               >
-              <i class="fa-solid fa-pen"></i>
+              <i class="fa-solid fa-pen" :disabled="this.newnewBillSearch[index].eletricV" ></i>
               </button>
             </td>
             <td v-if="!this.newnewBillSearch[index].eletricV"><i class="fa-solid fa-circle-exclamation" style="color:red;"></i></td>
@@ -313,11 +315,6 @@ export default {
       padding-left: 15px;
       font-weight: 500;
     }
-    .fa-pen{
-      &:hover{
-        color: #a4663f;
-      }
-    }
     .lastMonth {
       margin: 0 auto;
       margin-top: 1px;
@@ -335,8 +332,29 @@ export default {
         padding: 8px;
       }
     }
+  
+    .tableName{
+      text-decoration: none;
+      color: rgb(146, 75, 16);
+      background-color: transparent;
+      &:hover{
+        color: rgb(215, 176, 130);
+      }
+    }
+  
   }
+ 
 }
+.updateBtn{
+   &:hover{
+    cursor: pointer;
+        color: #a4663f;
+      }
+}
+.updateBtn[disabled]{
+      cursor: not-allowed;
+      color: #ccc;
+    }
 .headerArea {
   background-color: #ffc89a;
   width: 100%;

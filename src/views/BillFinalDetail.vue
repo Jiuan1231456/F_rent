@@ -4,10 +4,12 @@ import { mapState, mapActions } from "pinia";
 import emailjs from "emailjs-com";
 import Swal from "sweetalert2";
 import JSZip from "jszip";
-import Docxtemplater from "docxtemplater";
 import { saveAs } from "file-saver";
 import axios from "axios"; // 用於加載模板文件
-import { PDFDocument } from "pdf-lib";
+import jsPDF from 'jspdf'; // 導入 jsPDF 庫
+import 'jspdf-autotable';
+import { fontBase64 } from '@/assets/fonts/noto-sans-cjk.js'; // 根據實際路徑調整，fontBase64這個要去新增一個資料夾，資料夾裡面放轉檔的64位元資料以及google font下載下來的ttf檔案
+import JsBarcode from 'jsbarcode';//條碼的產生
 
 export default {
   data() {
@@ -17,7 +19,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(dataStore, ["finalBill", "billToContract", "loginObj"]),
+    ...mapState(dataStore, ["finalBill", "billToContract", "loginObj",]),
   },
   methods: {
     ...mapActions(dataStore, ["setBillToContract"]),
@@ -59,89 +61,69 @@ export default {
         }
       );
     },
-    async loadTemplate() { // 提供一個列印的模板
-      try {
-        const response = await axios.get("/test.docx", {
-          responseType: "arraybuffer",
-        });
-        return response.data;
-      } catch (error) {
-        // console.error('Error loading template:', error);
-        throw error;
-      }
-    },
-    async print() { // 列印功能
-      // try{
-      const templateArrayBuffer = await this.loadTemplate();
-      // console.log('Template loaded successfully');
+    generatePDF() {
+      const doc = new jsPDF();
 
-      // 創建一個空的 Word 文檔
-      const zip = new JSZip(templateArrayBuffer);
-      const doc = new Docxtemplater().loadZip(zip);
-      // console.log('Template unzipped and loaded into Docxtemplater');
+      // 添加字型
+      doc.addFileToVFS('NotoSerifTC-VariableFont_wght.ttf', fontBase64);
+      doc.addFont('NotoSerifTC-VariableFont_wght.ttf', 'NotoSerifTC', 'normal');
+      doc.setFont('NotoSerifTC');
 
-      // 設置文檔內容
-      doc.setData({
-        tenantName: this.finalBill.tenantName,
-        address:this.finalBill.address,
-        rentP:this.finalBill.rentP,
-        manageP:this.finalBill.manageOneP,
-        waterP:this.finalBill.waterOneP,
-        electricP:this.finalBill.eletricP,
-        electricV:this.finalBill.eletricV,
-        eletricOneP:this.finalBill.eletricOneP,
-        cutP:this.finalBill.cutP,
-        totalOneP:this.finalBill.totalOneP,
-        bankAccount:this.loginObj.accountBank,
-        periodStart: this.finalBill.periodStart,
-        periodEnd: this.finalBill.periodEnd,
-        paymentDate: this.finalBill.paymentDate,
-        ownerName: this.finalBill.ownerName,
-        ownerPhone:this.loginObj.ownerPhone,
-        tenantPhone:this.billToContract[0].tenantPhone
-        
+      // 添加標題
+      doc.setFontSize(26);
+      doc.text('繳費帳單', doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
+
+      doc.setFontSize(10);
+      doc.text(`計費期間 :  ${this.finalBill.periodStart} ~ ${this.finalBill.periodEnd}`, doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
+
+      // 添加資料
+      doc.setFontSize(12);
+      doc.text(`承租房間地址: ${this.finalBill.address}`, 10, 40);
+      doc.text(`租客姓名: ${this.finalBill.tenantName}`, 10, 50);
+      doc.text(`租客電話: ${this.billToContract[0].tenantPhone}`, 10, 60);
+
+      // 添加表格
+      const columns = ["項目", "費用計算", "金額"];
+      const rows = [
+        ["租金", "依租賃契約規定辦理", `${this.finalBill.rentP}`],
+        ["管理費", "依租賃契約規定辦理", `${this.finalBill.manageOneP}`],
+        ["水費", "依租賃契約規定辦理", `${this.finalBill.waterOneP}`],
+        ["電費", `每度電費 : ${this.finalBill.eletricP} 元/度\n用電量 : ${this.finalBill.eletricV}\n總電費為 (用電量 x 每度電電費) : ${this.finalBill.eletricOneP}`, `${this.finalBill.eletricOneP}`],
+        ["違約金", "依租賃契約規定辦理", `${this.finalBill.cutP}`],
+        ["應繳金額", "", `${this.finalBill.totalOneP}`]
+      ];
+
+      doc.autoTable({
+        head: [columns],
+        body: rows,
+        startY: 70,
+        theme: 'grid',
+        headStyles: { font: 'NotoSerifTC' },
+        bodyStyles: { font: 'NotoSerifTC' },
       });
-      console.log("Data set for the template");
 
-      try {
-        // 渲染文檔
-        doc.render();
-      } catch (error) {
-        console.error(error);
-        throw error;
-      }
+       // 繳費帳號
+      doc.text(`繳費帳號: ${this.loginObj.accountBank}`, 10, doc.autoTable.previous.finalY + 20);
 
-      // 生成 Word 文檔並保存
-      const out = doc.getZip().generate({
-        type: "blob",
-        mimeType:
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      });
-      saveAs(out, "本期租賃繳費單.docx");
-      // ========================================================================= 以下是生成pdf
-      // console.log('Buffer generated successfully');
-      // 將Docx文檔轉換為PDF
-      //   const pdfDoc = await PDFDocument.load(buffer);
-      //   // console.log('PDF document loaded successfully from buffer');
+      // 使用銀行帳號生成條碼
+      const barcodeData = this.loginObj.accountBank;
 
-      //    // 添加內容到PDF文件，這裡可以自定義添加內容的方式
-      //    const page = pdfDoc.addPage();
-      //     page.drawText('Hello, World!', { x: 50, y: 50 });
-      //     // console.log('Text added to the PDF');
+      // 創建條碼
+      const canvas = document.createElement('canvas');
+      JsBarcode(canvas, barcodeData, { format: "CODE128" });
+      const barcodeImage = canvas.toDataURL("image/png");
 
-      //     // 將PDF保存為Blob並下載
-      //     const pdfBytes = await pdfDoc.save();
-      //     console.log('PDF document saved successfully');
-      //     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      //     saveAs(blob, 'output.pdf'); // 下載文件，文件名為'output.pdf'
-      //     console.log('PDF downloaded successfully');
-      // } catch(error){
-      //   console.log('pdf生成失敗',error);
-      //   throw error;
-    },
+      // 添加條碼
+      doc.addImage(barcodeImage, 'PNG', 10, doc.autoTable.previous.finalY + 30, 100, 30);
+
+      // 下載 PDF
+      doc.save('繳費帳單.pdf');
+    }
   },
   mounted() {
     emailjs.init("l4QPcOaCIqMDx_T_L");
+    console.log("選的契約",this.billToContract);
+    console.log("perBill",this.per)
   },
 };
 </script>
@@ -253,7 +235,7 @@ export default {
     <button
       class="copy inform"
       style="right: 25%"
-      @click="print()"
+      @click="generatePDF()"
       title="點此即下載繳費單"
     >
       列印帳單
