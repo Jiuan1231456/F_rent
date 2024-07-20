@@ -6,12 +6,13 @@ import Swal from 'sweetalert2'
 export default {
     data() {
         return {
-            new_name: "",
-            new_pwd: "",
-            new_phone: "",
-            new_email: "",
-            new_bank: "",
-            owner_account:"",
+            new_name: "", // 用於存儲新姓名
+            new_pwd: "", // 用於存儲新密碼
+            old_pwd: "", // 用於存儲舊密碼
+            new_phone: "", // 用於存儲新電話
+            new_email: "", // 用於存儲新郵箱
+            new_bank: "", // 用於存儲新銀行信息
+            owner_account: "", // 用於存儲帳戶名
             // 用於控制顯示的狀態
             showName:  true,   // 初始顯示更改姓名
             showPwd: false,
@@ -97,8 +98,9 @@ export default {
             }
 
             const updatedPassword = {
-                owner_account:this.loginObj.account,
-                owner_pwd: this.ownerNewPwd || this.loginObj.ownerPwd
+                owner_account:this.loginObj.ownerAccount,
+                ownerOldPwd: this.old_pwd || this.loginObj.ownerOldPwd,
+                ownerNewPwd: this.new_pwd,
 
             };
 
@@ -140,7 +142,7 @@ export default {
             });
         },
 
-        // 控制顯示狀態的方法
+        // 控制顯示狀態的方法S
         toggleShow(field) {
             this.showName = field === 'name';
             this.showPwd = field === 'pwd';
@@ -182,9 +184,11 @@ export default {
         </div>
 
         <div v-if="showPwd" class="pwd">
-            <h3>當前密碼: </h3>
-            <p>{{loginObj.ownerPwd}}</p>
-            <h4>更新密碼:</h4>
+       
+
+            <h4>輸入舊密碼: </h4>
+            <input v-model="old_pwd" type="text" placeholder="輸入新的密碼" />
+            <h4>輸入新密碼:</h4>
             <input v-model="new_pwd" type="text" placeholder="輸入新的密碼" />
         </div>
 
