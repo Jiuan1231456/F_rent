@@ -3,11 +3,9 @@ import dataStore from "@/stores/dataStore";
 import { mapState } from "pinia";
 import { RouterLink } from 'vue-router';
 import send_btn from '../components/send_btn.vue';
-<<<<<<< HEAD
-=======
 import ConfirmationModal from '../components/ConfirmationModal.vue'; // 引入模態框組件
+import Swal from 'sweetalert2'; // 引入 SweetAlert2
 
->>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
 
 export default {
     data() {
@@ -17,12 +15,8 @@ export default {
             cut_reason: "",
             cut_date: "",
             ai:"",
-<<<<<<< HEAD
-            isSending: false // 追蹤送出狀態
-=======
             isSending: false, // 追蹤送出狀態
             showModal: false // 控制模態框顯示狀態
->>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
    
             
         }
@@ -36,10 +30,7 @@ export default {
     components: {
         RouterLink,
         send_btn,
-<<<<<<< HEAD
-=======
         ConfirmationModal
->>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
     },
     created(){
         console.log(this.roomObj);
@@ -54,54 +45,76 @@ export default {
             const date = new Date(dateString);
             return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
         },
+         // 將契約中止資料送至資料庫
         sendCutContractToDB(){
             this.isSending = true; // 禁用按鈕
-            let cutObj={
-                ai:this.oneContractObj.ai,
-                address:this.oneContractObj.address,
+            let cutObj = {
+                ai: this.oneContractObj.ai,
+                address: this.oneContractObj.address,
                 cutReason: this.cut_reason,
                 cutDate: this.cut_date,
             };
             fetch("http://localhost:8080/contract/updateContract", {
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json"
-            },
-            credentials:'include',
-            body: JSON.stringify(cutObj)
-        })
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'include',
+                body: JSON.stringify(cutObj)
+            })
             .then(res => res.json())
             .then(data => {
+                // 成功更新後跳出成功警示窗並自動跳轉頁面
+                if(data.code === 200){
+                    Swal.fire({
+                        title: "更新契約成功!",
+                        text: "可到契約查看詳情查看契約",
+                        icon: "success"
+                    })
+                    // .then(() => {
+                    //     window.location.href = '/ContractList'; // 修改為要跳轉的頁面
+                    // });
+                } else {
+                    // 更新失敗跳出失敗警示窗
+                    Swal.fire({
+                        title: "更新契約失敗",
+                        text: "請查看日期有無在合約內或漏填",
+                        icon: "error"
+                    });
+                }
                 console.log(data);
             })
-            .finally(() => {
-                    this.isSending = false; // 根據需求決定是否要重新啟用按鈕
+            .catch(error => {
+                // 處理請求失敗的情況
+                Swal.fire({
+                    title: "更新契約失敗",
+                    text: "請查看日期有無在契約期間內",
+                    icon: "error"
                 });
+                console.error("Error:", error);
+            })
+            .finally(() => {
+                this.isSending = false; // 根據需求決定是否要重新啟用按鈕
+            });
         },
-<<<<<<< HEAD
-=======
-        //顯示確認彈跳窗
+        // 顯示確認彈跳窗
         confirmAndSend() {
-            this.showModal = true;
-        },
-
-        onConfirm() {
-            this.showModal = false;
-            this.sendCutContractToDB();
-        },
-        onCancel() {
-            this.showModal = false;
-        },
->>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
-
-        //警示框確認送出
-        confirmAndSend() {
-            // 彈出確認框
-            if (confirm("您確定要送出嗎？")) {
-                this.sendCutContractToDB();
-            }
-        },
-    
+            Swal.fire({
+                title: "是否確定送出？",
+                text: "若送出後將不能重新編輯!請再次確認!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "是，確定送出",
+                cancelButtonText:"否，再考慮一下"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.sendCutContractToDB();
+                    this.isSending = true; // 禁用按鈕
+                }
+            });
+        }
     }
 }
 </script>
@@ -124,11 +137,8 @@ export default {
             <br>
             租賃物件地址: {{oneContractObj.address}}
             <br>
-<<<<<<< HEAD
-=======
             車位:{{oneContractObj.parking}}
             <br>
->>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
             樓層: {{ oneContractObj.floor }}
             <br>
             房號: {{oneContractObj.roomId }}
@@ -144,8 +154,7 @@ export default {
             水費/月: {{ oneContractObj.waterP}}
             <br>
             面積: {{oneContractObj.acreage}}
-            <br>
-            設備:{{ roomObj[0].equip }}
+          
             <br>
             物件備註:{{ oneContractObj.rCondition }}
             <div class="input-wrapper">
@@ -185,11 +194,7 @@ export default {
             <br>
             中止原因: <textarea type="text" v-model="cut_reason" class="input-box"></textarea>
             <br>
-<<<<<<< HEAD
-            違約金:  {{ roomObj[0].cutP }}
-=======
             違約金:  {{ oneContractObj.cutP }}
->>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
             <br>
             中止日期:  <input type="date" id="end" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="cut_date" />
         </div>
@@ -202,21 +207,16 @@ export default {
         <h3 class="signdate">立約日期：{{ formatDate(oneContractObj.signDate) }}</h3>
 
         契約編號:{{oneContractObj.ai}}
-    
-    
-        <div class="btn"> 
-            <send_btn class="space-between":disabled="isSending" @click="confirmAndSend"/> 
-        </div>
-<<<<<<< HEAD
-=======
-        <ConfirmationModal 
+        
+        <button class="space-between":disabled="isSending" @click="confirmAndSend">送出</button>
+       
+        <!-- <ConfirmationModal 
     :visible="showModal" 
-    message="您確定要送出嗎？" 
+    message="是否確定送出，若送出後將不能重新編輯!" 
     @confirm="onConfirm" 
     @cancel="onCancel" 
-/>
+/> -->
 
->>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
     </div>
 </template>
 
@@ -259,8 +259,8 @@ margin-right: 0% ;
 }
 h3{
     background-color: white;
-    background-color: white;
     background-color: rgb(247, 203, 150);
+    border-style:inset;
     width: 25%;
 
     padding: 2%;
@@ -284,8 +284,8 @@ h4{
     
 }
 h2{
-    background-color: white;
     background-color: rgb(247, 203, 150);
+    border-style:inset;
     width: 25%;
     padding: 1%;
     text-align: center;
@@ -297,21 +297,34 @@ h2{
     }
 h1{
     background-color: white;
-    // width: 30%;
-    // padding: 2%;
     border-style:inset;
     text-align: center;
-    // position: absolute;
     border-radius: 0%;
     top:2%;
     left: 39%;
     margin: auto;
-    // background-color: rgb(158, 112, 57);
     color: rgb(0, 0, 0);
 }
-<<<<<<< HEAD
-</style>
 
-=======
+button {
+        position: absolute;
+        right: 15%;
+        // bottom: 0%;
+        color: #090909;
+        width: 10%;
+        padding: 0.5em ;
+        font-size: 18px;
+        border-radius: 0.5em;
+        background: #e8e8e8;
+        cursor: pointer;
+        border: 1px solid #e8e8e8;
+        transition: all 0.3s;
+        box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+        }
+
+button:active {
+    color: #666;
+    font-weight: 500;
+    box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+    }
 </style>
->>>>>>> aca9b7ef24b6d20c4d947f3164c8d848240eb57e
