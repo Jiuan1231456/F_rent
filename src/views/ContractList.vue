@@ -46,6 +46,10 @@ export default {
                 endDate: this.contractFilters.endDate,
             };
             console.log("Search Object:", searchObj);// 打印搜尋條件以供調試
+            //搜尋條件為空
+            if (!searchObj.address && !searchObj.tenantName && !searchObj.startDate && !searchObj.endDate) {
+                searchObj = { ownerIdentity: this.loginObj.ownerIdentity };
+            }
 
             // 發送搜尋請求到後端
             fetch("http://localhost:8080/contract/contratSearch", {
@@ -59,9 +63,8 @@ export default {
                 .then(res => res.json())//將回應轉換為 JSON
                 .then(data => {
                     console.log("所有契約(不分房東):", data);// 第一層:顯示所有契約(沒有包含特定房東)
-
-                    // 第二層:篩選出當前身份證字號的契約問卷，即顯示特定房東的所有房間資訊
                     this.contractList = data.contractList.filter(item => item.ownerIdentity === this.loginObj.ownerIdentity);
+                    // 第二層:篩選出當前身份證字號的契約問卷，即顯示特定房東的所有房間資訊
                     console.log("只有當前房東的(篩選特定房東):", this.contractList);
                     // // 計算總頁數
                     // this.calculateTotalPages(this.contractList.length)
@@ -97,11 +100,15 @@ calculateTotalPages(totalItems) {
             console.log("Total Pages:", totalPages); // 打印總頁數以供參考
         },
         // 設定契約狀態
-        getContractStatus(contract) {//據當前日期和契約的開始及結束日期，判斷契約狀態。
+        getContractStatus(contract) {
             const now = new Date();
             const startDate = new Date(contract.startDate);
             const endDate = new Date(contract.endDate);
-            if (now < startDate) {
+            const cutDate = contract.cutDate ? new Date(contract.cutDate) : null;
+            
+            if (cutDate && cutDate < endDate) {
+                return "已中止";
+            } else if (now < startDate) {
                 return "待生效";
             } else if (now >= startDate && now <= endDate) {
                 return "出租中";
@@ -232,7 +239,7 @@ calculateTotalPages(totalItems) {
             <input type="date" id="start" name="trip-start" min="1970-01-01" max="2050-12-31" style="font-size: 22px;">
             <label for="end_time" style="background-color:  #FFC89A;">到：</label>
             <input type="date" id="end" name="trip-end" min="1970-01-01" max="2050-12-31" style="font-size: 22px;">
-            <button class="searchbtn" type="button" @click="search">搜尋</button>
+            <button class="searchbtn" type="button" @click="search()">搜尋</button>
         </p>
     </div>
 
@@ -243,6 +250,7 @@ calculateTotalPages(totalItems) {
             <button class="goingtostart" @click="filterByStatus('待生效')" :class="{ active: statusFilter === '待生效' }">待生效</button>
             <button class="ended" @click="filterByStatus('已結束')" :class="{ active: statusFilter === '已結束' }">已結束</button>
             <button class="ending-soon"  @click="filterEndingSoon()" :class="{ active: statusFilter === '快到期' }">快到期</button>
+            <button class="cut"  @click="filterByStatus('已中止')" :class="{ active: statusFilter === '已中止' }">已中止</button>
             <button class="all" @click="showAllContracts()" :class="{ active: statusFilter === '' }">顯示所有契約</button>
         </div>
 
@@ -493,6 +501,18 @@ calculateTotalPages(totalItems) {
     
         border: 0px;
         background-color: #fcc395;
+        border-radius: 20px;
+        &:hover {
+        background-color: #f0c49f;
+        }
+    }
+    .cut{
+        margin-bottom: 26px;
+        margin-left: 54px;
+        width: 12%;
+        height: 30px;
+        border: 0px;
+        background-color: #f9ddc6;
         border-radius: 20px;
         &:hover {
         background-color: #f0c49f;
