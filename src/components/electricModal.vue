@@ -48,7 +48,7 @@ export default {};
     background-color: #faf0e9;
     position: absolute;
     top: 10%;
-    left: 19%;
+    left: 24%;
     font-size: 36px;
     z-index: 2;
   }

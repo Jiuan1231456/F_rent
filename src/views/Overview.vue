@@ -3,6 +3,7 @@ import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
 import electricModal from "@/components/electricModal.vue";
 import { RouterLink } from "vue-router";
+import Swal from "sweetalert2";
 export default {
   data() {
     return {
@@ -61,6 +62,7 @@ export default {
           this.findContract();
           this.findBill();
           this.findSum();
+          this.alertDeadline();
         });
     },
     findContract() {//篩出快到期的契約(結束前31天)
@@ -211,15 +213,37 @@ export default {
       this.modalType = type;
       this.elecModal = true;
     },
+    alertDeadline() {
+      if(this.deadlineBill.length != 0 && this.contractLength != 0){
+        Swal.fire({
+          title: "提醒",
+          html: "目前有<br>" + this.contractLength + "筆租約即將到期<br>" + this.deadlineBill.length + "筆帳單繳費期限即將截止",
+          icon: "warning",
+        });
+      } else if(this.contractLength != 0){
+        Swal.fire({
+          title: "提醒",
+          text: "目前有"+ this.contractLength + "筆租約即將到期",
+          icon: "warning",
+        });
+      } else if(this.deadlineBill.length != 0){
+        Swal.fire({
+          title: "提醒",
+          text: "目前有"+this.deadlineBill.length + "筆帳單繳費期限即將截止",
+          icon: "warning",
+        });
+      } else{
+      }
+    },
   },
   mounted() {
     this.setPage(13);
-
   },
   created() {
     this.fetch();
+   
   },
-  updated() { },
+  updated() {},
 };
 </script>
 
@@ -228,13 +252,33 @@ export default {
     <h1 style="margin-bottom: 30px">{{ this.loginObj.ownerName }}房東，您好</h1>
     <div class="deadlineBox mainBox">
       <div class="areabox"></div>
-      <span class="title" style="right: 474px;">即將到期</span>
-      <button class="box1 box" @click="this.showModal('contract')" style="right: 128px;">
-        <span class="deadlineText" style="position: absolute; left: 28px; top: 7px; margin-left: 0">租約</span>
+      <span class="title" style="right: 474px">即將到期</span>
+      <button
+        class="box1 box"
+        @click="this.showModal('contract')"
+        style="right: 128px"
+      >
+        <div class="alert" v-if="this.contractLength" style="right: 7px">
+          !
+        </div>
+        <div class="" v-else="(this.contractLength = 0)"></div>
+        <span
+          class="deadlineText"
+          style="position: absolute; left: 28px; top: 7px; margin-left: 0"
+          >租約</span
+        >
         <span class="deadlineContent">{{ this.contractLength }}</span>
         <span class="deadlineText per">筆</span>
       </button>
-      <button class="box1 box" style="right: -186px;" @click="this.showModal('bill')">
+      <button
+        class="box1 box"
+        style="right: -186px"
+        @click="this.showModal('bill')"
+      >
+        <div class="alert" v-if="this.deadlineBill.length">
+          !
+        </div>
+        <div class="" v-else="(this.deadlineBill.length = 0)"></div>
         <span class="deadlineText">帳單</span>
         <span class="deadlineContent">{{ this.deadlineBill.length }}</span>
         <span class="deadlineText per">筆</span>
@@ -242,50 +286,66 @@ export default {
     </div>
 
     <div class="roomBox mainBox">
-      <div class="areabox" style="left: 2%;
-    width: 35%;
-    height: 361%;
-    top: -126%;"></div>
-      <span class="title" style="top: -165px;
-    left: 36px;">房間狀態</span>
+      <div
+        class="areabox"
+        style="left: 2%; width: 35%; height: 361%; top: -126%"
+      ></div>
+      <span class="title" style="top: -165px; left: 36px">房間狀態</span>
 
-      <button class="box2 box" style="left: 138px;
-    top: -152px;" @click="this.showModal('allRoom')">
+      <button
+        class="box2 box"
+        style="left: 138px; top: -152px"
+        @click="this.showModal('allRoom')"
+      >
         <span class="roomText">總數</span>
         <span class="roomContent">{{ this.roomList.length }}</span>
-        <span class="deadlineText per" style="top: 64px;
-    left: 132px;">間</span>
+        <span class="deadlineText per" style="top: 64px; left: 132px">間</span>
       </button>
-      <button class="box2 box" style="left: 138px" @click="this.showModal('tenanting')">
+      <button
+        class="box2 box"
+        style="left: 138px"
+        @click="this.showModal('tenanting')"
+      >
         <span class="roomText">出租中</span>
-        <span class="roomContent">{{ this.roomList.length - this.emptyRoomList.length }}</span>
-        <span class="deadlineText per" style="top: 64px;
-    left: 132px;">間</span>
+        <span class="roomContent">{{ this.rentingRoomList.length }}</span>
+        <span class="deadlineText per" style="top: 64px; left: 132px">間</span>
       </button>
-      <button class="box2 box" style="left: 138px;top: 206px;" @click="this.showModal('emptyRoom')">
+      <button
+        class="box2 box"
+        style="left: 138px; top: 206px"
+        @click="this.showModal('emptyRoom')"
+      >
         <span class="roomText">空房</span>
         <span class="roomContent">{{ this.emptyRoomList.length }}</span>
-        <span class="deadlineText per" style="top: 64px;
-    left: 132px;">間</span>
+        <span class="deadlineText per" style="top: 64px; left: 132px">間</span>
       </button>
     </div>
     <div class="electricBox mainBox">
-      <div class="areabox" style="top: -142px;"></div>
-      <span class="title" style="top: -136px;
-    right: 474px;">營收金額</span>
-      <button class="box1 box" style="
-    right: -186px;
-    top: -115px;" @click="this.showModal('sumLast')">
-        <span class="roomText" style="top: 16px;left: 28px;">上月營收總計</span>
-        <span class="roomContent" style="font-size: 1.5em;font-weight: 500;top: 61px; left: 64px;">{{ this.lastSum
-          }}元</span>
+      <div class="areabox" style="top: -142px"></div>
+      <span class="title" style="top: -136px; right: 474px">營收金額</span>
+      <button
+        class="box1 box"
+        style="right: -186px; top: -115px"
+        @click="this.showModal('sumLast')"
+      >
+        <span class="roomText" style="top: 16px; left: 28px">上月營收總計</span>
+        <span
+          class="roomContent"
+          style="font-size: 1.5em; font-weight: 500; top: 61px; left: 136px"
+          >{{ this.lastSum }}元</span
+        >
       </button>
-      <button class="box1 box" style="
-    right: 128px;
-    top: -115px;" @click="this.showModal('sumThis')">
-        <span class="roomText" style="top: 16px;left: 28px;">本月目前營收</span>
-        <span class="roomContent" style="font-size: 1.5em;font-weight: 500;top: 61px;left: 64px;">{{ this.thisSum
-          }}元</span>
+      <button
+        class="box1 box"
+        style="right: 128px; top: -115px"
+        @click="this.showModal('sumThis')"
+      >
+        <span class="roomText" style="top: 16px; left: 28px">本月目前營收</span>
+        <span
+          class="roomContent"
+          style="font-size: 1.5em; font-weight: 500; top: 61px; left: 72px; width: 250px;"
+          >{{ this.thisSum }}元</span
+        >
       </button>
     </div>
   </div>
@@ -416,7 +476,9 @@ export default {
       </div>
     </template>
     <template v-slot:footer>
-      <RouterLink :to="goToPage"><button class="goToBtn">{{ buttonText }}</button></RouterLink>
+      <RouterLink :to="goToPage"
+        ><button class="goToBtn">{{ buttonText }}</button></RouterLink
+      >
     </template>
   </electricModal>
 </template>
@@ -428,7 +490,6 @@ export default {
   width: 100%;
   height: 100dvh;
 }
-
 .title {
   font-size: 2em;
   font-weight: 500;
@@ -438,7 +499,6 @@ export default {
   left: 40px;
   background-color: transparent;
 }
-
 .mainBox {
   margin-top: 30px;
   display: flex;
@@ -448,7 +508,6 @@ export default {
   position: relative;
   background-color: transparent;
 }
-
 .areabox {
   width: 80%;
   height: 119%;
@@ -458,7 +517,6 @@ export default {
   top: -7px;
   border-radius: 10px;
 }
-
 .box {
   border: none;
   border-radius: 10px;
@@ -466,36 +524,30 @@ export default {
   position: absolute;
   border-bottom: 3px solid salmon;
   border-right: 3px solid rgb(219, 114, 102);
-
   &:hover {
     background-color: #ffdec3;
-
     &:active {
       border: none;
       transform: scale(0.95);
     }
   }
 }
-
 .box1 {
   width: 28%;
   height: 81%;
   top: 17px;
   padding-top: 5px;
 }
-
 .box2 {
   width: 19%;
   height: 74%;
   top: 27px;
   z-index: 99;
 }
-
 .box3 {
   top: 22px;
   height: 63%;
 }
-
 .deadlineText {
   background: transparent;
   font-size: 1.8em;
@@ -504,14 +556,12 @@ export default {
   left: 28px;
   top: 7px;
 }
-
 .per {
   position: absolute;
   font-size: 1.3em;
   top: 72px;
   left: 217px;
 }
-
 .deadlineContent {
   position: absolute;
   top: 57px;
@@ -520,15 +570,12 @@ export default {
   font-weight: 600;
   background: transparent;
 }
-
 .moreBtn {
   border: none;
-
   &:hover {
     color: rgb(220, 138, 38);
   }
 }
-
 .roomText {
   position: absolute;
   background: transparent;
@@ -537,7 +584,6 @@ export default {
   top: 7px;
   left: 42px;
 }
-
 .roomContent {
   background: transparent;
   position: absolute;
@@ -546,13 +592,11 @@ export default {
   left: 54px;
   top: 41px;
 }
-
 .headerArea {
   background-color: #ffc89a;
   width: 100%;
   height: 50px;
   position: relative;
-
   .slotTitle {
     margin: auto 0;
     font-size: 0.6em;
@@ -563,7 +607,6 @@ export default {
     font-weight: 500;
   }
 }
-
 .contentArea {
   margin: 31px auto;
   height: 40dvh;
@@ -571,7 +614,6 @@ export default {
   margin-left: 43px;
   overflow: auto;
 }
-
 .contract {
   width: 98%;
   // height: 100%;
@@ -579,12 +621,10 @@ export default {
   background-color: #cdc6a5;
   text-align: center;
 }
-
 .tenantName {
   background-color: transparent;
   text-decoration: none;
 }
-
 .thead {
   background-color: #ff9b5cc2;
   border: white;
@@ -592,45 +632,38 @@ export default {
   height: 47px;
   font-size: 0.5em;
 }
-
 .content {
   text-align: center;
   height: 50px;
 }
-
 td {
   background-color: #f9ddc6;
   padding: 5px;
   font-size: 0.5em;
 }
-
 tr:nth-of-type(odd) td {
   background-color: #ebebeb9e;
 }
-
 //捲軸底色
 #style-3::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: #f9ddc6;
   border-radius: 20px;
 }
-
 //捲軸寬度
 #style-3::-webkit-scrollbar {
   width: 8px;
   background-color: transparent;
 }
-
 //捲軸本體顏色
 #style-3::-webkit-scrollbar-thumb {
   background-color: #ff9b5cc2;
   border-radius: 20px;
 }
-
 .goToBtn {
   font-size: 0.6em;
   border: none;
-  background: #ffa455b0;
+  background: #e6987bcf;
   color: white;
   width: 156px;
   height: 45px;
@@ -638,13 +671,25 @@ tr:nth-of-type(odd) td {
   position: absolute;
   right: 46px;
   bottom: 14px;
-
   &:hover {
-    background: #ff8b26e7;
+    background: #ae6347cf;
   }
-
   &:active {
     transform: scale(0.96);
   }
+}
+.alert {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background-color: red;
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  border-radius: 50px;
+  padding-top: 3px;
+  padding-left: 12px;
+  color: white;
+  font-weight: 700;
 }
 </style>

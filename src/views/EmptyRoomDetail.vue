@@ -10,6 +10,14 @@ export default {
     },
     computed: {
         ...mapState(dataStore, ['page', 'loginObj', 'roomObj', 'registerObj']),
+        modifiedOwnerName() {
+            let ownerName = this.ownerInfo[0].ownerName;
+            if (ownerName.length > 1) {
+                return ownerName[0] + '〇' + ownerName.slice(2);
+            } else {
+                return ownerName;
+            }
+        }
     },
     methods: {
         ...mapActions(dataStore, ['setPage']),
@@ -24,20 +32,13 @@ export default {
             }
             console.log(this.ownerInfo);
         },
-        
-
-
         googleMapLink(address) {
             return `https://www.google.com/maps/embed/v1/place?key=AIzaSyDfjf8ZGHYP8eUFuI-64hjKxj2kJ-HWVy8&q=${encodeURIComponent(address)}`;
         }
-
-
-
     },
     created() {
         this.getOwnerInfo()
         console.log(this.ownerInfo[0].ownerName)
-
     },
     mounted() {
         this.setPage(21),
@@ -75,14 +76,15 @@ export default {
                 <img :src="'data:image/jpeg;base64,' + this.roomObj.photo" alt="Image">
             </div>
             <div class="map">
-                <iframe :src="googleMapLink(this.roomObj.address)" width="480" height="450" style="border: solid 1px black;"
-                    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <iframe :src="googleMapLink(this.roomObj.address)" width="480" height="450"
+                    style="border: solid 1px black;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </div>
 
         <div class="ownerInfo">
             <img class="ownerPhoto" src="/public/images.png" alt="">
-            <h4>屋主 : {{ this.ownerInfo[0].ownerName }} &emsp;&emsp;連絡電話 : {{ this.ownerInfo[0].ownerPhone }}</h4>
+            <h4>屋主 : {{ modifiedOwnerName }} &emsp;&emsp;連絡電話 : {{ this.ownerInfo[0].ownerPhone }}</h4>
         </div>
 
         <div class="bodyArea">

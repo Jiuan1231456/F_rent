@@ -3,15 +3,20 @@ import dataStore from "@/stores/dataStore";
 import { mapState } from "pinia";
 import { RouterLink } from 'vue-router';
 import send_btn from '../components/send_btn.vue';
+import ConfirmationModal from '../components/ConfirmationModal.vue'; // 引入模態框組件
+import Swal from 'sweetalert2'; // 引入 SweetAlert2
 
 export default {
     data() {
         return {
+
             sign_date: "",
             cut_reason: "",
             cut_date: "",
             ai: "",
-            isSending: false // 追蹤送出狀態
+            isSending: false, // 追蹤送出狀態
+            showModal: false // 控制模態框顯示狀態
+
         }
     },
 
@@ -23,9 +28,11 @@ export default {
     components: {
         RouterLink,
         send_btn,
+        ConfirmationModal
     },
     created() {
         console.log(this.roomObj);
+
     },
     mounted() {
 
@@ -36,7 +43,8 @@ export default {
             const date = new Date(dateString);
             return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
         },
-        sendCutContractToDB() {
+        // 將契約中止資料送至資料庫
+        sendCutContractToDB(){
             this.isSending = true; // 禁用按鈕
             let cutObj = {
                 ai: this.oneContractObj.ai,
@@ -52,24 +60,63 @@ export default {
                 credentials: 'include',
                 body: JSON.stringify(cutObj)
             })
-                .then(res => res.json())
-                .then(data => {
-                    console.log(data);
-                })
-                .finally(() => {
-                    this.isSending = false; // 根據需求決定是否要重新啟用按鈕
+            .then(res => res.json())
+            .then(data => {
+                // 成功更新後跳出成功警示窗並自動跳轉頁面
+                if(data.code === 200){
+                    Swal.fire({
+                        title: "更新契約成功!",
+                        text: "可到契約查看詳情查看契約",
+                        icon: "success"
+                    })
+                    .then(() => {
+                        this.$router.push('/ContractList'); // 修改為要跳轉的頁面
+                    });
+                } else {
+                    // 更新失敗跳出失敗警示窗
+                    Swal.fire({
+                        title: "更新契約失敗",
+                        text: "請查看日期有無在合約內或漏填",
+                        icon: "error"
+                    });
+                }
+                console.log(data);
+            })
+            .catch(error => {
+                // 處理請求失敗的情況
+                Swal.fire({
+                    title: "更新契約失敗",
+                    text: "請查看日期有無在契約期間內",
+                    icon: "error"
                 });
+                console.error("Error:", error);
+            })
+            .finally(() => {
+                this.isSending = false; // 根據需求決定是否要重新啟用按鈕
+            });
         },
-
-        //警示框確認送出
+        // 顯示確認彈跳窗
         confirmAndSend() {
-            // 彈出確認框
-            if (confirm("您確定要送出嗎？")) {
-                this.sendCutContractToDB();
-            }
-        },
+            Swal.fire({
+                title: "是否確定送出？",
+                text: "若送出後將不能重新編輯!請再次確認!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "是，確定送出",
+                cancelButtonText:"否，再考慮一下"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.sendCutContractToDB();
+                    this.isSending = true; // 禁用按鈕
+                }
+            });
+        }
     }
 }
+
+
 </script>
 
 <template>
@@ -77,7 +124,7 @@ export default {
         <!-- <h1>與{{oneContractObj.tenantName}}的租賃契約書</h1> -->
 
         <br>
-        <h1>與{{ oneContractObj.tenantName }}的租賃契約書</h1>
+        <h1>租賃契約書</h1>
         <div class="roomInfo">
             <h2>租賃物件資訊</h2>
             <br>
@@ -90,6 +137,8 @@ export default {
             <br>
             租賃物件地址: {{ oneContractObj.address }}
             <br>
+            <div style="background-color: white;" v-if="oneContractObj.parking">車位 : 有</div>
+            <div v-else  style="background-color: white;">車位 : 無</div>
             樓層: {{ oneContractObj.floor }}
             <br>
             房號: {{ oneContractObj.roomId }}
@@ -106,8 +155,8 @@ export default {
             <br>
             面積: {{ oneContractObj.acreage }}
             <br>
-            <!-- 設備:{{ roomObj[0].equip }} -->
-            <br>
+            <!-- 設備:{{ oneContractObj.equip }} -->
+            <!-- <br> -->
             物件備註:{{ oneContractObj.rCondition }}
             <div class="input-wrapper">
 
@@ -124,6 +173,8 @@ export default {
             戶籍地址: {{ oneContractObj.ownerHomeAddress }}
             <br>
             通訊地址: {{ oneContractObj.ownerContactAddress }}
+            <br>
+            email: {{ loginObj.ownerEmail }}
             <br>
             連絡電話: {{ loginObj.ownerPhone }}
             <br>
@@ -154,7 +205,7 @@ export default {
         <br>
         <h3 class="other">其他備註(或個別磋商條款)</h3>
         <br>
-        <textarea disabled>{{ oneContractObj.cOther }}</textarea>
+        <textarea disabled style="resize: none; width: 360px;">{{oneContractObj.cOther}}</textarea>
         <br>
         <br>
         <h3 class="signdate">立約日期：{{ formatDate(oneContractObj.signDate) }}</h3>
@@ -163,8 +214,10 @@ export default {
 
 
         <div class="btn">
-            <send_btn class="space-between" :disabled="isSending" @click="confirmAndSend" />
+            <button class="space-between":disabled="isSending" @click="confirmAndSend">送出</button>
         </div>
+        <ConfirmationModal :visible="showModal" message="您確定要送出嗎？" @confirm="onConfirm" @cancel="onCancel" />
+
     </div>
 </template>
 
@@ -175,13 +228,35 @@ export default {
 * {
     margin-right: 0%;
 }
+button {
+        position: absolute;
+        right: 18%;
+        top:234%;
+       // bottom: 0%;
+        color: #090909;
+        width: 10%;
+        padding: 0.5em ;
+        font-size: 18px;
+        border-radius: 0.5em;
+        background: #e8e8e8;
+        cursor: pointer;
+        border: 1px solid #e8e8e8;
+        transition: all 0.3s;
+        box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+        }
+
+button:active {
+    color: #666;
+    font-weight: 500;
+    box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+    }
 
 .bigArea {
 
     margin-top: 3%;
     padding: 3%;
     margin-bottom: 3%;
-    margin-left: 7%;
+    margin-left: 10%;
     width: 55%;
     background-color: white;
     border: 1px solid rgba(12, 12, 12, 0.096);

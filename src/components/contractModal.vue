@@ -42,12 +42,12 @@ export default {};
 
   .block {
     // 彈出視窗
-    width: 83%;
+    width: 60%;
     height: 530px;
     background-color: #faf0e9;
     position: absolute;
-    top: 3%;
-    left: 9%;
+    top: 5%;
+    left: 20%;
     font-size: 36px;
     z-index: 2;
   }

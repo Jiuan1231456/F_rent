@@ -29,10 +29,10 @@ export default {
     ...mapState(dataStore, ["page"]),
   },
   methods: {
-     // 更新 headerArea 顯示狀態的方法
+    // 更新 headerArea 顯示狀態的方法
     updateHeaderVisibility(route) {
       // 隱藏 headerArea 的路由列表
-      const hideHeaderRoutes = ['/TenantBillFirst', '/emptyRoomList','/EmptyRoomDetail'];
+      const hideHeaderRoutes = ['/TenantBillFirst', '/emptyRoomList', '/EmptyRoomDetail'];
       // 如果當前路由在隱藏列表中，設置 showHeaderArea 為 false，否則為 true
       this.showHeaderArea = !hideHeaderRoutes.includes(route.path);
     },
@@ -59,34 +59,13 @@ export default {
         <span>X</span>
       </label>
     </div> -->
-      <!-- ============== -->
-      <RouterLink
-        class="routerItem"
-        :class="{ selectedPage: this.page === 13 }"
-        to="/Overview"
-        >總覽</RouterLink
-      >
-
-      <RouterLink
-        class="routerItem"
-        :class="{ selectedPage: this.page === 4 }"
-        to="/roomlist"
-        >房間列表
-      </RouterLink>
-
-      <RouterLink
-        class="routerItem"
-        :class="{ selectedPage: this.page === 6 }"
-        to="/ContractList"
-        >租約管理列表</RouterLink
-      >
-      <RouterLink
-        class="routerItem"
-        :class="{ selectedPage: this.page === 11 }"
-        to="/lookupBill"
-        >帳單管理</RouterLink
-      >
-      <!-- <RouterLink
+    <!-- ============== -->
+    <!-- <RouterLink class="routerItem" :class="{ selectedPage: this.page === 20 }" to="/emptyRoomList">回首頁</RouterLink> -->
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 13 }" to="/Overview">總覽</RouterLink>
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 2 }" to="/roomlist">房間列表</RouterLink>
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 6 }" to="/ContractList">租約管理列表</RouterLink>
+    <RouterLink class="routerItem" :class="{ selectedPage: this.page === 11 }" to="/lookupBill">帳單管理</RouterLink>
+    <!-- <RouterLink
         class="routerItem"
         :class="{ selectedPage: this.page === 12 }"
         to="/TenantBillFirst"

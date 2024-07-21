@@ -1,6 +1,10 @@
 <script>
 import dataStore from "@/stores/dataStore";
 import { mapState, mapActions } from "pinia";
+import jsPDF from 'jspdf'; // 導入 jsPDF 庫
+import 'jspdf-autotable';
+import { fontBase64 } from '@/assets/fonts/noto-sans-cjk.js'; // 根據實際路徑調整，fontBase64這個要去新增一個資料夾，資料夾裡面放轉檔的64位元資料以及google font下載下來的ttf檔案
+import JsBarcode from 'jsbarcode';//條碼的產生
 export default {
   data() {
     return {
@@ -49,6 +53,63 @@ export default {
 
     })
   },
+  generatePDF() {
+      const doc = new jsPDF();
+
+      // 添加字型
+      doc.addFileToVFS('NotoSerifTC-VariableFont_wght.ttf', fontBase64);
+      doc.addFont('NotoSerifTC-VariableFont_wght.ttf', 'NotoSerifTC', 'normal');
+      doc.setFont('NotoSerifTC');
+
+      // 添加標題
+      doc.setFontSize(26);
+      doc.text('繳費帳單', doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
+
+      doc.setFontSize(10);
+      doc.text(`計費期間 :  ${this.billObj.periodStart} ~ ${this.billObj.periodEnd}`, doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
+
+      // 添加資料
+      doc.setFontSize(12);
+      doc.text(`租賃房間地址: ${this.billObj.address}`, 10, 40);
+      doc.text(`承租人姓名: ${this.billObj.tenantName}`, 10, 50);
+
+      // 添加表格
+      const columns = ["項目", "費用計算", "金額"];
+      const rows = [
+        ["租金", "依租賃契約規定辦理", `${this.billObj.rentP}`],
+        ["管理費", "依租賃契約規定辦理", `${this.billObj.manageOneP}`],
+        ["水費", "依租賃契約規定辦理", `${this.billObj.waterOneP}`],
+        ["電費", `每度電費 : ${this.billObj.eletricP} 元/度\n用電量 : ${this.billObj.eletricV}\n總電費為 (用電量 x 每度電電費) : ${this.billObj.eletricOneP}`, `${this.billObj.eletricOneP}`],
+        ["違約金", "依租賃契約規定辦理", `${this.billObj.cutP}`],
+        ["應繳金額", "", `${this.billObj.totalOneP}`]
+      ];
+
+      doc.autoTable({
+        head: [columns],
+        body: rows,
+        startY: 70,
+        theme: 'grid',
+        headStyles: { font: 'NotoSerifTC' },
+        bodyStyles: { font: 'NotoSerifTC' },
+      });
+
+       // 繳費帳號
+      doc.text(`繳費帳號: ${this.loginObj.accountBank}`, 10, doc.autoTable.previous.finalY + 20);
+
+      // 使用銀行帳號生成條碼
+      const barcodeData = this.loginObj.accountBank;
+
+      // 創建條碼
+      const canvas = document.createElement('canvas');
+      JsBarcode(canvas, barcodeData, { format: "CODE128" });
+      const barcodeImage = canvas.toDataURL("image/png");
+
+      // 添加條碼
+      doc.addImage(barcodeImage, 'PNG', 10, doc.autoTable.previous.finalY + 30, 100, 30);
+
+      // 下載 PDF
+      doc.save('繳費帳單.pdf');
+    },
   mounted() {
     console.log('此筆帳單',this.billObj);
     
@@ -123,7 +184,7 @@ export default {
       </table>
     </div>
     <button class="back"><RouterLink to="/lookupbill" style="text-decoration: none;background-color: transparent;color: white;">返回列表</RouterLink></button>
-    <button class="copy">列印帳單</button>
+    <button class="copy" @click="generatePDF()">列印帳單</button>
   </div>
 </template>
 

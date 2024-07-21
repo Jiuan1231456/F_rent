@@ -219,10 +219,10 @@ export default {
         <i class="fa-solid fa-magnifying-glass" style="font-size: 30px; background-color: transparent"></i>
       </button>
       <br />
-      <label for="start" class="start">契約起日&emsp;<input type="date" id="start"
+      <label for="start" class="start">計費起日&emsp;<input type="date" id="start"
           v-model="this.billFilters.periodStart" /></label>
       <span style="position: absolute; top: 95px; left: 374px">到</span>
-      <label for="end" class="end">契約迄日&emsp;<input type="date" id="start"
+      <label for="end" class="end">計費迄日&emsp;<input type="date" id="start"
           v-model="this.billFilters.periodEnd" /></label>
       <br />
       <span class="searchTitle" style="position: absolute; bottom: 16%">承租狀態</span>

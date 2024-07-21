@@ -46,36 +46,6 @@ export default {
   <div class="bigArea">
     <div class="topArea"></div>
     <span class="title" style="position: fixed;">親愛的承租人，您好</span>
-    <div class="titleBox">
-      <label for="contract" class="cont label">
-        <input
-          class="titleInput"
-          id="contract"
-          type="radio"
-          v-model="this.changeShow"
-          value="A"
-          name="questionaire"
-          style="right: -21%;
-    top: -30px;width: 19%;"
-        />
-        <span class="contspan span" style="left: 48%;position: fixed;">租約資訊</span>
-      </label>
-      <label for="bill" class="bill label">
-        <input
-          class="titleInput"
-          id="bill"
-          type="radio"
-          v-model="this.changeShow"
-          value="B"
-          name="preview"
-          style="left: 64.5%;
-    top: 9%;
-    width: 10%;
-    position: fixed;"
-        />
-        <span class="billspan span" style="left:65.5%;position: fixed;">帳單資訊</span>
-      </label>
-    </div>
     <!-- <div class="middleArea"> -->
          <TenantContract v-if="changeShow === 'A'" @next="changePage" :showNextPage="showNextPage" @goToNextPage="goToNextPage"></TenantContract>
         <TenantBill v-if="changeShow === 'B'" @next="changePage" :showNextPage="showNextPage" @goToNextPage="goToNextPage"></TenantBill>
@@ -92,14 +62,14 @@ export default {
   color: black;
   // margin-top: 50px;
   .topArea{
-    width: 100%;
+    width: 144%;
     height: 19dvh;
     background-color: #ffdec2;
-    margin-left: -514px;
+    margin-left: -524px;
     z-index: 0;
   }
   .title {
-    font-size: 35px;
+    font-size: 2.5em;
     margin-left: 35px;
     z-index: 1;
     position: absolute;

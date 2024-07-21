@@ -16,7 +16,7 @@ export default {
             addressList: [],//放篩選完狀態的地址
             allList: [],//儲存房間列表(固定搜尋全部)
             roomList: [],//儲存篩選完的房間列表(要顯示的空房)
-            
+            loggedIn:false,
         }
     },
     components:{
@@ -60,7 +60,7 @@ export default {
                             newRoomList.push(this.allList[i]);
                         }
                     }
-                    console.log(newRoomList)
+                    console.log("未出租的房間列表",newRoomList)
                     this.roomList = newRoomList;
                 })
         },
@@ -72,7 +72,7 @@ export default {
             month = month < 10 ? "0" + month : month;
             day = day < 10 ? "0" + day : day;
             let todayStr = today.getFullYear() + "-" + month + "-" + day;
-            console.log(todayStr);
+            console.log("今天日期",todayStr);
             this.addressList = this.contractList.filter(item => (todayStr < item.startDate && todayStr >= item.signDate) || (todayStr >= item.startDate && todayStr <= item.endDate));
             console.log("契約列表撈出 出租中的地址", this.addressList);
         },
@@ -109,20 +109,37 @@ export default {
                     this.roomList = newRoomList;
                 })
         },
-
-
         browse(index) { //跳轉到Detail前，先抓取點選的該筆資料暫存到pinia
             this.setRoomObj(this.roomList[index]);
             console.log("pinia的setRoomObj", this.roomObj);
         },
-
+        logout() {
+            fetch("http://localhost:8080/rent/logout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Logout failed");
+                    }
+                    sessionStorage.removeItem("當前帳號"); // 清除当前账号信息
+                    this.loggedIn = false; // 重置登录状态
+                    console.log("Logout successful");
+                })
+                .catch(error => {
+                    console.error("Logout request failed:", error);
+                });
+        },
 
     },
     created() {
         this.searchEmptyRoom()
+        this.logout();//瀏覽空房頁面自動登出
     },
     mounted() {
-        this.setPage(20)
+        this.setPage(20);
     },
 }
 </script>

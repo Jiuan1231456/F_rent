@@ -17,6 +17,7 @@ export default defineStore("dataStore", {
     tenantData: {}, // 房客登入(房客的電話和身分證字號)
     contractListObj: {},
     tenantContract: {}, // 房客的契約
+    tenantBill:{},
   }),
   getters: {
     // 返回變數或數據
@@ -35,6 +36,7 @@ export default defineStore("dataStore", {
     getTenantData: (state) => state.tenantData,
     getcontractListObj: (state) => state.contractListObj,
     getTenantContract: (state) => state.tenantContract,
+    getTenantBill: (state) => state.tenantBill,
   },
 
   actions: {
@@ -82,5 +84,8 @@ export default defineStore("dataStore", {
     setTenantContract(obj) {
       this.tenantContract = obj;
     },
+    setTenantBill(obj){
+      this.tenantBill = obj;
+    }
   },
 });
