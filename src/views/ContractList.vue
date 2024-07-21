@@ -8,6 +8,8 @@ export default {
         return {
             //儲存契約列表
             contractList: [],
+            //儲存搜尋契約列表
+            // searchContractList: [],
             // 儲存搜尋對象過濾器
             contractFilters: {
                 address: "",
@@ -37,6 +39,7 @@ export default {
             this.$router.push({ name: 'contractAdd'}); 
         },
         //模糊搜尋過濾器
+        //模糊搜尋過濾器
         search() {
         // 建立搜尋條件，依照地址、承租方姓名或租約日期進行搜尋
             let searchObj = {
@@ -47,9 +50,9 @@ export default {
             };
             console.log("Search Object:", searchObj);// 打印搜尋條件以供調試
             //搜尋條件為空
-            if (!searchObj.address && !searchObj.tenantName && !searchObj.startDate && !searchObj.endDate) {
-                searchObj = { ownerIdentity: this.loginObj.ownerIdentity };
-            }
+            // if (!searchObj.address && !searchObj.tenantName && !searchObj.startDate && !searchObj.endDate) {
+            //     searchObj = { ownerIdentity: this.loginObj.ownerIdentity };
+            // }
 
             // 發送搜尋請求到後端
             fetch("http://localhost:8080/contract/contratSearch", {
