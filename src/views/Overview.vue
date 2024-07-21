@@ -12,14 +12,17 @@ export default {
       roomList: [], // 全部房間
       deadlineContract: [], // 快到期的契約
       deadlineBill: [],
-      addressList: [], // 出租中的房間
-      emptyRoom: [], // 空房
+      addressList: [], // 從契約中抓出的出租中地址
       contractLength: "",
       elecModal: false,
       lastMonth: [],
       lastSum: 0,
       thisMonth: [],
       thisSum: 0,
+      contractList2: [],
+      addressList2: [],
+      emptyRoomList: [],
+      rentingRoomList:[],
     };
   },
   components: {
@@ -35,8 +38,7 @@ export default {
       // 繳費方式彈跳視窗的開關
       this.elecModal = !this.elecModal;
     },
-    fetch() {
-      // 抓全部資料
+    fetch() {// 抓全部資料
       let obj = {
         ownerAccount: this.loginObj.ownerAccount,
       };
@@ -53,16 +55,17 @@ export default {
           console.log("全部的", data);
           this.billList = data.billList;
           this.contractList = data.contractList;
+          this.contractList2 = data.contractList;
           this.roomList = data.roomList;
+          this.searchContractList();
+          this.searchContractList2();
           this.findContract();
-          this.findTenanting();
           this.findBill();
           this.findSum();
           this.alertDeadline();
         });
     },
-    findContract() {
-      //篩出快到期的契約(結束前31天)
+    findContract() {//篩出快到期的契約(結束前31天)
       const today = new Date();
       // 設定篩選條件，結束日期在今天後31天以內
       const filteredContracts = this.contractList.filter((item) => {
@@ -79,8 +82,7 @@ export default {
       console.log("剩不到30天的租約", filteredContracts);
       this.contractLength = filteredContracts.length;
     },
-    findBill() {
-      // 找出繳費期限即將截止的帳單
+    findBill() {// 找出繳費期限即將截止的帳單
       const today = new Date();
       // 設定篩選條件，結束日期在今天後31天以內
       this.deadlineBill = this.billList.filter((item) => {
@@ -94,43 +96,65 @@ export default {
       });
       console.log("剩不到5天的帳單", this.deadlineBill);
     },
-    findTenanting() {
-      // 篩出正在出租中和空房
+
+    searchContractList2() { //從契約列表抓出空房的地址
+      this.addInAddressList2();
+      let newRoomList = [];
+      for (let i = 0; i < this.roomList.length; i++) {
+        let foundMatch = false;
+        for (let j = 0; j < this.addressList2.length; j++) {
+          if (this.roomList[i].address === this.addressList2[j].address) {
+            foundMatch = true;
+            break; // 一旦找到匹配的地址就跳出內層迴圈
+          }
+        }
+        if (!foundMatch) {
+          newRoomList.push(this.roomList[i]);
+        }
+      }
+      this.emptyRoomList = newRoomList;
+      console.log("空房列表", this.emptyRoomList);
+    },
+    addInAddressList2() {// searchContractList()中 用來判斷租約狀態
       let today = new Date();
       let month = today.getMonth() + 1;
       let day = today.getDate();
       // 確保日期格式符合 2024-06-05，否則會變成 2024-6-5
       month = month < 10 ? "0" + month : month;
       day = day < 10 ? "0" + day : day;
-
       let todayStr = today.getFullYear() + "-" + month + "-" + day;
       console.log(todayStr);
-      this.addressList = this.contractList.filter(
-        (item) =>
-          (todayStr < item.startDate && todayStr >= item.signDate) ||
-          (todayStr >= item.startDate && todayStr <= item.endDate)
-      );
-      console.log("契約列表撈出 狀態出租中", this.addressList);
+      this.addressList2 = this.contractList2.filter(item => (todayStr < item.startDate && todayStr >= item.signDate) || (todayStr >= item.startDate && todayStr <= item.endDate));
+      console.log("契約列表撈出 狀態出租中", this.addressList2);
+    },
 
+
+
+    searchContractList() { //從契約列表抓出出租中的地址
+      this.addInAddressList2();
+      let newRoomList = [];
       for (let i = 0; i < this.roomList.length; i++) {
-        let foundMatch = false;
-        for (let j = 0; j < this.addressList.length; j++) {
-          if (this.roomList[i].address === this.addressList[j].address) {
-            foundMatch = true;
-            break; // 一旦找到匹配的地址就跳出內層迴圈
+        for (let j = 0; j < this.addressList2.length; j++) {
+          if (this.roomList[i].address === this.addressList2[j].address) {
+            newRoomList.push(this.roomList[i]);
           }
-        }
-        if (!foundMatch) {
-          this.emptyRoom.push(this.roomList[i]);
+          continue; // 一旦找到匹配的地址就跳出內層迴圈
         }
       }
-      console.log("空房", this.emptyRoom);
-      // this.emptyRoom = this.contractList.filter((item) => (todayStr < item.signDate)
-      // || (item.endDate < todayStr) || ((todayStr < item.startDate) && (item.startDate === item.signDate)))
-      // console.log("契約列表撈出 空房", this.emptyRoom);
+      console.log(newRoomList)
+      this.rentingRoomList = newRoomList;
+      console.log("出租中房間列表",this.rentingRoomList)
+
     },
-    findSum() {
-      // 算出營收加總
+
+
+
+
+
+
+
+
+    findSum() {  // 算出營收加總
       // ======= 上月份營收 ==========
       const today = new Date();
       this.lastMonth = this.billList.filter((item) => {
@@ -138,10 +162,7 @@ export default {
         return periodEnd.getMonth() === today.getMonth() - 1;
       });
       console.log("上月帳單", this.lastMonth);
-      this.lastSum = this.lastMonth.reduce(
-        (sum, item) => sum + item.totalOneP,
-        0
-      );
+      this.lastSum = this.lastMonth.reduce((sum, item) => sum + item.totalOneP, 0);
       console.log("上月帳單加總", this.lastSum);
       // ====== 本月份營收 ==========
       this.thisMonth = this.billList.filter((item) => {
@@ -149,14 +170,10 @@ export default {
         return periodEnd.getMonth() === today.getMonth();
       });
       console.log("本月帳單", this.thisMonth);
-      this.thisSum = this.thisMonth.reduce(
-        (sum, item) => sum + item.totalOneP,
-        0
-      );
+      this.thisSum = this.thisMonth.reduce((sum, item) => sum + item.totalOneP, 0);
       console.log("本月帳單加總", this.thisSum);
     },
-    showModal(type) {
-      // 彈跳視窗動態變化
+    showModal(type) {  // 彈跳視窗動態變化
       if (type === "contract") {
         this.modalTitle = "即將到期之租約列表";
         this.modalContentList = this.contractList;
@@ -173,13 +190,13 @@ export default {
         this.buttonText = "前往房間列表";
         this.goToPage = "/roomList";
       } else if (type === "tenanting") {
-        this.modalTitle = "出租中商辦";
-        this.modalContentList = this.addressList;
+        this.modalTitle = "出租中";
+        this.modalContentList = this.rentingRoomList;
         this.buttonText = "前往房間列表";
         this.goToPage = "/roomList";
       } else if (type === "emptyRoom") {
         this.modalTitle = "全部空房";
-        this.modalContentList = this.emptyRoom;
+        this.modalContentList = this.emptyRoomList;
         this.buttonText = "前往房間列表";
         this.goToPage = "/roomList";
       } else if (type === "sumLast") {
@@ -224,7 +241,7 @@ export default {
   },
   created() {
     this.fetch();
-    // this.alertDeadline();
+   
   },
   updated() {},
 };
@@ -290,7 +307,7 @@ export default {
         @click="this.showModal('tenanting')"
       >
         <span class="roomText">出租中</span>
-        <span class="roomContent">{{ this.addressList.length }}</span>
+        <span class="roomContent">{{ this.rentingRoomList.length }}</span>
         <span class="deadlineText per" style="top: 64px; left: 132px">間</span>
       </button>
       <button
@@ -299,7 +316,7 @@ export default {
         @click="this.showModal('emptyRoom')"
       >
         <span class="roomText">空房</span>
-        <span class="roomContent">{{ this.emptyRoom.length }}</span>
+        <span class="roomContent">{{ this.emptyRoomList.length }}</span>
         <span class="deadlineText per" style="top: 64px; left: 132px">間</span>
       </button>
     </div>
