@@ -236,7 +236,7 @@ export default {
         </div>
 
         <div v-if="showBank" class="bank">
-            <h3>現行銀行帳戶: </h3>
+            <h3>現行銀行帳戶:</h3>
             <p>{{ loginObj.accountBank }}</p>
             <h4>更新銀行帳戶:</h4>
             <input v-model="new_bank" type="text" placeholder="(分行碼)+10碼帳號，如:(102)1111111111" />

@@ -154,7 +154,7 @@ export default {
       doc.save('租賃契約書.pdf');
     }
   },
-  mounted() {
+  created() {
     this.test();
   },
 };

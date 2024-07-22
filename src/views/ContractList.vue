@@ -32,7 +32,7 @@ export default {
     },
     methods: {
 
-        ...mapActions(dataStore, ['setOneContractObj', 'setRoomObj']),
+        ...mapActions(dataStore, ['setPage','setOneContractObj', 'setRoomObj']),
         // 跳轉到新增契約頁面
         goToContractAdd() {
             // 使用 Vue Router 的方式進行跳轉
@@ -154,7 +154,12 @@ export default {
         selectRoomInfo(index) {
             console.log("選特定房東的特定房間資訊", this.contractList[index]);//印出來供看console
             this.setOneContractObj(this.contractList[index]);
-            // this.$router.push('/Contract_Detail')
+            // this.$router.push('/Cutcontract_Detail')
+        },
+        selectRoomInfo1(index) {
+            console.log("選特定房東的特定房間資訊", this.contractList[index]);//印出來供看console
+            this.setOneContractObj(this.contractList[index]);
+            this.$router.push('/Cutcontract_Edit')
         },
         //找出該契約的房間資訊
         findRoomInfo() {
@@ -216,6 +221,7 @@ export default {
         this.search(); // 組件創建時執行搜尋以獲取初始數據
     },
     mounted() {
+        this.setPage(6)
         console.log('此筆契約', this.oneContractObj);
     }
 }
@@ -297,7 +303,7 @@ export default {
                         <td>{{ item.endDate }}</td>
                         <td>{{ item.rentP }}</td>
                         <td>
-                        <button class="cutEditButton" :disabled="getContractStatus(item) ==='已中止'" @click="selectRoomInfo(index)">契約中止編輯</button>
+                        <button class="cutEditButton" :disabled="getContractStatus(item) ==='已中止'" @click="selectRoomInfo1(index)">契約中止編輯</button>
                             
                         </td>
                         <td>

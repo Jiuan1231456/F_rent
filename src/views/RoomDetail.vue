@@ -14,7 +14,7 @@ export default {
         ...mapActions(dataStore, ['setPage']),
     },
     mounted() {
-        this.setPage(5)
+        this.setPage(2)
     }
 }
 </script>

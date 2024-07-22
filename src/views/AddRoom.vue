@@ -120,7 +120,7 @@ export default {
 
     },
     mounted() {
-        this.setPage(3);
+        this.setPage(2);
         console.log(this.loginObj);
         this.fetchCities();
     }

@@ -120,9 +120,9 @@ export default {
                         text: "可到契約查看詳情查看契約",
                         icon: "success"
                     })
-                    // .then(() => {
-                    //     window.location.href = '/ContractList'; // 修改為要跳轉的頁面
-                    // });
+                    .then(() => {
+                        this.$router.push('/ContractList'); // 修改為要跳轉的頁面
+                    });
                 } else {
                     // 更新失敗跳出失敗警示窗
                     Swal.fire({
@@ -268,7 +268,7 @@ export default {
                     <span class="underline"></span>
                 </div>
                 <br>
-                <h3>立約日期:  <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="sign_date"/></h3>
+                <!-- <h3>立約日期:  <input type="date" id="start" style="font-size: 22px;" min="1970-01-01" max="2050-12-31" v-model="sign_date"/></h3> -->
 
 
                 <div class="btn">

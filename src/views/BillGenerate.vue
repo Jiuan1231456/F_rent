@@ -144,7 +144,7 @@ export default {
     },
   },
   mounted() {
-    this.setPage(10);
+    this.setPage(11);
     this.search();
   },
 };

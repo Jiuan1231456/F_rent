@@ -331,7 +331,7 @@ export default {
         <span class="roomText" style="top: 16px; left: 28px">上月營收總計</span>
         <span
           class="roomContent"
-          style="font-size: 1.5em; font-weight: 500; top: 61px; left: 136px"
+          style="font-size: 1.5em; font-weight: 500; top: 61px; left: 120px"
           >{{ this.lastSum }}元</span
         >
       </button>
