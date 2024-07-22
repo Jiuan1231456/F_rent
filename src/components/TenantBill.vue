@@ -428,21 +428,27 @@ export default {
   .atm {
     margin-right: 112px;
     margin-left: 48px;
-    background-color: #ee9b82;
+    background-color: #ffc88d;
     &:hover {
-      background-color: #ed704a;
+      background-color: #ffa048e8;
     }
     &:active {
       transform: scale(0.95);
+    }
+    &:focus{
+      background-color: #ffa048e8;
     }
   }
   .cash {
-    background-color: #ee9b82;
+    background-color: #ffc88d;
     &:hover {
-      background-color: #ed704a;
+      background-color: #ffa048e8;
     }
     &:active {
       transform: scale(0.95);
+    }
+    &:focus{
+      background-color: #ffa048e8;
     }
   }
   .feeWay {
