@@ -241,7 +241,7 @@ export default {
   },
   created() {
     this.fetch();
-   
+  
   },
   updated() {},
 };
@@ -258,7 +258,7 @@ export default {
         @click="this.showModal('contract')"
         style="right: 128px"
       >
-        <div class="alert" v-if="this.contractLength" style="right: 7px">
+        <div class="alert" v-if="this.contractLength" title="30天內即將到期!" style="right: 7px">
           !
         </div>
         <div class="" v-else="(this.contractLength = 0)"></div>
@@ -275,7 +275,7 @@ export default {
         style="right: -186px"
         @click="this.showModal('bill')"
       >
-        <div class="alert" v-if="this.deadlineBill.length">
+        <div class="alert" title="5天內繳費截止!" v-if="this.deadlineBill.length">
           !
         </div>
         <div class="" v-else="(this.deadlineBill.length = 0)"></div>
